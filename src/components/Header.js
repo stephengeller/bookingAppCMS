@@ -53,8 +53,4 @@ class Header extends Component {
     }
 }
 
-function mapStateToProps({ auth }) {
-    return { auth };
-}
-
 export default Header

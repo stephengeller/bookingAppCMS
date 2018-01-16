@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Header from './Header'
-import Properties from './Properties'
+import Properties from '../pages/Properties'
 import { BrowserRouter, Route } from 'react-router-dom';
 const Logout = () => <h2>Logged out</h2>;
 
