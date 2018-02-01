@@ -3,23 +3,22 @@ import { Button, Icon } from 'react-materialize';
 
 
 class PropertyForm extends Component {
-
     render() {
         return (
             <div className="container">
                 <form ref="propertyForm">
                     <div className="input-field col s6">
-                        <input id="name" ref="name" type="text" className="validate" />
-                        <label htmlFor="name">Property Name</label>
+                        <input id="title" ref="title" type="text" className="validate" />
+                        <label htmlFor="title">Title</label>
                     </div>
                     <div className="input-field col s6">
                         <input
-                            id="location"
-                            ref="location"
+                            id="description"
+                            ref="description"
                             type="text"
                             className="validate"
                         />
-                        <label htmlFor="location">Location</label>
+                        <label htmlFor="description">Description</label>
                     </div>
                     <div className="input-field col s6">
                         <input id="owner" ref="owner" type="text" className="validate" />
@@ -54,7 +53,7 @@ class PropertyForm extends Component {
                     <Button
                         className="btn waves-effect waves-light"
                         type="submit"
-                        onClick={console.log('success!')}
+                        onClick={() => console.log('success!')}
                     >
                         <Icon right>add</Icon>Add Property
                     </Button>
