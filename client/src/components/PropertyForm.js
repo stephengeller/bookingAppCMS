@@ -14,6 +14,9 @@ class PropertyForm extends Component {
       }
     }
 
+    // to get update, loop gettingProperties until
+    // there's a difference between current and API
+
     addProperty() {
       let fields = this.state.fields
       console.log('adding property from within form: ', fields)
@@ -23,7 +26,7 @@ class PropertyForm extends Component {
           .then((response) => {
             fieldNames.map(fieldName => fields[fieldName] = '')
             this.setState({ fields })
-            console.log('form state', this.state)
+            console.log('Successfully added property, form fields: ', this.state)
             setTimeout(() => {
               this.props.getProperties()
             }, 500)
@@ -34,71 +37,30 @@ class PropertyForm extends Component {
     }
 
     updateInputValue(evt, input) {
-      console.log('evt is: ', evt)
       let value = evt.target.value
       let fields = this.state.fields
       fields[input] = value
       this.setState({
         fields
       })
-      console.log(this.state)
     }
 
     render() {
         return (
             <div className="container">
-                < FormItem name={'test'} value={this.state.fields.test} updateInputValue={this.updateInputValue}/>
-                <div ref="propertyForm">
-                    <div className="input-field col s6">
-                        <input
-                          id="title"
-                          type="text"
-                          className="validate"
-                          value={this.state.fields.title}
-                          onChange={value => { this.updateInputValue(value, 'title')}}
-                          />
-                        <label htmlFor="title">Title</label>
-                    </div>
-                    <div className="input-field col s6">
-                        <input
-                            id="description"
-                            type="text"
-                            className="validate"
-                            value={this.state.fields.description}
-                            onChange={value => { this.updateInputValue(value, 'description')}}
-                        />
-                        <label htmlFor="description">Description</label>
-                    </div>
-                    <div className="input-field col s6">
-                        <input
-                          id="ownerId"
-                          type="text"
-                          className="validate"
-                          value={this.state.fields.ownerId}
-                          onChange={value => { this.updateInputValue(value, 'ownerId')}}
-                          />
-                        <label htmlFor="ownerId">OwnerId</label>
-                    </div>
-                    <div className="input-field col s6">
-                        <input
-                          id="facilities"
-                          type="text"
-                          className="validate"
-                          value={this.state.fields.facilites}
-                          onChange={value => { this.updateInputValue(value, 'facilities')}}
-                          />
-                        <label htmlFor="facilities">Facilities</label>
-                    </div>
-                    <Button
-                        className="btn waves-effect waves-light"
-                        type="submit"
-                        onClick={this.addProperty}
-                    >
-                        <Icon right>add</Icon>Add Property
-                    </Button>
-                </div>
-                <br />
-                <div className="divider" />
+              < FormItem name={'title'} value={this.state.fields.title} updateInputValue={this.updateInputValue}/>
+              < FormItem name={'description'} value={this.state.fields.description} updateInputValue={this.updateInputValue}/>
+              < FormItem name={'ownerId'} value={this.state.fields.test} updateInputValue={this.updateInputValue}/>
+              < FormItem name={'facilities'} value={this.state.fields.facilities} updateInputValue={this.updateInputValue}/>
+              <Button
+                  className="btn waves-effect waves-light"
+                  type="submit"
+                  onClick={this.addProperty}
+              >
+                  <Icon right>add</Icon>Add Property
+              </Button>
+              <br />
+              <div className="divider" />
             </div>
             )
     }
