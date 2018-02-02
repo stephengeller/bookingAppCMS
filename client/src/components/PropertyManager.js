@@ -1,85 +1,72 @@
 import React, { Component } from 'react';
 import PropertyForm from './PropertyForm'
-import { Button, Icon } from 'react-materialize';
+import PropertyItem from '../components/PropertyItem'
+import axios from 'axios'
 
 
 class ApiPropertyManager extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            properties: [
-                {
-                    name: 'API Beautiful 4 Bedroom Flat off Brick Lane',
-                    location: '10 Hereford Street',
-                    owner: 'Stephen Geller',
-                    startDate: '2018-10-01',
-                    endDate: '2018-10-25',
-                    phoneNumber: '07763123456',
-                    email: 'notmy@email.com',
-                    counter: 0
-                }
-            ],
-            title: 'Property Manager',
-            counter: 1
+            user: 'Stephen',
+            properties: []
         };
-        this.removeProperty = this.removeProperty.bind(this);
-        this.findPropertyByCounter = this.findPropertyByCounter.bind(this);
-        this.convertToDate = this.convertToDate.bind(this);
-        this.showPropertyDetails = this.showPropertyDetails.bind(this)
-    }
-    removeProperty(counter) {
-        let properties = this.state.properties;
-        let property = this.findPropertyByCounter(counter);
-        let index = properties.indexOf(property);
-        if (index > -1) {
-            properties.splice(index, 1);
-        }
-        this.setState({properties});
+        this.deleteProperty = this.deleteProperty.bind(this)
+        this.getProperties = this.getProperties.bind(this)
     }
 
-    showPropertyDetails(counter) {
-        let property = this.findPropertyByCounter(counter);
-        console.log('DETAILS:');
-        console.log(property);
+    deleteProperty(property) {
+      console.log('attempting to delete property')
+      axios
+          .delete("http://localhost:3000/properties/" + property.id)
+          .then((response) => {
+            console.log('successful delete of id: ' + property.id)
+            this.getProperties()
+          })
+          .catch(function(error) {
+              console.log('delete error: ', error);
+          })
     }
 
-    convertToDate(date) {
-        return new Date(date).toDateString()
+    getProperties() {
+      console.log('waiting for any changes to complete first...')
+      setTimeout(() => {
+        axios
+            .get("http://localhost:3000/properties/search")
+            .then((response) => {
+              const properties = response.data
+                this.setState({ properties });
+                console.log('successfully retrieved properties', properties)
+            })
+            .catch(function(error) {
+                console.log(error);
+            })
+      }, 2000)
     }
 
-    findPropertyByCounter(index) {
-        let properties = this.state.properties;
-        return properties.find(property => {
-            return property.counter === index;
-        });
-    }
-
-    updateProperties(property) {
-        let properties = this.state.properties;
-        properties.push(property);
-        this.setState({ properties });
-        console.log(this.state.properties)
+    componentDidMount() {
+        this.getProperties()
     }
 
 
 
     render() {
-        let properties = this.state.properties;
-        return (
-            <div className="container">
-                < PropertyForm updateProperties={this.updateProperties.bind(this)} counter={this.state.counter} />
-                <div className="divider" />
-                <ul>
-                    {properties.map(property => {
-                        return (<li key={property.counter}>
-                                {property.name}
-                            </li>
-                        )})
-                    }
-                    <div className="container"></div>
-                </ul>
-            </div>
-        );
+      let properties = this.state.properties;
+      let counter = 0
+      return (
+          <div className='container'>
+              <h2 className="center-align">PropertiesApi</h2>
+              < PropertyForm getProperties={this.getProperties}/>
+              {properties.map(property => {
+                  counter += 1
+                  return (
+                      < PropertyItem property={property} key={counter} deleteProperty={this.deleteProperty}/>
+                    )
+                  })
+              }
+              <button onClick={() => this.getProperties()}>Get Properties</button>
+          </div>
+      );
     }
 }
 

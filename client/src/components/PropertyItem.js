@@ -1,10 +1,6 @@
 import React, { Component } from 'react'
-import axios from 'axios'
 
 class PropertyItem extends Component {
-  constructor(props) {
-    super(props)
-  }
 
   render() {
     let property = this.props.property
