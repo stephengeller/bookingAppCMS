@@ -3,13 +3,13 @@ import PropertyForm from './PropertyForm'
 import { Button, Icon } from 'react-materialize';
 
 
-class PropertyManager extends Component {
+class ApiPropertyManager extends Component {
     constructor(props) {
         super(props);
         this.state = {
             properties: [
                 {
-                    name: 'Beautiful 4 Bedroom Flat off Brick Lane',
+                    name: 'API Beautiful 4 Bedroom Flat off Brick Lane',
                     location: '10 Hereford Street',
                     owner: 'Stephen Geller',
                     startDate: '2018-10-01',
@@ -27,7 +27,7 @@ class PropertyManager extends Component {
         this.convertToDate = this.convertToDate.bind(this);
         this.showPropertyDetails = this.showPropertyDetails.bind(this)
     }
-     removeProperty(counter) {
+    removeProperty(counter) {
         let properties = this.state.properties;
         let property = this.findPropertyByCounter(counter);
         let index = properties.indexOf(property);
@@ -83,4 +83,4 @@ class PropertyManager extends Component {
     }
 }
 
-export default PropertyManager;
+export default ApiPropertyManager;

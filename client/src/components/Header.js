@@ -6,7 +6,7 @@ class Header extends Component {
     constructor(props) {
         super(props);
         this.state={
-            user: 'Stephen'
+            user: 'user'
         }
     }
     renderContent() {
@@ -22,15 +22,9 @@ class Header extends Component {
             default:
                 return [
                     <li key="1">
-                        <a href="/api" >PropertiesApi</a>
-                    </li>,
-                    <li key="2">
                         <a href="/properties" >Properties</a>
                     </li>,
-                    <li key="3">
-                        <a href="/logout" >Logout</a>
-                    </li>,
-                    <li key="4" style={{ margin: '0 10px' }}>
+                    <li key="2" style={{ margin: '0 10px' }}>
                         Welcome {this.state.user}
                     </li>
                 ];

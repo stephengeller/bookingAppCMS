@@ -1,63 +1,98 @@
 import React, { Component} from 'react'
 import { Button, Icon } from 'react-materialize';
+import axios from 'axios'
 
 
-class PropertyForm extends Component {
+class PropertyFormApi extends Component {
+    constructor(props) {
+      super(props)
+      this.addProperty = this.addProperty.bind(this)
+      this.state={
+        fields: {
+        }
+      }
+    }
+
+    addProperty() {
+      let fields = this.state.fields
+      console.log('adding property from within form: ', fields)
+      let fieldNames = ['title', 'description', 'ownerId', 'facilities']
+      axios
+          .post("http://localhost:3000/properties/", fields)
+          .then((response) => {
+            fieldNames.map(fieldName => fields[fieldName] = '')
+            this.setState({ fields })
+            console.log('form state', this.state)
+            setTimeout(() => {
+              this.props.getProperties()
+            }, 500)
+          })
+          .catch(function(error) {
+              console.log('Adding error: ', error);
+          })
+    }
+
+    updateInputValue(evt, input) {
+      let value = evt.target.value
+      let fields = this.state.fields
+      fields[input] = value
+      this.setState({
+        fields
+      })
+    }
+
     render() {
         return (
             <div className="container">
-                <form ref="propertyForm">
+                <div ref="propertyForm">
                     <div className="input-field col s6">
-                        <input id="title" ref="title" type="text" className="validate" />
+                        <input
+                          id="title"
+                          type="text"
+                          className="validate"
+                          value={this.state.fields.title}
+                          onChange={value => { this.updateInputValue(value, 'title')}}
+                          />
                         <label htmlFor="title">Title</label>
                     </div>
                     <div className="input-field col s6">
                         <input
                             id="description"
-                            ref="description"
                             type="text"
                             className="validate"
+                            value={this.state.fields.description}
+                            onChange={value => { this.updateInputValue(value, 'description')}}
                         />
                         <label htmlFor="description">Description</label>
                     </div>
                     <div className="input-field col s6">
-                        <input id="owner" ref="owner" type="text" className="validate" />
-                        <label htmlFor="owner">Owner</label>
+                        <input
+                          id="ownerId"
+                          type="text"
+                          className="validate"
+                          value={this.state.fields.ownerId}
+                          onChange={value => { this.updateInputValue(value, 'ownerId')}}
+                          />
+                        <label htmlFor="ownerId">OwnerId</label>
                     </div>
-                    <div className="row">
-                        <div className="col s6">
-                            <span>Start Date</span>
-                            <input
-                                id="startDate"
-                                ref="startDate"
-                                type="date"
-                                className="datepicker validate"
-                            />
-                        </div>
-                        <div className="col s6">
-                            <span>End Date</span>
-                            <input
-                                id="endDate"
-                                ref="endDate"
-                                type="date"
-                                className="validate"
-                            />
-                        </div>
+                    <div className="input-field col s6">
+                        <input
+                          id="facilities"
+                          type="text"
+                          className="validate"
+                          value={this.state.fields.facilites}
+                          onChange={value => { this.updateInputValue(value, 'facilities')}}
+                          />
+                        <label htmlFor="facilities">Facilities</label>
                     </div>
-                    <input
-                        type="text"
-                        ref="phoneNumber"
-                        placeholder="Contact Phone Number"
-                    />
-                    <input type="email" ref="email" placeholder="Contact Email Address" />
                     <Button
                         className="btn waves-effect waves-light"
                         type="submit"
-                        onClick={() => console.log('success!')}
+                        onClick={this.addProperty}
                     >
                         <Icon right>add</Icon>Add Property
                     </Button>
-                </form>
+                </div>
                 <br />
                 <div className="divider" />
             </div>
@@ -65,5 +100,4 @@ class PropertyForm extends Component {
     }
 }
 
-
-export default PropertyForm
+export default PropertyFormApi
