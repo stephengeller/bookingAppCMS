@@ -1,15 +1,16 @@
 import React, { Component} from 'react'
 import { Button, Icon } from 'react-materialize';
 import axios from 'axios'
+import FormItem from './FormItem'
 
 
-class PropertyFormApi extends Component {
+class PropertyForm extends Component {
     constructor(props) {
       super(props)
       this.addProperty = this.addProperty.bind(this)
+      this.updateInputValue = this.updateInputValue.bind(this)
       this.state={
-        fields: {
-        }
+        fields: {}
       }
     }
 
@@ -33,17 +34,20 @@ class PropertyFormApi extends Component {
     }
 
     updateInputValue(evt, input) {
+      console.log('evt is: ', evt)
       let value = evt.target.value
       let fields = this.state.fields
       fields[input] = value
       this.setState({
         fields
       })
+      console.log(this.state)
     }
 
     render() {
         return (
             <div className="container">
+                < FormItem name={'test'} value={this.state.fields.test} updateInputValue={this.updateInputValue}/>
                 <div ref="propertyForm">
                     <div className="input-field col s6">
                         <input
@@ -100,4 +104,4 @@ class PropertyFormApi extends Component {
     }
 }
 
-export default PropertyFormApi
+export default PropertyForm
