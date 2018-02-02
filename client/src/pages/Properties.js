@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropertyManager from '../components/PropertyManager'
 
-class PropertiesApi extends Component {
+class Properties extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -17,4 +17,4 @@ class PropertiesApi extends Component {
     }
 }
 
-export default PropertiesApi;
+export default Properties;

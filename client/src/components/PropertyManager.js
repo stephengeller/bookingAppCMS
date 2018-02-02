@@ -29,42 +29,37 @@ class ApiPropertyManager extends Component {
     }
 
     getProperties() {
-      console.log('waiting for any changes to complete first...')
-      setTimeout(() => {
-        axios
-            .get("http://localhost:3000/properties/search")
-            .then((response) => {
-              const properties = response.data
-                this.setState({ properties });
-                console.log('successfully retrieved properties', properties)
-            })
-            .catch(function(error) {
-                console.log(error);
-            })
-      }, 2000)
+      axios
+          .get("http://localhost:3000/properties/search")
+          .then((response) => {
+            const properties = response.data
+              this.setState({ properties });
+              return properties
+          })
+          .catch(function(error) {
+              console.log(error);
+          })
     }
 
     componentDidMount() {
         this.getProperties()
     }
 
-
-
     render() {
-      let properties = this.state.properties;
+      let properties = this.state.properties.reverse();
       let counter = 0
       return (
           <div className='container'>
               <h2 className="center-align">PropertiesApi</h2>
-              < PropertyForm getProperties={this.getProperties}/>
+              < PropertyForm getProperties={this.getProperties} properties={this.state.properties}/>
               {properties.map(property => {
                   counter += 1
                   return (
-                      < PropertyItem property={property} key={counter} deleteProperty={this.deleteProperty}/>
+                      < PropertyItem property={property} key={counter} deleteProperty={this.deleteProperty} getProperties={this.getProperties}/>
                     )
                   })
               }
-              <button onClick={() => this.getProperties()}>Get Properties</button>
+              <button className="btn waves-effect waves-light" onClick={() => this.getProperties()}>Get Properties</button>
           </div>
       );
     }

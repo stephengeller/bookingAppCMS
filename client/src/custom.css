@@ -1,0 +1,13 @@
+.property-item {
+  border: 1px solid grey;
+  margin: 3%;
+  padding-left: 4%;
+}
+
+.property-line {
+  margin-bottom: 2%;
+}
+
+.property-line-title {
+  border-bottom: 1px solid black
+}

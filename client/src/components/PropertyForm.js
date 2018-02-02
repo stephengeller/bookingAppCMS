@@ -27,9 +27,6 @@ class PropertyForm extends Component {
             fieldNames.map(fieldName => fields[fieldName] = '')
             this.setState({ fields })
             console.log('Successfully added property, form fields: ', this.state)
-            setTimeout(() => {
-              this.props.getProperties()
-            }, 500)
           })
           .catch(function(error) {
               console.log('Adding error: ', error);
