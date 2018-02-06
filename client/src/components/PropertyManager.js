@@ -54,6 +54,15 @@ class ApiPropertyManager extends Component {
           getProperties={this.getProperties}
           properties={this.state.properties}
         />
+        <br />
+        <div className="center-align">
+          <button
+            className="btn waves-effect waves-light"
+            onClick={() => this.getProperties()}
+          >
+            Get Properties
+          </button>
+        </div>
         {properties.map(property => {
           counter += 1;
           return (
@@ -65,12 +74,6 @@ class ApiPropertyManager extends Component {
             />
           );
         })}
-        <button
-          className="btn waves-effect waves-light"
-          onClick={() => this.getProperties()}
-        >
-          Get Properties
-        </button>
       </div>
     );
   }
