@@ -17,7 +17,6 @@ class PropertyItemEditor extends Component {
   updateProperty() {
     const { property } = this.props;
     const { fields } = this.state;
-    const fieldNames = ['title', 'description', 'ownerId', 'facilities'];
     const url = `http://localhost:3000/properties/${property.id}`;
     axios
       .put(url, fields)

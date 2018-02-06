@@ -11,18 +11,21 @@ class PropertyItem extends Component {
     };
   }
 
-  toggleEditor(property) {
+  toggleEditor() {
     const oppositeOfPrevious = !this.state.showPropertyEditor;
     this.setState({ showPropertyEditor: oppositeOfPrevious });
   }
 
-  hideEditor(property) {
+  hideEditor() {
     this.setState({ showPropertyEditor: false });
   }
 
   render() {
     const { property } = this.props;
-    const facilitiesString = property.facilities.join(', ');
+    let facilitiesString = null;
+    if (property.facilites) {
+      facilitiesString = property.facilities.join(', ');
+    }
     return (
       <section className="property-item center-align ">
         <h4 className="property-line-title">{property.title}</h4>

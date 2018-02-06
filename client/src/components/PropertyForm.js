@@ -15,8 +15,10 @@ class PropertyForm extends Component {
 
   addProperty() {
     const fields = this.state.fields;
+      fields.facilities = fields.facilities
+      .replace(/[^a-zA-Z\d]/g, ' ')
+      .split(' ');
     const fieldNames = ['title', 'description', 'ownerId', 'facilities'];
-    console.log('adding property from within form: ', fields);
     axios
       .post('http://localhost:3000/properties/', fields)
       .then(response => {
@@ -57,7 +59,7 @@ class PropertyForm extends Component {
           updateInputValue={this.updateInputValue}
         />
         <FormItem
-          name={'facilities'}
+          name={'facilities (separated by spaces)'}
           value={this.state.fields.facilities}
           updateInputValue={this.updateInputValue}
         />
