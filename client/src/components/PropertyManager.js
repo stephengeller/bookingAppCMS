@@ -49,10 +49,6 @@ class ApiPropertyManager extends Component {
     return (
       <div className="container">
         <h2 className="center-align">Properties</h2>
-        <PropertyForm
-          getProperties={this.getProperties}
-          properties={this.state.properties}
-        />
         <br />
         <div className="center-align">
           <button
@@ -68,7 +64,6 @@ class ApiPropertyManager extends Component {
               property={property}
               key={property.id}
               deleteProperty={this.deleteProperty}
-              getProperties={this.getProperties}
             />
           );
         })}

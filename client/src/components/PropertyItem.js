@@ -4,15 +4,16 @@ import PropertyItemEditor from './PropertyItemEditor';
 class PropertyItem extends Component {
   constructor(props) {
     super(props);
-    this.showEditor = this.showEditor.bind(this);
+    this.toggleEditor = this.toggleEditor.bind(this);
     this.hideEditor = this.hideEditor.bind(this);
     this.state = {
       showPropertyEditor: false
     };
   }
 
-  showEditor(property) {
-    this.setState({ showPropertyEditor: true });
+  toggleEditor(property) {
+    const oppositeOfPrevious = !this.state.showPropertyEditor;
+    this.setState({ showPropertyEditor: oppositeOfPrevious });
   }
 
   hideEditor(property) {
@@ -48,7 +49,7 @@ class PropertyItem extends Component {
           <span className="left-align">
             <button
               className="btn waves-effect waves-light blue accent-2"
-              onClick={() => this.showEditor(property)}
+              onClick={() => this.toggleEditor(property)}
             >
               Edit Property
             </button>
@@ -60,6 +61,7 @@ class PropertyItem extends Component {
             ) : null}
           </span>
         </div>
+        <br />
       </section>
     );
   }

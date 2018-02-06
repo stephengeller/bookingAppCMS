@@ -79,7 +79,6 @@ class PropertyForm extends Component {
           <Icon right>add</Icon>Add Property
         </Button>
         <br />
-        <div className="divider" />
       </div>
     );
   }
