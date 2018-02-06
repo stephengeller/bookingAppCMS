@@ -18,14 +18,24 @@ class PropertyItem extends Component {
           <span className="property-line-title">Facilities: </span>
           {property.facilities}
         </div>
-        <button
-          className="btn waves-effect waves-light"
-          onClick={() => this.props.deleteProperty(property)}
-        >
-          Delete This Property
-        </button>
-        <br />
-        <br />
+        <div className="container">
+          <div className="right-align">
+            <button
+              className="btn waves-effect waves-light red accent-4"
+              onClick={() => this.props.deleteProperty(property)}
+            >
+              Delete Property
+            </button>
+          </div>
+          <div className="left-align">
+            <button
+              className="btn waves-effect waves-light blue accent-2"
+              onClick={() => this.props.deleteProperty(property)}
+            >
+              Update Property
+            </button>
+          </div>
+        </div>
       </section>
     );
   }
