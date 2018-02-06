@@ -21,21 +21,22 @@ class PropertyItem extends Component {
   }
 
   render() {
-    let property = this.props.property;
+    const { property } = this.props;
+    const facilitiesString = property.facilities.join(', ');
     return (
-      <section className="property-item center-align">
-        <h5>{property.title}</h5>
+      <section className="property-item center-align ">
+        <h4 className="property-line-title">{property.title}</h4>
         <h6 className="property-line">
-          <span className="property-line-title">Description: </span>
+          <div className="property-line-title">Description: </div>
           {property.description}
         </h6>
         <div className="property-line">
-          <span className="property-line-title">OwnerID: </span>
+          <div className="property-line-title">OwnerID: </div>
           {property.ownerId}
         </div>
         <div className="property-line">
-          <span className="property-line-title">Facilities: </span>
-          {property.facilities}
+          <div className="property-line-title">Facilities: </div>
+          {facilitiesString}
         </div>
         <div className="container">
           <span className="right-align">
@@ -51,7 +52,9 @@ class PropertyItem extends Component {
               className="btn waves-effect waves-light blue accent-2"
               onClick={() => this.toggleEditor(property)}
             >
-              Edit Property
+              {this.state.showPropertyEditor
+                ? 'Hide Property Editor'
+                : 'Edit Property'}
             </button>
             {this.state.showPropertyEditor ? (
               <PropertyItemEditor

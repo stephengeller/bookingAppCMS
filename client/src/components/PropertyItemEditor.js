@@ -3,29 +3,29 @@ import { Button, Icon } from 'react-materialize';
 import axios from 'axios';
 import FormItem from './FormItem';
 
-class PropertyForm extends Component {
+class PropertyItemEditor extends Component {
   constructor(props) {
     super(props);
-    this.addProperty = this.addProperty.bind(this);
+    this.updateProperty = this.updateProperty.bind(this);
     this.updateInputValue = this.updateInputValue.bind(this);
+    const property = this.props.property;
     this.state = {
-      fields: {}
+      fields: property
     };
   }
 
-  addProperty() {
-    const fields = this.state.fields;
+  updateProperty() {
+    const { property } = this.props;
+    const { fields } = this.state;
     const fieldNames = ['title', 'description', 'ownerId', 'facilities'];
-    console.log('adding property from within form: ', fields);
+    const url = `http://localhost:3000/properties/${property.id}`;
     axios
-      .post('http://localhost:3000/properties/', fields)
+      .put(url, fields)
       .then(response => {
-        alert(`Property "${fields.title}" has been successfully added`);
-        fieldNames.map(fieldName => (fields[fieldName] = ''));
-        this.setState({ fields });
+        this.props.hideEditor();
       })
       .catch(function(error) {
-        console.log('Error adding property: ', error);
+        console.log('Error updating property: ', error);
       });
   }
 
@@ -41,6 +41,7 @@ class PropertyForm extends Component {
   render() {
     return (
       <div className="container">
+        <br />
         <FormItem
           name={'title'}
           value={this.state.fields.title}
@@ -64,9 +65,9 @@ class PropertyForm extends Component {
         <Button
           className="btn waves-effect waves-light"
           type="submit"
-          onClick={this.addProperty}
+          onClick={this.updateProperty}
         >
-          <Icon right>add</Icon>Add Property
+          <Icon right>add</Icon>Update Property
         </Button>
         <br />
       </div>
@@ -74,4 +75,4 @@ class PropertyForm extends Component {
   }
 }
 
-export default PropertyForm;
+export default PropertyItemEditor;
