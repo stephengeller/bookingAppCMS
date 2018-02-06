@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropertyForm from './PropertyForm';
 import PropertyItem from '../components/PropertyItem';
 import axios from 'axios';
 
@@ -17,7 +16,7 @@ class ApiPropertyManager extends Component {
   deleteProperty(property) {
     axios
       .delete('http://localhost:3000/properties/' + property.id)
-      .then(response => {
+      .then(() => {
         const properties = this.state.properties;
         const index = properties.indexOf(property);
         properties.splice(index, 1);

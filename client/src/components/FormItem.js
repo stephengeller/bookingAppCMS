@@ -3,20 +3,20 @@ import React, { Component } from 'react';
 class FormItem extends Component {
   constructor(props) {
     super(props);
-    this.capitaliseFirstLetter = this.capitaliseFirstLetter.bind(this);
+    FormItem.capitaliseFirstLetter = FormItem.capitaliseFirstLetter.bind(this);
   }
 
-  capitaliseFirstLetter(word) {
+  static capitaliseFirstLetter(word) {
     const array = word.split('');
     array[0] = array[0].toUpperCase();
     return array.join('');
   }
 
   render() {
-    const name = this.props.name;
+    const { name, label } = this.props;
     return (
       <div ref="propertyForm">
-        {this.capitaliseFirstLetter(name)}
+        {label}
         <div className="input-field col s6">
           <input
             id={name}

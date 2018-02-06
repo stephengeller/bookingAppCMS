@@ -13,15 +13,17 @@ class PropertyForm extends Component {
     };
   }
 
+  static formatItemStringToArray(string) {
+    return string.replace(/[^a-zA-Z\d]/g, ' ').split(' ');
+  }
+
   addProperty() {
     const fields = this.state.fields;
-      fields.facilities = fields.facilities
-      .replace(/[^a-zA-Z\d]/g, ' ')
-      .split(' ');
+    fields.facilites = PropertyForm.formatItemStringToArray(fields.facilities);
     const fieldNames = ['title', 'description', 'ownerId', 'facilities'];
     axios
       .post('http://localhost:3000/properties/', fields)
-      .then(response => {
+      .then(() => {
         alert(`Property "${fields.title}" has been successfully added`);
         fieldNames.map(fieldName => (fields[fieldName] = ''));
         this.setState({ fields });
@@ -45,21 +47,25 @@ class PropertyForm extends Component {
       <div className="container">
         <FormItem
           name={'title'}
+          label={'Title'}
           value={this.state.fields.title}
           updateInputValue={this.updateInputValue}
         />
         <FormItem
           name={'description'}
+          label={'Property Description'}
           value={this.state.fields.description}
           updateInputValue={this.updateInputValue}
         />
         <FormItem
           name={'ownerId'}
+          label={'Owner ID'}
           value={this.state.fields.ownerId}
           updateInputValue={this.updateInputValue}
         />
         <FormItem
-          name={'facilities (separated by spaces)'}
+          name={'facilities'}
+          label={'Facilities (separated by spaces)'}
           value={this.state.fields.facilities}
           updateInputValue={this.updateInputValue}
         />

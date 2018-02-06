@@ -22,8 +22,8 @@ class PropertyItem extends Component {
 
   render() {
     const { property } = this.props;
-    let facilitiesString = null;
-    if (property.facilites) {
+    let facilitiesString;
+    if (property.facilities) {
       facilitiesString = property.facilities.join(', ');
     }
     return (
