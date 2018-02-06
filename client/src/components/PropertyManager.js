@@ -46,10 +46,9 @@ class ApiPropertyManager extends Component {
 
   render() {
     let properties = this.state.properties.reverse();
-    let counter = 0;
     return (
       <div className="container">
-        <h2 className="center-align">PropertiesApi</h2>
+        <h2 className="center-align">Properties</h2>
         <PropertyForm
           getProperties={this.getProperties}
           properties={this.state.properties}
@@ -64,11 +63,10 @@ class ApiPropertyManager extends Component {
           </button>
         </div>
         {properties.map(property => {
-          counter += 1;
           return (
             <PropertyItem
               property={property}
-              key={counter}
+              key={property.id}
               deleteProperty={this.deleteProperty}
               getProperties={this.getProperties}
             />

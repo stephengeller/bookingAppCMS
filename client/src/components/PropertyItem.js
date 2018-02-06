@@ -1,10 +1,28 @@
 import React, { Component } from 'react';
+import PropertyItemEditor from './PropertyItemEditor';
 
 class PropertyItem extends Component {
+  constructor(props) {
+    super(props);
+    this.showEditor = this.showEditor.bind(this);
+    this.hideEditor = this.hideEditor.bind(this);
+    this.state = {
+      showPropertyEditor: false
+    };
+  }
+
+  showEditor(property) {
+    this.setState({ showPropertyEditor: true });
+  }
+
+  hideEditor(property) {
+    this.setState({ showPropertyEditor: false });
+  }
+
   render() {
     let property = this.props.property;
     return (
-      <section className="property-item">
+      <section className="property-item center-align">
         <h5>{property.title}</h5>
         <h6 className="property-line">
           <span className="property-line-title">Description: </span>
@@ -19,22 +37,28 @@ class PropertyItem extends Component {
           {property.facilities}
         </div>
         <div className="container">
-          <div className="right-align">
+          <span className="right-align">
             <button
               className="btn waves-effect waves-light red accent-4"
               onClick={() => this.props.deleteProperty(property)}
             >
               Delete Property
             </button>
-          </div>
-          <div className="left-align">
+          </span>
+          <span className="left-align">
             <button
               className="btn waves-effect waves-light blue accent-2"
-              onClick={() => this.props.deleteProperty(property)}
+              onClick={() => this.showEditor(property)}
             >
-              Update Property
+              Edit Property
             </button>
-          </div>
+            {this.state.showPropertyEditor ? (
+              <PropertyItemEditor
+                property={property}
+                hideEditor={this.hideEditor}
+              />
+            ) : null}
+          </span>
         </div>
       </section>
     );

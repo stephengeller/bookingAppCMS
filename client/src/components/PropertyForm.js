@@ -25,8 +25,7 @@ class PropertyForm extends Component {
 
   addProperty() {
     const fields = this.state.fields;
-    fields.id = this.generatePropId(fields.title);
-    const fieldNames = ['title', 'description', 'ownerId', 'facilities', 'id'];
+    const fieldNames = ['title', 'description', 'ownerId', 'facilities'];
     console.log('adding property from within form: ', fields);
     axios
       .post('http://localhost:3000/properties/', fields)
