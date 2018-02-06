@@ -15,12 +15,14 @@ class ApiPropertyManager extends Component {
   }
 
   deleteProperty(property) {
-    console.log('attempting to delete property');
     axios
       .delete('http://localhost:3000/properties/' + property.id)
       .then(response => {
-        console.log('successful delete of id: ' + property.id);
-        this.getProperties();
+        const properties = this.state.properties;
+        const index = properties.indexOf(property);
+        properties.splice(index, 1);
+        this.setState({ properties });
+        alert(`"${property.title}" has been successfully deleted`);
       })
       .catch(function(error) {
         console.log('delete error: ', error);
@@ -45,19 +47,10 @@ class ApiPropertyManager extends Component {
   }
 
   render() {
-    let properties = this.state.properties.reverse();
+    let properties = this.state.properties;
     return (
       <div className="container">
         <h2 className="center-align">Properties</h2>
-        <br />
-        <div className="center-align">
-          <button
-            className="btn waves-effect waves-light"
-            onClick={() => this.getProperties()}
-          >
-            Get Properties
-          </button>
-        </div>
         {properties.map(property => {
           return (
             <PropertyItem
