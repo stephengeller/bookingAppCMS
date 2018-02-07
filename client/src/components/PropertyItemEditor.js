@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Icon } from 'react-materialize';
-import axios from 'axios';
+import axios from '../modules/axios';
 import FormItem from './FormItem';
 
 class PropertyItemEditor extends Component {
@@ -17,7 +17,7 @@ class PropertyItemEditor extends Component {
   updateProperty() {
     const { property } = this.props;
     const { fields } = this.state;
-    const url = `http://localhost:3000/properties/${property.id}`;
+    const url = `/properties/${property.id}`;
     axios
       .put(url, fields)
       .then(response => {
