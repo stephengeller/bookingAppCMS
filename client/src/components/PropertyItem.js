@@ -23,9 +23,9 @@ class PropertyItem extends Component {
   render() {
     const { property } = this.props;
     let facilitiesString;
-    if (property.facilities) {
-      facilitiesString = property.facilities.join(', ');
-    }
+    // if (property.facilities) {
+    //   facilitiesString = property.facilities.join(', ');
+    // }
     return (
       <section className="property-item center-align ">
         <h4 className="property-line-title">{property.title}</h4>
@@ -39,7 +39,7 @@ class PropertyItem extends Component {
         </div>
         <div className="property-line">
           <div className="property-line-title">Facilities: </div>
-          {facilitiesString}
+          {property.facilites}
         </div>
         <div className="container">
           <span className="right-align">

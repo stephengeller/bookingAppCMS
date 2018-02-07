@@ -5,6 +5,10 @@ import AddProperty from '../pages/AddProperty';
 import { BrowserRouter, Route } from 'react-router-dom';
 const Logout = () => <h2>Logged out</h2>;
 
+// TODO: create route to handle redirect to login page and back (parse & store the token in local storage)
+// TODO: set the token in the Header for all the calls to the API
+// TODO: create global config components (eg for URL, maybe token)
+
 class App extends Component {
   // componentDidMount == do something AFTER the component is rendered
   componentDidMount() {}

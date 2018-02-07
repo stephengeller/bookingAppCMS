@@ -12,7 +12,7 @@ In your terminal:
 $ git clone git@github.com:stephengeller/bookingAppCMS.git
 $ cd bookingAppCMS/client
 $ npm install
-$ npm start # will open on localhost:3000
+$ npm start # will open on localhost:5000
 ```
 
 ## Features
