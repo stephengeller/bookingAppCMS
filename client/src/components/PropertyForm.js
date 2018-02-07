@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Icon } from 'react-materialize';
-import axios from 'axios';
+import axios from '../modules/axios';
 import FormItem from './FormItem';
 
 class PropertyForm extends Component {
@@ -22,7 +22,7 @@ class PropertyForm extends Component {
     fields.facilites = PropertyForm.formatItemStringToArray(fields.facilities);
     const fieldNames = ['title', 'description', 'ownerId', 'facilities'];
     axios
-      .post('http://localhost:3000/properties/', fields)
+      .post('/properties/', fields)
       .then(() => {
         alert(`Property "${fields.title}" has been successfully added`);
         fieldNames.map(fieldName => (fields[fieldName] = ''));

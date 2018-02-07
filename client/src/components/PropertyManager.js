@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropertyItem from '../components/PropertyItem';
-import axios from 'axios';
+import axios from '../modules/axios';
 
 class ApiPropertyManager extends Component {
   constructor(props) {
@@ -15,7 +15,7 @@ class ApiPropertyManager extends Component {
 
   deleteProperty(property) {
     axios
-      .delete('http://localhost:3000/properties/' + property.id)
+      .delete('/properties/' + property.id)
       .then(() => {
         const properties = this.state.properties;
         const index = properties.indexOf(property);
@@ -30,7 +30,7 @@ class ApiPropertyManager extends Component {
 
   getProperties() {
     axios
-      .get('http://localhost:3000/properties/search')
+      .get('/properties/search')
       .then(response => {
         const properties = response.data;
         this.setState({ properties });
