@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Icon } from 'react-materialize';
+
+import ArrayFormatter from '../modules/ArrayFormatter';
 import axios from '../modules/axios';
 import FormItem from './FormItem';
 
@@ -9,28 +11,57 @@ class PropertyForm extends Component {
     this.addProperty = this.addProperty.bind(this);
     this.updateInputValue = this.updateInputValue.bind(this);
     this.state = {
-      fields: {}
+      fields: {},
+      error: ''
     };
+    this.arrayFormatter = new ArrayFormatter();
   }
 
-  static formatItemStringToArray(string) {
-    return string.replace(/[^a-zA-Z\d]/g, ' ').split(' ');
+  emptyBoxErrorHandler(fieldNames) {
+    const missingFields = [];
+    fieldNames.forEach(field => {
+      if (!this.state.fields[field]) {
+        missingFields.push(field);
+      } else {
+      }
+    });
+    const messageString =
+      'The following fields are required: ' + missingFields.join(', ');
+    return {
+      style: { color: 'red' },
+      message: messageString
+    };
   }
 
   addProperty() {
     const fields = this.state.fields;
-    fields.facilites = PropertyForm.formatItemStringToArray(fields.facilities);
+    fields.facilities = this.arrayFormatter.formatItemStringToArray(
+      fields.facilities
+    );
     const fieldNames = ['title', 'description', 'ownerId', 'facilities'];
-    axios
-      .post('/properties/', fields)
-      .then(() => {
-        alert(`Property "${fields.title}" has been successfully added`);
-        fieldNames.map(fieldName => (fields[fieldName] = ''));
-        this.setState({ fields });
-      })
-      .catch(function(error) {
-        console.log('Error adding property: ', error);
-      });
+    const { title, description, ownerId, facilities } = this.state.fields;
+    if (!!title && !!description && !!ownerId && !!facilities) {
+      axios
+        .post('/properties/', fields)
+        .then(() => {
+          const error = {
+            message: `Property "${fields.title}" successfully added`,
+            style: { color: 'green' }
+          };
+          fieldNames.map(fieldName => (fields[fieldName] = ''));
+          this.setState({ fields, error });
+        })
+        .catch(error => {
+          const errorMessage = {
+            message: error.toString(),
+            style: { color: 'red' }
+          };
+          this.setState({ error: errorMessage });
+        });
+    } else {
+      const error = this.emptyBoxErrorHandler(fieldNames);
+      this.setState({ error });
+    }
   }
 
   updateInputValue(evt, input) {
@@ -45,6 +76,9 @@ class PropertyForm extends Component {
   render() {
     return (
       <div className="container">
+        <div className="error" style={this.state.error.style} id="error">
+          {this.state.error.message}
+        </div>
         <FormItem
           name={'title'}
           label={'Title'}
@@ -66,6 +100,12 @@ class PropertyForm extends Component {
         <FormItem
           name={'facilities'}
           label={'Facilities (separated by spaces)'}
+          value={this.state.fields.facilities}
+          updateInputValue={this.updateInputValue}
+        />
+        <FormItem
+          name={'postcode'}
+          label={'Post Code'}
           value={this.state.fields.facilities}
           updateInputValue={this.updateInputValue}
         />
