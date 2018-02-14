@@ -4,14 +4,18 @@ import { Button, Icon } from 'react-materialize';
 import ArrayFormatter from '../modules/ArrayFormatter';
 import axios from '../modules/axios';
 import FormItem from './FormItem';
+import GoogleMapsAPI from './GoogleMapsAPI';
 
 class PropertyForm extends Component {
   constructor(props) {
     super(props);
     this.addProperty = this.addProperty.bind(this);
     this.updateInputValue = this.updateInputValue.bind(this);
+    this.mapsAPI = new GoogleMapsAPI();
     this.state = {
-      fields: {},
+      fields: {
+        location: {}
+      },
       error: ''
     };
     this.arrayFormatter = new ArrayFormatter();
@@ -33,14 +37,33 @@ class PropertyForm extends Component {
     };
   }
 
-  addProperty() {
+  async addProperty() {
     const fields = this.state.fields;
     fields.facilities = this.arrayFormatter.formatItemStringToArray(
       fields.facilities
     );
-    const fieldNames = ['title', 'description', 'ownerId', 'facilities'];
-    const { title, description, ownerId, facilities } = this.state.fields;
-    if (!!title && !!description && !!ownerId && !!facilities) {
+    const fieldNames = [
+      'title',
+      'description',
+      'ownerId',
+      'facilities',
+      'postcode'
+    ];
+    const {
+      title,
+      description,
+      facilities,
+      postcode
+    } = this.state.fields;
+    if (!!title && !!description && !!facilities && !!postcode) {
+      const lngLat = await this.mapsAPI.getPostcodeResults(postcode);
+      fields.location = {
+        lat: lngLat.latitude,
+        lon: lngLat.longitude
+      };
+      fields.postcode = postcode;
+      fields.ownerId = 'testOwnerId';
+      console.log(fields);
       axios
         .post('/properties/', fields)
         .then(() => {
@@ -52,6 +75,7 @@ class PropertyForm extends Component {
           this.setState({ fields, error });
         })
         .catch(error => {
+          console.log(error);
           const errorMessage = {
             message: error.toString(),
             style: { color: 'red' }
@@ -92,12 +116,6 @@ class PropertyForm extends Component {
           updateInputValue={this.updateInputValue}
         />
         <FormItem
-          name={'ownerId'}
-          label={'Owner ID'}
-          value={this.state.fields.ownerId}
-          updateInputValue={this.updateInputValue}
-        />
-        <FormItem
           name={'facilities'}
           label={'Facilities (separated by spaces)'}
           value={this.state.fields.facilities}
@@ -106,7 +124,7 @@ class PropertyForm extends Component {
         <FormItem
           name={'postcode'}
           label={'Post Code'}
-          value={this.state.fields.facilities}
+          value={this.state.fields.location['postcode']}
           updateInputValue={this.updateInputValue}
         />
         <Button

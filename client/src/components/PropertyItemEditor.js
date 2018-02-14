@@ -52,11 +52,6 @@ class PropertyItemEditor extends Component {
           updateInputValue={this.updateInputValue}
         />
         <FormItem
-          name={'ownerId'}
-          value={this.state.fields.ownerId}
-          updateInputValue={this.updateInputValue}
-        />
-        <FormItem
           name={'facilities'}
           value={this.state.fields.facilities}
           updateInputValue={this.updateInputValue}

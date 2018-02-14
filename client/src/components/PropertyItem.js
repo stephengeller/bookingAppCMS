@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import PropertyItemEditor from './PropertyItemEditor';
+import GoogleMapsAPI from './GoogleMapsAPI';
 
 class PropertyItem extends Component {
   constructor(props) {
     super(props);
     this.toggleEditor = this.toggleEditor.bind(this);
     this.hideEditor = this.hideEditor.bind(this);
+    this.formatFacilities = this.formatFacilities.bind(this);
     this.state = {
       showPropertyEditor: false
     };
+    this.mapsAPI = new GoogleMapsAPI();
   }
 
   toggleEditor() {
@@ -20,11 +23,29 @@ class PropertyItem extends Component {
     this.setState({ showPropertyEditor: false });
   }
 
+  formatFacilities(property) {
+    console.log(property);
+    if (typeof property.facilities === Array) {
+      console.log('Array!');
+      property.facilities = property.facilities.join(', ');
+    } else if (typeof property.facilities === String) {
+      console.log('String!');
+      property.facilities = property.facilities.split(',').join(', ');
+    } else if (property.facilities === undefined) {
+      console.log('wtf');
+    } else {
+      console.log(property.facilities);
+      return property.facilities;
+    }
+  }
+
+  componentWillMount() {
+    this.formatFacilities(this.props.property);
+    console.log();
+  }
+
   render() {
     const { property } = this.props;
-    if (property.facilities.length > 0) {
-      property.facilites = property.facilities.join(', ');
-    }
     return (
       <section className="property-item center-align ">
         <h4 className="property-line-title">{property.title}</h4>
@@ -38,7 +59,11 @@ class PropertyItem extends Component {
         </div>
         <div className="property-line">
           <div className="property-line-title">Facilities: </div>
-          {property.facilites}
+          {property.facilities}
+        </div>
+        <div className="property-line">
+          <div className="property-line-title">Location: </div>
+          {property.location.postcode}
         </div>
         <div className="container">
           <span className="right-align">

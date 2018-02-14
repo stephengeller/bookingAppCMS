@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-export class GoogleMapsAPI {
+export default class GoogleMapsAPI {
   constructor() {
     this.state = {
       selected: 'mi',
       key: 'AIzaSyBQi4BxTf1DMgJsQhuX8louSRU2R0NTxl0',
-      getCoordinates : 'https://maps.googleapis.com/maps/api/geocode/json'
+      getCoordinates: 'https://maps.googleapis.com/maps/api/geocode/json'
     };
     this.data = {
       result: [],
@@ -14,30 +14,65 @@ export class GoogleMapsAPI {
     this.getPostcodeResults = this.getPostcodeResults.bind(this);
   }
 
-  async getPostcodeResults() {
+  async getPostcodeResults(postcode) {
+    let locationObject = {
+      longitude: '',
+      latitude: ''
+    };
     await axios
-      .get(getCoordinates, {
+      .get(this.state.getCoordinates, {
         params: {
-          address: this.state.query4,
+          address: postcode,
           key: this.state.key,
           sensor: true
         }
       })
       .then(response => {
-        console.log('The force is strong with this POSTCODE', response);
+        console.log('Frodo, we must carry this POSTCODE to Mordor', response);
         const { lat, lng } = response.data.results[0].geometry.location;
-        this.setState({
-          query: this.state.query4,
+        locationObject = {
           longitude: lng,
-          latitude: lat,
-          loading: false
-        });
+          latitude: lat
+        };
+        return locationObject;
       })
       .catch(error => {
         console.log(
-          'The force is weak with this POSTCODE - Error fetching and parsing data',
+          'One does not simply work with this POSTCODE - Error fetching and parsing data',
           error
         );
       });
+    return locationObject;
+  }
+
+  async getLatLngFromPostCode(lat, lng) {
+    let locationObject = {
+      lat,
+      lng
+    };
+    await axios
+      .get(this.state.getCoordinates, {
+        params: {
+          address: `${lat},${lng}`,
+          key: this.state.key,
+          sensor: true
+        }
+      })
+      .then(response => {
+        console.log('Frodo, we must carry this LOCATION to Mordor', response);
+        const { lat, lng } = response.data.results[0].geometry.location;
+        locationObject = {
+          longitude: lng,
+          latitude: lat
+        };
+        return locationObject;
+      })
+      .catch(error => {
+        console.log(
+          'One does not simply work with this LOCATION - Error fetching and parsing data',
+          error
+        );
+      });
+    return locationObject;
   }
 }
