@@ -22,10 +22,9 @@ class PropertyItem extends Component {
 
   render() {
     const { property } = this.props;
-    let facilitiesString;
-    // if (property.facilities) {
-    //   facilitiesString = property.facilities.join(', ');
-    // }
+    if (property.facilities.length > 0) {
+      property.facilites = property.facilities.join(', ');
+    }
     return (
       <section className="property-item center-align ">
         <h4 className="property-line-title">{property.title}</h4>
