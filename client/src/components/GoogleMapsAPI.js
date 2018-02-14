@@ -45,27 +45,22 @@ export default class GoogleMapsAPI {
     return locationObject;
   }
 
-  async getLatLngFromPostCode(lat, lng) {
-    let locationObject = {
-      lat,
-      lng
-    };
+  async getAddressFromLatLng(lat, lng) {
+    let addressObject = {};
+    const address = `${lat},${lng}`;
+    console.log(address);
     await axios
       .get(this.state.getCoordinates, {
         params: {
-          address: `${lat},${lng}`,
+          address,
           key: this.state.key,
           sensor: true
         }
       })
       .then(response => {
         console.log('Frodo, we must carry this LOCATION to Mordor', response);
-        const { lat, lng } = response.data.results[0].geometry.location;
-        locationObject = {
-          longitude: lng,
-          latitude: lat
-        };
-        return locationObject;
+        addressObject = response.data.results[0];
+        return addressObject;
       })
       .catch(error => {
         console.log(
@@ -73,6 +68,6 @@ export default class GoogleMapsAPI {
           error
         );
       });
-    return locationObject;
+    return addressObject;
   }
 }

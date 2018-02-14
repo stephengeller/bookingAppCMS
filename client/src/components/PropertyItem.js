@@ -9,7 +9,10 @@ class PropertyItem extends Component {
     this.hideEditor = this.hideEditor.bind(this);
     this.formatFacilities = this.formatFacilities.bind(this);
     this.state = {
-      showPropertyEditor: false
+      showPropertyEditor: false,
+      property: {
+        location: ''
+      }
     };
     this.mapsAPI = new GoogleMapsAPI();
   }
@@ -24,7 +27,6 @@ class PropertyItem extends Component {
   }
 
   formatFacilities(property) {
-    console.log(property);
     if (typeof property.facilities === Array) {
       console.log('Array!');
       property.facilities = property.facilities.join(', ');
@@ -34,18 +36,32 @@ class PropertyItem extends Component {
     } else if (property.facilities === undefined) {
       console.log('wtf');
     } else {
-      console.log(property.facilities);
+      // console.log(property.facilities);
       return property.facilities;
     }
   }
 
-  componentWillMount() {
-    this.formatFacilities(this.props.property);
-    console.log();
+  async componentWillMount() {
+    const property = this.props.property;
+    this.formatFacilities(property);
+    const results = await this.mapsAPI.getAddressFromLatLng(
+      property.location.lat,
+      property.location.lon
+    );
+    console.log(results);
+    if (results) {
+      property.location.address = results.formatted_address;
+      console.log('success', property);
+    } else {
+      property.location.address = 'missing';
+    }
+    this.setState({ property });
+    console.log(this.state);
   }
 
   render() {
-    const { property } = this.props;
+    const { property } = this.state;
+    console.log(this.state);
     return (
       <section className="property-item center-align ">
         <h4 className="property-line-title">{property.title}</h4>
@@ -63,7 +79,7 @@ class PropertyItem extends Component {
         </div>
         <div className="property-line">
           <div className="property-line-title">Location: </div>
-          {property.location.postcode}
+          {property.location.address}
         </div>
         <div className="container">
           <span className="right-align">
