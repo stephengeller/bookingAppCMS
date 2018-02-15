@@ -10,3 +10,8 @@
 .property-line-title {
   font-weight: bold;
 }
+
+.error {
+  font-size: 150%;
+  text-align: center;
+}

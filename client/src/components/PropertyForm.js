@@ -13,10 +13,20 @@ class PropertyForm extends Component {
     this.updateInputValue = this.updateInputValue.bind(this);
     this.arrayFormatter = new ArrayFormatter();
     this.mapsAPI = new GoogleMapsAPI();
-    this.fieldNames = [
+    this.allFields = [
       'title',
       'description',
       'facilities',
+      'addressLine1',
+      'addressLine2',
+      'city',
+      'postcode'
+    ];
+    this.requiredFields = [
+      'title',
+      'description',
+      'facilities',
+      'addressLine1',
       'city',
       'postcode'
     ];
@@ -46,17 +56,8 @@ class PropertyForm extends Component {
   }
 
   allFieldsAreCompleted() {
-    const requiredFields = [
-      'title',
-      'description',
-      'facilities',
-      'addressLine1',
-      'city',
-      'postcode'
-    ];
-
-    for (let i = 0; i < requiredFields.length; i++) {
-      if (!this.state.fields[requiredFields[i]]) {
+    for (let i = 0; i < this.requiredFields.length; i++) {
+      if (!this.state.fields[this.requiredFields[i]]) {
         return false;
       }
     }
@@ -64,23 +65,26 @@ class PropertyForm extends Component {
   }
 
   async addProperty() {
-    const { fields } = this.state;
-
-    fields.facilities = this.arrayFormatter.formatItemStringToArray(
-      fields.facilities
-    );
+    const fields = {
+      title: this.state.fields.title,
+      description: this.state.fields.description
+    };
 
     if (this.allFieldsAreCompleted()) {
       console.log('No empty fields, making axios call to add property');
 
       const lngLat = await this.mapsAPI.getPostcodeResults(fields.postcode);
-      fields.location = {
+      fields['location'] = {
         lat: lngLat.latitude,
         lon: lngLat.longitude
       };
-      fields.address = await this.arrayFormatter.convertAddressToArray(fields);
-      fields.ownerId = 'testOwnerId';
-      console.log(fields);
+      fields['facilities'] = this.arrayFormatter.formatItemStringToArray(
+        this.state.fields.facilities.toString()
+      );
+      fields['address'] = await this.arrayFormatter.convertAddressToArray(
+        this.state.fields
+      );
+      fields['ownerId'] = 'testOwnerId';
 
       axios
         .post('/properties/', fields)
@@ -89,8 +93,9 @@ class PropertyForm extends Component {
             message: `Property "${fields.title}" successfully added`,
             style: { color: 'green' }
           };
-          this.fieldNames.map(fieldName => (fields[fieldName] = ''));
-          this.setState({ fields, error });
+          const currentFieldsState = this.state.fields;
+          this.allFields.map(fieldName => (currentFieldsState[fieldName] = ''));
+          this.setState({ fields: currentFieldsState, error });
         })
         .catch(error => {
           console.log(error);
@@ -102,15 +107,15 @@ class PropertyForm extends Component {
           this.setState({ error: errorMessage });
         });
     } else {
-      const error = this.emptyBoxErrorHandler(this.fieldNames);
+      const error = this.emptyBoxErrorHandler(this.requiredFields);
       this.setState({ error });
     }
   }
 
-  updateInputValue(evt, input) {
-    let value = evt.target.value;
+  updateInputValue(evt, formName) {
+    let value = evt.target.value.toString();
     let fields = this.state.fields;
-    fields[input] = value;
+    fields[formName] = value;
     this.setState({
       fields
     });
@@ -146,25 +151,25 @@ class PropertyForm extends Component {
         <FormItem
           name={'addressLine1'}
           label={'Address Line 1'}
-          value={this.state.fields.location['addressLine1']}
+          value={this.state.fields['addressLine1']}
           updateInputValue={this.updateInputValue}
         />
         <FormItem
           name={'addressLine2'}
           label={'Address Line 2 (optional)'}
-          value={this.state.fields.location['addressLine2']}
+          value={this.state.fields['addressLine2']}
           updateInputValue={this.updateInputValue}
         />
         <FormItem
           name={'city'}
           label={'City'}
-          value={this.state.fields.location['city']}
+          value={this.state.fields['city']}
           updateInputValue={this.updateInputValue}
         />
         <FormItem
           name={'postcode'}
           label={'Post Code'}
-          value={this.state.fields.location['postcode']}
+          value={this.state.fields['postcode']}
           updateInputValue={this.updateInputValue}
         />
         <Button
