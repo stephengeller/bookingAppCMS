@@ -21,7 +21,7 @@ class ApiPropertyManager extends Component {
         const index = properties.indexOf(property);
         properties.splice(index, 1);
         this.setState({ properties });
-        alert(`"${property.title}" has been successfully deleted`);
+        console.log(`"${property.title}" has been successfully deleted`);
       })
       .catch(function(error) {
         console.log('delete error: ', error);

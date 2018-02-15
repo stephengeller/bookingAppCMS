@@ -44,6 +44,7 @@ class PropertyItemEditor extends Component {
         Title
         <FormItem
           name={'title'}
+          type={'text'}
           placeholder={'title'}
           value={this.state.fields.title}
           updateInputValue={this.updateInputValue}
@@ -51,6 +52,7 @@ class PropertyItemEditor extends Component {
         Description
         <FormItem
           name={'description'}
+          type={'text'}
           placeholder={'description'}
           value={this.state.fields.description}
           updateInputValue={this.updateInputValue}
@@ -58,6 +60,7 @@ class PropertyItemEditor extends Component {
         Facilities
         <FormItem
           name={'facilities'}
+          type={'text'}
           placeholder={'facilities'}
           value={this.state.fields.facilities}
           updateInputValue={this.updateInputValue}

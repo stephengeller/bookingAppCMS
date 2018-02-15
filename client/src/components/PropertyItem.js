@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import PropertyItemEditor from './PropertyItemEditor';
 import GoogleMapsAPI from './GoogleMapsAPI';
 
@@ -42,16 +43,9 @@ class PropertyItem extends Component {
 
   async componentWillMount() {
     const property = this.props.property;
+    console.log(property);
     this.formatFacilities(property);
-    const results = await this.mapsAPI.getAddressFromLatLng(
-      property.location.lat,
-      property.location.lon
-    );
-    if (results) {
-      property.location.address = results.formatted_address;
-    } else {
-      property.location.address = 'Invalid Location';
-    }
+    property.location.address = `${property.addressLine1}`;
     this.setState({ property });
   }
 
@@ -64,10 +58,6 @@ class PropertyItem extends Component {
           <div className="property-line-title">Description: </div>
           {property.description}
         </h6>
-        <div className="property-line">
-          <div className="property-line-title">OwnerID: </div>
-          {property.ownerId}
-        </div>
         <div className="property-line">
           <div className="property-line-title">Facilities: </div>
           {property.facilities}
