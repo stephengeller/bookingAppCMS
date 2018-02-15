@@ -16,13 +16,13 @@ class FormItem extends Component {
     const { name, label } = this.props;
     return (
       <div ref="propertyForm">
-        {label}
         <div className="input-field col s6">
           <input
             id={name}
             type="text"
             className="validate"
             value={this.props.value}
+            placeholder={label}
             onChange={value => {
               this.props.updateInputValue(value, name);
             }}

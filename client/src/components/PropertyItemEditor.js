@@ -41,18 +41,24 @@ class PropertyItemEditor extends Component {
     return (
       <div className="container">
         <br />
+        Title
         <FormItem
           name={'title'}
+          placeholder={'title'}
           value={this.state.fields.title}
           updateInputValue={this.updateInputValue}
         />
+        Description
         <FormItem
           name={'description'}
+          placeholder={'description'}
           value={this.state.fields.description}
           updateInputValue={this.updateInputValue}
         />
+        Facilities
         <FormItem
           name={'facilities'}
+          placeholder={'facilities'}
           value={this.state.fields.facilities}
           updateInputValue={this.updateInputValue}
         />

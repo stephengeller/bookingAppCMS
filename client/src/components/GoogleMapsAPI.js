@@ -16,8 +16,8 @@ export default class GoogleMapsAPI {
 
   async getPostcodeResults(postcode) {
     let locationObject = {
-      longitude: '',
-      latitude: ''
+      longitude: 0,
+      latitude: 0
     };
     await axios
       .get(this.state.getCoordinates, {
@@ -48,7 +48,6 @@ export default class GoogleMapsAPI {
   async getAddressFromLatLng(lat, lng) {
     let addressObject = {};
     const address = `${lat},${lng}`;
-    console.log(address);
     await axios
       .get(this.state.getCoordinates, {
         params: {

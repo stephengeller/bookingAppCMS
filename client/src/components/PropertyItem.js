@@ -36,7 +36,6 @@ class PropertyItem extends Component {
     } else if (property.facilities === undefined) {
       console.log('wtf');
     } else {
-      // console.log(property.facilities);
       return property.facilities;
     }
   }
@@ -48,20 +47,16 @@ class PropertyItem extends Component {
       property.location.lat,
       property.location.lon
     );
-    console.log(results);
     if (results) {
       property.location.address = results.formatted_address;
-      console.log('success', property);
     } else {
-      property.location.address = 'missing';
+      property.location.address = 'Invalid Location';
     }
     this.setState({ property });
-    console.log(this.state);
   }
 
   render() {
     const { property } = this.state;
-    console.log(this.state);
     return (
       <section className="property-item center-align ">
         <h4 className="property-line-title">{property.title}</h4>
