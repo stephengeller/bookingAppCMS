@@ -17,11 +17,10 @@ class PropertyForm extends Component {
       'title',
       'description',
       'facilities',
-      'addressLine1',
-      'addressLine2',
       'city',
       'postcode'
     ];
+
     this.state = {
       fields: {
         location: {}
@@ -47,8 +46,17 @@ class PropertyForm extends Component {
   }
 
   allFieldsAreCompleted() {
-    for (let i = 0; i < this.fieldNames.length; i++) {
-      if (!this.state.fields[this.fieldNames[i]]) {
+    const requiredFields = [
+      'title',
+      'description',
+      'facilities',
+      'addressLine1',
+      'city',
+      'postcode'
+    ];
+
+    for (let i = 0; i < requiredFields.length; i++) {
+      if (!this.state.fields[requiredFields[i]]) {
         return false;
       }
     }
@@ -63,13 +71,16 @@ class PropertyForm extends Component {
     );
 
     if (this.allFieldsAreCompleted()) {
+      console.log('No empty fields, making axios call to add property');
+
       const lngLat = await this.mapsAPI.getPostcodeResults(fields.postcode);
       fields.location = {
         lat: lngLat.latitude,
         lon: lngLat.longitude
       };
+      fields.address = await this.arrayFormatter.convertAddressToArray(fields);
       fields.ownerId = 'testOwnerId';
-      console.log('No empty fields, making axios call to add property');
+      console.log(fields);
 
       axios
         .post('/properties/', fields)

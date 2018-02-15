@@ -8,7 +8,6 @@ class PropertyItem extends Component {
     super(props);
     this.toggleEditor = this.toggleEditor.bind(this);
     this.hideEditor = this.hideEditor.bind(this);
-    this.formatFacilities = this.formatFacilities.bind(this);
     this.state = {
       showPropertyEditor: false,
       property: {
@@ -27,25 +26,13 @@ class PropertyItem extends Component {
     this.setState({ showPropertyEditor: false });
   }
 
-  formatFacilities(property) {
-    if (typeof property.facilities === Array) {
-      console.log('Array!');
-      property.facilities = property.facilities.join(', ');
-    } else if (typeof property.facilities === String) {
-      console.log('String!');
-      property.facilities = property.facilities.split(',').join(', ');
-    } else if (property.facilities === undefined) {
-      console.log('wtf');
-    } else {
-      return property.facilities;
-    }
-  }
-
-  async componentWillMount() {
+  componentWillMount() {
     const property = this.props.property;
-    console.log(property);
-    this.formatFacilities(property);
-    property.location.address = `${property.addressLine1}`;
+    if (property.address) {
+      property.address = property.address.join(', ');
+    } else if (property.location) {
+      property.address = `${property.location.lat}, ${property.location.lon}`;
+    }
     this.setState({ property });
   }
 
@@ -64,7 +51,7 @@ class PropertyItem extends Component {
         </div>
         <div className="property-line">
           <div className="property-line-title">Location: </div>
-          {property.location.address}
+          {property.address}
         </div>
         <div className="container">
           <span className="right-align">
