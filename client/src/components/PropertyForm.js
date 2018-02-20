@@ -178,12 +178,12 @@ class PropertyForm extends Component {
           value={this.state.fields['postcode']}
           updateInputValue={this.updateInputValue}
         />
+        <br />
         Available Dates
         <FormItem
           name={'availableFrom'}
           label={'Available From'}
           type={'date'}
-          hardLabel={true}
           value={this.state.fields['availableFrom']}
           updateInputValue={this.updateInputValue}
         />
@@ -191,7 +191,6 @@ class PropertyForm extends Component {
           name={'availableTo'}
           label={'Available To'}
           type={'date'}
-          hardLabel={true}
           value={this.state.fields['availableTo']}
           updateInputValue={this.updateInputValue}
         />

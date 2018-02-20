@@ -12,8 +12,8 @@ class AddProperty extends Component {
 
   render() {
     return (
-      <div className="container">
-        <h2 className="center-align">Add Property</h2>
+      <div className="">
+        <h2 className="center">Add Property</h2>
         <PropertyForm />
       </div>
     );

@@ -8,7 +8,7 @@ class FormItem extends Component {
       type = 'text';
     }
     return (
-      <Row ref="propertyForm">
+      <Row ref="propertyForm" className="">
         <Input
           s={12}
           label={label}

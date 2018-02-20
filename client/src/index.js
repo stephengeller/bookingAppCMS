@@ -1,4 +1,4 @@
-import 'materialize-css/dist/css/materialize.min.css';
+import 'react-materialize';
 import './custom.css';
 import React from 'react';
 import ReactDOM from 'react-dom';

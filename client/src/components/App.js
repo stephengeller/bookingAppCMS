@@ -12,16 +12,14 @@ const Logout = () => <h2>Logged out</h2>;
 class App extends Component {
   render() {
     return (
-      <div className="">
-        <BrowserRouter>
-          <div>
-            <Header />
-            <Route exact path="/properties" component={Properties} />
-            <Route exact path="/properties/add" component={AddProperty} />
-            <Route path="/logout" component={Logout} />
-          </div>
-        </BrowserRouter>
-      </div>
+      <BrowserRouter>
+        <div>
+          <Header />
+          <Route exact path="/properties" component={Properties} />
+          <Route exact path="/properties/add" component={AddProperty} />
+          <Route path="/logout" component={Logout} />
+        </div>
+      </BrowserRouter>
     );
   }
 }
