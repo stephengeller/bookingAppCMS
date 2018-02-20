@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import PropertyItemEditor from './PropertyItemEditor';
-import GoogleMapsAPI from './GoogleMapsAPI';
+import GoogleMapsAPI from '../modules/GoogleMapsAPI';
 
 class PropertyItem extends Component {
   constructor(props) {

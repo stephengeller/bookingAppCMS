@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { Navbar, Icon, NavItem } from 'react-materialize';
+import { Navbar, NavItem } from 'react-materialize';
 
 class Header extends Component {
   constructor(props) {
@@ -35,22 +34,6 @@ class Header extends Component {
   }
 
   render() {
-    /*
-    <Navbar brand="logo" right>
-      <NavItem href="get-started.html">
-        <Icon>search</Icon>
-      </NavItem>
-      <NavItem href="get-started.html">
-        <Icon>view_module</Icon>
-      </NavItem>
-      <NavItem href="get-started.html">
-        <Icon>refresh</Icon>
-      </NavItem>
-      <NavItem href="get-started.html">
-        <Icon>more_vert</Icon>
-      </NavItem>
-    </Navbar>
-    */
     return (
       <Navbar className="teal darken-4" brand="CareFreeBreaks CMS" right>
         <div>
