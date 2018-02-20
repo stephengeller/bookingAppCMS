@@ -21,12 +21,15 @@ class Header extends Component {
       default:
         return [
           <NavItem key="1">
-            <a href="/properties/add">Add Property</a>
+            <a href="/">Home</a>
           </NavItem>,
           <NavItem key="2">
+            <a href="/properties/add">Add Property</a>
+          </NavItem>,
+          <NavItem key="3">
             <a href="/properties">Manage</a>
           </NavItem>,
-          <span key="3" style={{ margin: '0 10px' }}>
+          <span key="4" style={{ margin: '0 10px' }}>
             Welcome {this.state.user}
           </span>
         ];
