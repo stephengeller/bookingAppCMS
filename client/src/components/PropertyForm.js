@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Icon } from 'react-materialize';
+import { Button, Icon, Row } from 'react-materialize';
 
 import ArrayFormatter from '../modules/ArrayFormatter';
 import GoogleMapsAPI from '../modules/GoogleMapsAPI';
@@ -180,28 +180,32 @@ class PropertyForm extends Component {
         />
         <br />
         Available Dates
-        <FormItem
-          name={'availableFrom'}
-          label={'Available From'}
-          type={'date'}
-          value={this.state.fields['availableFrom']}
-          updateInputValue={this.updateInputValue}
-        />
-        <FormItem
-          name={'availableTo'}
-          label={'Available To'}
-          type={'date'}
-          value={this.state.fields['availableTo']}
-          updateInputValue={this.updateInputValue}
-        />
-        <Button
-          className="btn waves-effect waves-light"
-          type="submit"
-          onClick={this.addProperty}
-        >
-          <Icon right>add</Icon>Add Property
-        </Button>
-        <br />
+        <Row>
+          <FormItem
+            name={'availableFrom'}
+            label={'Available From'}
+            type={'date'}
+            s={6}
+            value={this.state.fields['availableFrom']}
+            updateInputValue={this.updateInputValue}
+          />
+          <FormItem
+            name={'availableTo'}
+            label={'Available To'}
+            type={'date'}
+            s={6}
+            value={this.state.fields['availableTo']}
+            updateInputValue={this.updateInputValue}
+          />
+          <Button
+            className="btn waves-effect waves-light"
+            type="submit"
+            onClick={this.addProperty}
+          >
+            <Icon right>add</Icon>Add Property
+          </Button>
+          <br />
+        </Row>
       </div>
     );
   }
