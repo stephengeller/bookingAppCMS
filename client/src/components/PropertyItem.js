@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Card } from 'react-materialize';
 
 import PropertyItemEditor from './PropertyItemEditor';
 import GoogleMapsAPI from '../modules/GoogleMapsAPI';
@@ -39,8 +40,11 @@ class PropertyItem extends Component {
   render() {
     const { property } = this.state;
     return (
-      <section className="property-item center-align ">
-        <h4 className="property-line-title">{property.title}</h4>
+      <Card
+        className="property-item center-align"
+        title={property.title}
+        waves="light"
+      >
         <h6 className="property-line">
           <div className="property-line-title">Description: </div>
           {property.description}
@@ -80,7 +84,7 @@ class PropertyItem extends Component {
           </span>
         </div>
         <br />
-      </section>
+      </Card>
     );
   }
 }
