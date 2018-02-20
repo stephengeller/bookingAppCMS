@@ -150,6 +150,7 @@ class PropertyForm extends Component {
         />
         <FormItem
           name={'description'}
+          type={'textarea'}
           label={'Property Description'}
           value={this.state.fields.description}
           updateInputValue={this.updateInputValue}

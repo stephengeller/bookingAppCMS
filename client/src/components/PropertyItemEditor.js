@@ -52,7 +52,7 @@ class PropertyItemEditor extends Component {
         Description
         <FormItem
           name={'description'}
-          type={'text'}
+          type={'textarea'}
           placeholder={'description'}
           value={this.state.fields.description}
           updateInputValue={this.updateInputValue}
