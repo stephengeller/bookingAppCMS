@@ -9,9 +9,11 @@ client/node_modules
 /.idea/*
 *.xml
 
-
 # testing
 /coverage
+
+# dev
+client/src/dev.js
 
 # production
 /build
