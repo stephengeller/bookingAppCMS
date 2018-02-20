@@ -41,14 +41,17 @@ class PropertyForm extends Component {
 
   emptyBoxErrorHandler(fieldNames) {
     const missingFields = [];
+
     fieldNames.forEach(field => {
       if (!this.state.fields[field]) {
-        console.log('missing: ', this.state.fields[field], field);
+        console.log('missing:', field);
         missingFields.push(field);
       }
     });
+
     const messageString =
       'The following fields are required: ' + missingFields.join(', ');
+
     return {
       style: { color: 'red' },
       message: messageString
@@ -65,26 +68,28 @@ class PropertyForm extends Component {
   }
 
   async addProperty() {
-    const fields = {
-      title: this.state.fields.title,
-      description: this.state.fields.description
-    };
-
     if (this.allFieldsAreCompleted()) {
       console.log('No empty fields, making axios call to add property');
 
-      const lngLat = await this.mapsAPI.getPostcodeResults(fields.postcode);
-      fields['location'] = {
-        lat: lngLat.latitude,
-        lon: lngLat.longitude
+      const lngLat = await this.mapsAPI.getPostcodeResults(
+        this.state.fields.postcode
+      );
+
+      const fields = {
+        title: this.state.fields.title,
+        description: this.state.fields.description,
+        location: {
+          lat: lngLat.latitude,
+          lon: lngLat.longitude
+        },
+        facilities: this.arrayFormatter.formatItemStringToArray(
+          this.state.fields.facilities.toString()
+        ),
+        address: await this.arrayFormatter.convertAddressToArray(
+          this.state.fields
+        ),
+        ownerId: 'testOwnerId'
       };
-      fields['facilities'] = this.arrayFormatter.formatItemStringToArray(
-        this.state.fields.facilities.toString()
-      );
-      fields['address'] = await this.arrayFormatter.convertAddressToArray(
-        this.state.fields
-      );
-      fields['ownerId'] = 'testOwnerId';
 
       axios
         .post('/properties/', fields)

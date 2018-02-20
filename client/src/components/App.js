@@ -10,9 +10,6 @@ const Logout = () => <h2>Logged out</h2>;
 // TODO: create global config components (eg for URL, maybe token)
 
 class App extends Component {
-  // componentDidMount == do something AFTER the component is rendered
-  componentDidMount() {}
-
   render() {
     return (
       <div className="">
