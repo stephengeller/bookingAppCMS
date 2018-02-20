@@ -76,10 +76,12 @@ class PropertyForm extends Component {
       this.state.fields.postcode
     );
     console.log(fields);
-    const { title, description } = fields;
+    const { title, description, availableFrom, availableTo } = fields;
     return {
       title,
       description,
+      availableFrom,
+      availableTo,
       location: {
         lat: lngLat.latitude,
         lon: lngLat.longitude

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Icon } from 'react-materialize';
+import { Button, Icon, Row } from 'react-materialize';
 import axios from '../modules/axios';
 import FormItem from './FormItem';
 
@@ -65,6 +65,25 @@ class PropertyItemEditor extends Component {
           value={this.state.fields.facilities}
           updateInputValue={this.updateInputValue}
         />
+        Available Dates
+        <Row>
+          <FormItem
+            name={'availableFrom'}
+            label={'Available From'}
+            type={'date'}
+            s={6}
+            value={this.state.fields['availableFrom']}
+            updateInputValue={this.updateInputValue}
+          />
+          <FormItem
+            name={'availableTo'}
+            label={'Available To'}
+            type={'date'}
+            s={6}
+            value={this.state.fields['availableTo']}
+            updateInputValue={this.updateInputValue}
+          />
+        </Row>
         <Button
           className="btn waves-effect waves-light"
           type="submit"

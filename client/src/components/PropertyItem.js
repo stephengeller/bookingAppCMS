@@ -57,6 +57,14 @@ class PropertyItem extends Component {
           <div className="property-line-title">Location: </div>
           {property.address}
         </div>
+        <div className="property-line">
+          <div className="property-line-title">Available From: </div>
+          {property.availableFrom}
+        </div>
+        <div className="property-line">
+          <div className="property-line-title">Available To: </div>
+          {property.availableTo}
+        </div>
         <div className="container">
           <span className="right-align">
             <button
