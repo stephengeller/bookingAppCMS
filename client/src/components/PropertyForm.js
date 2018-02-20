@@ -74,10 +74,11 @@ class PropertyForm extends Component {
       const lngLat = await this.mapsAPI.getPostcodeResults(
         this.state.fields.postcode
       );
+      const { title, description } = this.state.fields;
 
       const fields = {
-        title: this.state.fields.title,
-        description: this.state.fields.description,
+        title,
+        description,
         location: {
           lat: lngLat.latitude,
           lon: lngLat.longitude
@@ -175,6 +176,23 @@ class PropertyForm extends Component {
           name={'postcode'}
           label={'Post Code'}
           value={this.state.fields['postcode']}
+          updateInputValue={this.updateInputValue}
+        />
+        Available Dates
+        <FormItem
+          name={'availableFrom'}
+          label={'Available From'}
+          type={'date'}
+          hardLabel={true}
+          value={this.state.fields['availableFrom']}
+          updateInputValue={this.updateInputValue}
+        />
+        <FormItem
+          name={'availableTo'}
+          label={'Available To'}
+          type={'date'}
+          hardLabel={true}
+          value={this.state.fields['availableTo']}
           updateInputValue={this.updateInputValue}
         />
         <Button
