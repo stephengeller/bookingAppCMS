@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Button, Icon } from 'react-materialize';
 
 import ArrayFormatter from '../modules/ArrayFormatter';
+import GoogleMapsAPI from '../modules/GoogleMapsAPI';
 import axios from '../modules/axios';
 import FormItem from './FormItem';
-import GoogleMapsAPI from './GoogleMapsAPI';
 
 class PropertyForm extends Component {
   constructor(props) {
