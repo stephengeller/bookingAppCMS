@@ -20,7 +20,9 @@ class PropertyForm extends Component {
       'addressLine1',
       'addressLine2',
       'city',
-      'postcode'
+      'postcode',
+      'availableFrom',
+      'availableTo'
     ];
     this.requiredFields = [
       'title',
@@ -28,7 +30,9 @@ class PropertyForm extends Component {
       'facilities',
       'addressLine1',
       'city',
-      'postcode'
+      'postcode',
+      'availableFrom',
+      'availableTo'
     ];
 
     this.state = {
@@ -67,30 +71,32 @@ class PropertyForm extends Component {
     return true;
   }
 
+  async setUpFieldsObject(fields) {
+    const lngLat = await this.mapsAPI.getPostcodeResults(
+      this.state.fields.postcode
+    );
+    console.log(fields);
+    const { title, description } = fields;
+    return {
+      title,
+      description,
+      location: {
+        lat: lngLat.latitude,
+        lon: lngLat.longitude
+      },
+      facilities: this.arrayFormatter.formatItemStringToArray(
+        fields.facilities.toString()
+      ),
+      address: await this.arrayFormatter.convertAddressToArray(fields),
+      ownerId: 'testOwnerId'
+    };
+  }
+
   async addProperty() {
     if (this.allFieldsAreCompleted()) {
       console.log('No empty fields, making axios call to add property');
 
-      const lngLat = await this.mapsAPI.getPostcodeResults(
-        this.state.fields.postcode
-      );
-      const { title, description } = this.state.fields;
-
-      const fields = {
-        title,
-        description,
-        location: {
-          lat: lngLat.latitude,
-          lon: lngLat.longitude
-        },
-        facilities: this.arrayFormatter.formatItemStringToArray(
-          this.state.fields.facilities.toString()
-        ),
-        address: await this.arrayFormatter.convertAddressToArray(
-          this.state.fields
-        ),
-        ownerId: 'testOwnerId'
-      };
+      const fields = await this.setUpFieldsObject(this.state.fields);
 
       axios
         .post('/properties/', fields)
