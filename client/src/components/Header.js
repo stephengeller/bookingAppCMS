@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Navbar, NavItem } from 'react-materialize';
+import { Link } from 'react-router-dom';
 
 class Header extends Component {
   constructor(props) {
@@ -15,18 +16,21 @@ class Header extends Component {
       case false:
         return [
           <li className="nav-dropdown" key="1">
-            <a href="/login">Login</a>
+            <Link to="/login">Login</Link>
           </li>
         ];
       default:
         return [
-          <NavItem key="1">
-            <a href="/properties/add">Add Property</a>
+          <NavItem key="1" href="/">
+            Home
           </NavItem>,
-          <NavItem key="2">
-            <a href="/properties">Manage</a>
+          <NavItem key="2" href="/properties/add">
+            Add Property
           </NavItem>,
-          <span key="3" style={{ margin: '0 10px' }}>
+          <NavItem key="3" href="/properties">
+            Manage
+          </NavItem>,
+          <span key="4" style={{ margin: '0 10px' }}>
             Welcome {this.state.user}
           </span>
         ];

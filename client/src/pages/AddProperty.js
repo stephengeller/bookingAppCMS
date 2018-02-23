@@ -14,6 +14,7 @@ class AddProperty extends Component {
     return (
       <div className="">
         <h2 className="center">Add Property</h2>
+        <br />
         <PropertyForm />
       </div>
     );

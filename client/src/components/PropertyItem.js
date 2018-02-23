@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import { Card } from 'react-materialize';
 
-import PropertyItemEditor from './PropertyItemEditor';
+import PropertyLine from './PropertyLine';
+import DeletePropertyButton from './buttons/DeletePropertyButton';
+import EditPropertyButton from './buttons/EditPropertyButton';
 import GoogleMapsAPI from '../modules/GoogleMapsAPI';
 
 class PropertyItem extends Component {
@@ -39,48 +42,24 @@ class PropertyItem extends Component {
   render() {
     const { property } = this.state;
     return (
-      <section className="property-item center-align ">
-        <h4 className="property-line-title">{property.title}</h4>
-        <h6 className="property-line">
-          <div className="property-line-title">Description: </div>
-          {property.description}
-        </h6>
-        <div className="property-line">
-          <div className="property-line-title">Facilities: </div>
-          {property.facilities}
-        </div>
-        <div className="property-line">
-          <div className="property-line-title">Location: </div>
-          {property.address}
-        </div>
+      <Card
+        className="property-item center-align"
+        title={property.title}
+        waves="light"
+      >
+        <PropertyLine label={'Description'} field={property.description} />
+        <PropertyLine label={'Facilities'} field={property.facilities} />
+        <PropertyLine label={'Location'} field={property.address} />
         <div className="container">
-          <span className="right-align">
-            <button
-              className="btn waves-effect waves-light red accent-4"
-              onClick={() => this.props.deleteProperty(property)}
-            >
-              Delete Property
-            </button>
-          </span>
-          <span className="left-align">
-            <button
-              className="btn waves-effect waves-light blue accent-2"
-              onClick={() => this.toggleEditor(property)}
-            >
-              {this.state.showPropertyEditor
-                ? 'Hide Property Editor'
-                : 'Edit Property'}
-            </button>
-            {this.state.showPropertyEditor ? (
-              <PropertyItemEditor
-                property={property}
-                hideEditor={this.hideEditor}
-              />
-            ) : null}
-          </span>
+          <EditPropertyButton property={property} />
+          <br />
+          <DeletePropertyButton
+            property={property}
+            deleteProperty={this.props.deleteProperty}
+          />
         </div>
         <br />
-      </section>
+      </Card>
     );
   }
 }

@@ -15,6 +15,9 @@ client/src/dev.js
 # testing
 /coverage
 
+# dev
+client/src/dev.js
+
 # production
 /build
 

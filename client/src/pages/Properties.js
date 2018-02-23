@@ -11,7 +11,12 @@ class Properties extends Component {
   }
 
   render() {
-    return <PropertyManager />;
+    return (
+      <div>
+        <h2 className="center-align">Properties</h2>
+        <PropertyManager />
+      </div>
+    );
   }
 }
 

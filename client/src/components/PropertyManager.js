@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Preloader } from 'react-materialize';
+
 import PropertyItem from '../components/PropertyItem';
 import axios from '../modules/axios';
 
@@ -7,8 +9,10 @@ class ApiPropertyManager extends Component {
     super(props);
     this.state = {
       user: 'Stephen',
-      properties: []
+      properties: [],
+      error: ''
     };
+    this.loaded = false;
     this.deleteProperty = this.deleteProperty.bind(this);
     this.getProperties = this.getProperties.bind(this);
   }
@@ -33,11 +37,18 @@ class ApiPropertyManager extends Component {
       .get('/properties/search')
       .then(response => {
         const properties = response.data;
+        this.loaded = true;
         this.setState({ properties });
         return properties;
       })
-      .catch(function(error) {
+      .catch(error => {
         console.log(error);
+        this.loaded = true;
+        const errorMessage = {
+          message: error.toString(),
+          style: { color: 'red' }
+        };
+        this.setState({ error: errorMessage });
       });
   }
 
@@ -49,16 +60,24 @@ class ApiPropertyManager extends Component {
     let properties = this.state.properties;
     return (
       <div className="container">
-        <h2 className="center-align">Properties</h2>
-        {properties.map(property => {
-          return (
-            <PropertyItem
-              property={property}
-              key={property.id}
-              deleteProperty={this.deleteProperty}
-            />
-          );
-        })}
+        <div className="error" style={this.state.error.style} id="error">
+          {this.state.error.message}
+        </div>
+        {this.loaded === false ? (
+          <div className="center-align">
+            <Preloader flashing />
+          </div>
+        ) : (
+          properties.map(property => {
+            return (
+              <PropertyItem
+                property={property}
+                key={property.id}
+                deleteProperty={this.deleteProperty}
+              />
+            );
+          })
+        )}
       </div>
     );
   }

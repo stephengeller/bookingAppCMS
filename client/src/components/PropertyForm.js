@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { Button, Icon } from 'react-materialize';
+import { Row } from 'react-materialize';
 
-import ArrayFormatter from '../modules/ArrayFormatter';
+import Formatter from '../modules/Formatter';
+import ErrorHandler from '../modules/ErrorHandler';
 import GoogleMapsAPI from '../modules/GoogleMapsAPI';
 import axios from '../modules/axios';
+import AddPropertyButton from './buttons/AddPropertyButton';
 import FormItem from './FormItem';
 
 class PropertyForm extends Component {
@@ -11,7 +13,8 @@ class PropertyForm extends Component {
     super(props);
     this.addProperty = this.addProperty.bind(this);
     this.updateInputValue = this.updateInputValue.bind(this);
-    this.arrayFormatter = new ArrayFormatter();
+    this.formatter = new Formatter();
+    this.errorHandler = new ErrorHandler();
     this.mapsAPI = new GoogleMapsAPI();
     this.allFields = [
       'title',
@@ -20,7 +23,9 @@ class PropertyForm extends Component {
       'addressLine1',
       'addressLine2',
       'city',
-      'postcode'
+      'postcode',
+
+      'bookingEmail'
     ];
     this.requiredFields = [
       'title',
@@ -28,7 +33,9 @@ class PropertyForm extends Component {
       'facilities',
       'addressLine1',
       'city',
-      'postcode'
+      'postcode',
+
+      'bookingEmail'
     ];
 
     this.state = {
@@ -39,62 +46,42 @@ class PropertyForm extends Component {
     };
   }
 
-  emptyBoxErrorHandler(fieldNames) {
-    const missingFields = [];
-
-    fieldNames.forEach(field => {
-      if (!this.state.fields[field]) {
-        console.log('missing:', field);
-        missingFields.push(field);
-      }
-    });
-
-    const messageString =
-      'The following fields are required: ' + missingFields.join(', ');
+  async setUpFieldsObject(fields) {
+    const lngLat = await this.mapsAPI.getPostcodeResults(
+      this.state.fields.postcode
+    );
+    console.log(fields);
+    const { title, description, bookingEmail } = fields;
 
     return {
-      style: { color: 'red' },
-      message: messageString
+      title,
+      description,
+      location: {
+        lat: lngLat.latitude,
+        lon: lngLat.longitude
+      },
+      facilities: this.formatter.formatItemStringToArray(fields.facilities),
+      address: await this.formatter.convertAddressToArray(fields),
+      ownerId: 'testOwnerId',
+      bookingEmail
     };
   }
 
-  allFieldsAreCompleted() {
-    for (let i = 0; i < this.requiredFields.length; i++) {
-      if (!this.state.fields[this.requiredFields[i]]) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   async addProperty() {
-    if (this.allFieldsAreCompleted()) {
+    if (
+      this.errorHandler.allFieldsAreCompleted(
+        this.requiredFields,
+        this.state.fields
+      )
+    ) {
       console.log('No empty fields, making axios call to add property');
 
-      const lngLat = await this.mapsAPI.getPostcodeResults(
-        this.state.fields.postcode
-      );
-      const { title, description } = this.state.fields;
-
-      const fields = {
-        title,
-        description,
-        location: {
-          lat: lngLat.latitude,
-          lon: lngLat.longitude
-        },
-        facilities: this.arrayFormatter.formatItemStringToArray(
-          this.state.fields.facilities.toString()
-        ),
-        address: await this.arrayFormatter.convertAddressToArray(
-          this.state.fields
-        ),
-        ownerId: 'testOwnerId'
-      };
+      const fields = await this.setUpFieldsObject(this.state.fields);
 
       axios
         .post('/properties/', fields)
         .then(() => {
+          console.log(fields, 'was posted to axios');
           const error = {
             message: `Property "${fields.title}" successfully added`,
             style: { color: 'green' }
@@ -113,7 +100,10 @@ class PropertyForm extends Component {
           this.setState({ error: errorMessage });
         });
     } else {
-      const error = this.emptyBoxErrorHandler(this.requiredFields);
+      const error = this.errorHandler.emptyBoxErrorHandler(
+        this.requiredFields,
+        this.state
+      );
       this.setState({ error });
     }
   }
@@ -133,7 +123,9 @@ class PropertyForm extends Component {
         <div className="error" style={this.state.error.style} id="error">
           {this.state.error.message}
         </div>
-        Details
+        <h5 className="center-align">
+          <strong>Details</strong>
+        </h5>
         <FormItem
           name={'title'}
           label={'Title'}
@@ -142,6 +134,7 @@ class PropertyForm extends Component {
         />
         <FormItem
           name={'description'}
+          type={'textarea'}
           label={'Property Description'}
           value={this.state.fields.description}
           updateInputValue={this.updateInputValue}
@@ -152,8 +145,17 @@ class PropertyForm extends Component {
           value={this.state.fields.facilities}
           updateInputValue={this.updateInputValue}
         />
+        <FormItem
+          name={'bookingEmail'}
+          label={'Booking Email'}
+          type={'email'}
+          value={this.state.fields.bookingEmail}
+          updateInputValue={this.updateInputValue}
+        />
         <br />
-        Address
+        <h5 className="center-align">
+          <strong>Address</strong>
+        </h5>
         <FormItem
           name={'addressLine1'}
           label={'Address Line 1'}
@@ -179,32 +181,30 @@ class PropertyForm extends Component {
           updateInputValue={this.updateInputValue}
         />
         <br />
-        Available Dates
-        <FormItem
-          name={'availableFrom'}
-          label={'Available From'}
-          type={'date'}
-          value={this.state.fields['availableFrom']}
-          updateInputValue={this.updateInputValue}
-        />
-        <FormItem
-          name={'availableTo'}
-          label={'Available To'}
-          type={'date'}
-          value={this.state.fields['availableTo']}
-          updateInputValue={this.updateInputValue}
-        />
-        <Button
-          className="btn waves-effect waves-light"
-          type="submit"
-          onClick={this.addProperty}
-        >
-          <Icon right>add</Icon>Add Property
-        </Button>
-        <br />
+        <Row>
+          <AddPropertyButton addProperty={this.addProperty} />
+          <br />
+        </Row>
       </div>
     );
   }
 }
+
+// <FormItem
+//   name={'availableTo'}
+//   label={'Available From'}
+//   type={'date'}
+//   s={6}
+//   value={this.state.fields[}
+//   updateInputValue={this.updateInputValue}
+// />
+// <FormItem
+//   name={'availableTo'}
+//   label={'Available To'}
+//   type={'date'}
+//   s={6}
+//   value={this.state.fields['availableTo']}
+//   updateInputValue={this.updateInputValue}
+// />
 
 export default PropertyForm;
