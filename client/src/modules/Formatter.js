@@ -1,4 +1,4 @@
-class ArrayFormatter {
+class Formatter {
   formatItemStringToArray(string) {
     return string.split(' ');
   }
@@ -27,4 +27,4 @@ class ArrayFormatter {
   }
 }
 
-export default ArrayFormatter;
+export default Formatter;
