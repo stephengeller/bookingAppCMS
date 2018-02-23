@@ -26,6 +26,14 @@ class ErrorHandler {
     }
     return true;
   }
+
+  createErrorMessage(message, boolean) {
+    const color = boolean ? 'green' : 'red';
+    return {
+      message,
+      style: { color }
+    };
+  }
 }
 
 export default ErrorHandler;

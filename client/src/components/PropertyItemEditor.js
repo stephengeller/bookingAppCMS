@@ -7,6 +7,7 @@ import { DateRangePicker } from 'react-dates';
 
 import DateRangeArrayMaker from '../modules/DateRangeArrayMaker';
 import Formatter from '../modules/Formatter';
+import ErrorHandler from '../modules/ErrorHandler';
 import axios from '../modules/axios';
 import FormItem from './FormItem';
 
@@ -16,9 +17,11 @@ class PropertyItemEditor extends Component {
     this.updateProperty = this.updateProperty.bind(this);
     this.updateInputValue = this.updateInputValue.bind(this);
     this.dateRangeArrayMaker = new DateRangeArrayMaker();
+    this.errorHandler = new ErrorHandler();
     this.formatter = new Formatter();
     this.state = {
-      fields: {}
+      fields: {},
+      error: ''
     };
     this.url = `/properties/${this.props.id}`;
   }
@@ -46,10 +49,14 @@ class PropertyItemEditor extends Component {
     axios
       .put(this.url, fields)
       .then(response => {
-        console.log('successfully updated!');
+        const message = 'successfully updated!';
+        console.log(message);
+        this.setState({ error: message });
       })
       .catch(function(error) {
-        console.log('Error updating property: ', error);
+        const message = ('Error updating property: ', error);
+        console.log(message);
+        this.setState({ error: message });
       });
   }
 
@@ -63,12 +70,20 @@ class PropertyItemEditor extends Component {
       axios
         .post(url, array)
         .then(response => {
-          console.log('successfully updated AVAILABILITY');
-          console.log(response);
+          const message = 'successfully updated AVAILABILITY';
+          console.log(message, response);
+          const error = this.errorHandler.createErrorMessage(message, true);
+          this.setState({ error });
         })
-        .catch(error => {
-          console.log('error updating AVAILABILITY: ', error);
+        .catch(errorResponse => {
+          const message = 'error updating AVAILABILITY: ' + errorResponse;
+          const error = this.errorHandler.createErrorMessage(message, false);
+          this.setState({ error });
         });
+    } else {
+      const message = 'fill in the date fields!';
+      const error = this.errorHandler.createErrorMessage(message, false);
+      this.setState({ error });
     }
   }
 
@@ -85,7 +100,9 @@ class PropertyItemEditor extends Component {
     return (
       <div className="container">
         <h2 className="center-align"> {this.state.fields.title} </h2>
-        <div id="error" />
+        <div className="error" style={this.state.error.style} id="error">
+          {this.state.error.message}
+        </div>
         <br />
         Title
         <FormItem
