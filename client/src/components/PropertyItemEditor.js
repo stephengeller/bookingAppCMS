@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Icon, Row } from 'react-materialize';
+import { Button, Icon } from 'react-materialize';
+
+import Formatter from '../modules/Formatter';
 import axios from '../modules/axios';
 import FormItem from './FormItem';
 
@@ -8,6 +10,7 @@ class PropertyItemEditor extends Component {
     super(props);
     this.updateProperty = this.updateProperty.bind(this);
     this.updateInputValue = this.updateInputValue.bind(this);
+    this.formatter = new Formatter();
     this.state = {
       fields: {}
     };
@@ -32,6 +35,9 @@ class PropertyItemEditor extends Component {
 
   updateProperty() {
     const { fields, property } = this.state;
+    fields.facilities = this.formatter.formatItemStringToArray(
+      fields.facilities
+    );
     const url = `/properties/${property.id}`;
     axios
       .put(url, fields)
@@ -76,30 +82,9 @@ class PropertyItemEditor extends Component {
         Facilities
         <FormItem
           name={'facilities'}
-          type={'text'}
-          placeholder={'facilities'}
           value={this.state.fields.facilities}
           updateInputValue={this.updateInputValue}
         />
-        Available Dates
-        <Row>
-          <FormItem
-            name={'availableFrom'}
-            label={'Available From'}
-            type={'date'}
-            s={6}
-            value={this.state.fields['availableFrom']}
-            updateInputValue={this.updateInputValue}
-          />
-          <FormItem
-            name={'availableTo'}
-            label={'Available To'}
-            type={'date'}
-            s={6}
-            value={this.state.fields['availableTo']}
-            updateInputValue={this.updateInputValue}
-          />
-        </Row>
         <Button
           className="btn waves-effect waves-light"
           type="submit"
