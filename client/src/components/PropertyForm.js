@@ -11,7 +11,7 @@ class PropertyForm extends Component {
     super(props);
     this.addProperty = this.addProperty.bind(this);
     this.updateInputValue = this.updateInputValue.bind(this);
-    this.arrayFormatter = new Formatter();
+    this.Formatter = new Formatter();
     this.mapsAPI = new GoogleMapsAPI();
     this.allFields = [
       'title',
@@ -95,10 +95,10 @@ class PropertyForm extends Component {
         lat: lngLat.latitude,
         lon: lngLat.longitude
       },
-      facilities: this.arrayFormatter.formatItemStringToArray(
+      facilities: this.Formatter.formatItemStringToArray(
         fields.facilities.toString()
       ),
-      address: await this.arrayFormatter.convertAddressToArray(fields),
+      address: await this.Formatter.convertAddressToArray(fields),
       ownerId: 'testOwnerId',
       bookingEmail
     };

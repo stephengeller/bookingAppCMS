@@ -1,8 +1,10 @@
-import React, { Component } from "react";
-import { Card } from "react-materialize";
+import React, { Component } from 'react';
+import { Card } from 'react-materialize';
 
-import PropertyItemEditor from "./PropertyItemEditor";
-import GoogleMapsAPI from "../modules/GoogleMapsAPI";
+import PropertyLine from './PropertyLine';
+import DeletePropertyButton from './buttons/DeletePropertyButton';
+import EditPropertyButton from './buttons/EditPropertyButton';
+import GoogleMapsAPI from '../modules/GoogleMapsAPI';
 
 class PropertyItem extends Component {
   constructor(props) {
@@ -12,7 +14,7 @@ class PropertyItem extends Component {
     this.state = {
       showPropertyEditor: false,
       property: {
-        location: ""
+        location: ''
       }
     };
     this.mapsAPI = new GoogleMapsAPI();
@@ -30,7 +32,7 @@ class PropertyItem extends Component {
   componentWillMount() {
     const property = this.props.property;
     if (property.address) {
-      property.address = property.address.join(", ");
+      property.address = property.address.join(', ');
     } else if (property.location) {
       property.address = `${property.location.lat}, ${property.location.lon}`;
     }
@@ -45,51 +47,17 @@ class PropertyItem extends Component {
         title={property.title}
         waves="light"
       >
-        <h6 className="property-line">
-          <div className="property-line-title">Description: </div>
-          {property.description}
-        </h6>
-        <div className="property-line">
-          <div className="property-line-title">Facilities: </div>
-          {property.facilities}
-        </div>
-        <div className="property-line">
-          <div className="property-line-title">Location: </div>
-          {property.address}
-        </div>
-        <div className="property-line">
-          <div className="property-line-title">Available From: </div>
-          {property.availableFrom}
-        </div>
-          <div className="property-line">
-          <div className="property-line-title">Available To: </div>
-          {property.availableTo}
-        </div>
-         <div className="container">
-          <span className="right-align">
-            <button
-              className="btn waves-effect waves-light red accent-4"
-              onClick={() => this.props.deleteProperty(property)}
-            >
-              Delete Property
-            </button>
-          </span>
-          <span className="left-align">
-            <button
-              className="btn waves-effect waves-light blue accent-2"
-              onClick={() => this.toggleEditor(property)}
-            >
-              {this.state.showPropertyEditor
-                ? "Hide Property Editor"
-                : "Edit Property"}
-            </button>
-            {this.state.showPropertyEditor ? (
-              <PropertyItemEditor
-                property={property}
-                hideEditor={this.hideEditor}
-              />
-            ) : null}
-          </span>
+        <PropertyLine label={'Description'} field={property.description} />
+        <PropertyLine label={'Facilities'} field={property.facilities} />
+        <PropertyLine label={'Location'} field={property.address} />
+        <PropertyLine label={'Available From'} field={property.availableFrom} />
+        <PropertyLine label={'Available To'} field={property.availableTo} />
+        <div className="container">
+          <DeletePropertyButton
+            property={property}
+            deleteProperty={this.props.deleteProperty}
+          />
+          <EditPropertyButton property={property} />
         </div>
         <br />
       </Card>
