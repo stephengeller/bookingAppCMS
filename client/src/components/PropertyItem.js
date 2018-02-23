@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { Card } from 'react-materialize';
+import React, { Component } from "react";
+import { Card } from "react-materialize";
 
-import PropertyItemEditor from './PropertyItemEditor';
-import GoogleMapsAPI from '../modules/GoogleMapsAPI';
+import PropertyItemEditor from "./PropertyItemEditor";
+import GoogleMapsAPI from "../modules/GoogleMapsAPI";
 
 class PropertyItem extends Component {
   constructor(props) {
@@ -12,7 +12,7 @@ class PropertyItem extends Component {
     this.state = {
       showPropertyEditor: false,
       property: {
-        location: ''
+        location: ""
       }
     };
     this.mapsAPI = new GoogleMapsAPI();
@@ -30,7 +30,7 @@ class PropertyItem extends Component {
   componentWillMount() {
     const property = this.props.property;
     if (property.address) {
-      property.address = property.address.join(', ');
+      property.address = property.address.join(", ");
     } else if (property.location) {
       property.address = `${property.location.lat}, ${property.location.lon}`;
     }
@@ -61,11 +61,11 @@ class PropertyItem extends Component {
           <div className="property-line-title">Available From: </div>
           {property.availableFrom}
         </div>
-        <div className="property-line">
+          <div className="property-line">
           <div className="property-line-title">Available To: </div>
           {property.availableTo}
         </div>
-        <div className="container">
+         <div className="container">
           <span className="right-align">
             <button
               className="btn waves-effect waves-light red accent-4"
@@ -80,8 +80,8 @@ class PropertyItem extends Component {
               onClick={() => this.toggleEditor(property)}
             >
               {this.state.showPropertyEditor
-                ? 'Hide Property Editor'
-                : 'Edit Property'}
+                ? "Hide Property Editor"
+                : "Edit Property"}
             </button>
             {this.state.showPropertyEditor ? (
               <PropertyItemEditor

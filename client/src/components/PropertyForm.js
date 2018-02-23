@@ -22,7 +22,8 @@ class PropertyForm extends Component {
       'city',
       'postcode',
       'availableFrom',
-      'availableTo'
+      'availableTo',
+      'bookingEmail'
     ];
     this.requiredFields = [
       'title',
@@ -32,7 +33,8 @@ class PropertyForm extends Component {
       'city',
       'postcode',
       'availableFrom',
-      'availableTo'
+      'availableTo',
+      'bookingEmail'
     ];
 
     this.state = {
@@ -62,6 +64,18 @@ class PropertyForm extends Component {
     };
   }
 
+  formatDate(date) {
+    var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+  }
+
   allFieldsAreCompleted() {
     for (let i = 0; i < this.requiredFields.length; i++) {
       if (!this.state.fields[this.requiredFields[i]]) {
@@ -76,12 +90,19 @@ class PropertyForm extends Component {
       this.state.fields.postcode
     );
     console.log(fields);
-    const { title, description, availableFrom, availableTo } = fields;
-    return {
+    const {
       title,
       description,
       availableFrom,
       availableTo,
+      bookingEmail
+    } = fields;
+
+    return {
+      title,
+      description,
+      availableFrom: this.formatDate(availableFrom),
+      availableTo: this.formatDate(availableTo),
       location: {
         lat: lngLat.latitude,
         lon: lngLat.longitude
@@ -90,7 +111,8 @@ class PropertyForm extends Component {
         fields.facilities.toString()
       ),
       address: await this.arrayFormatter.convertAddressToArray(fields),
-      ownerId: 'testOwnerId'
+      ownerId: 'testOwnerId',
+      bookingEmail
     };
   }
 
@@ -103,6 +125,7 @@ class PropertyForm extends Component {
       axios
         .post('/properties/', fields)
         .then(() => {
+          console.log(fields, 'was posted to axios');
           const error = {
             message: `Property "${fields.title}" successfully added`,
             style: { color: 'green' }
@@ -159,6 +182,13 @@ class PropertyForm extends Component {
           name={'facilities'}
           label={'Facilities (separated by spaces)'}
           value={this.state.fields.facilities}
+          updateInputValue={this.updateInputValue}
+        />
+        <FormItem
+          name={'bookingEmail'}
+          label={'Booking Email'}
+          type={'email'}
+          value={this.state.fields.bookingEmail}
           updateInputValue={this.updateInputValue}
         />
         <br />
