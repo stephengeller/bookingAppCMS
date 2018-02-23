@@ -9,6 +9,8 @@ client/node_modules
 /.idea/*
 *.xml
 
+# Private
+client/src/dev.js
 
 # testing
 /coverage
