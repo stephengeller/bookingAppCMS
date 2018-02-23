@@ -47,6 +47,8 @@ class PropertyItem extends Component {
         title={property.title}
         waves="light"
       >
+        <div className="divider" />
+        <br />
         <PropertyLine label={'Description'} field={property.description} />
         <PropertyLine
           label={'Facilities'}

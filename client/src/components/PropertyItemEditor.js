@@ -47,7 +47,7 @@ class PropertyItemEditor extends Component {
   }
 
   updateProperty() {
-    const { fields, property } = this.state;
+    const { fields } = this.state;
     fields.facilities = this.formatter.formatItemStringToArray(
       fields.facilities
     );
@@ -135,6 +135,9 @@ class PropertyItemEditor extends Component {
         Available Dates
         <br />
         <DateRangePicker
+          noBorder
+          showClearDates
+          showDefaultInputIcon
           startDate={this.state.startDate}
           startDateId="your_unique_start_date_id"
           endDate={this.state.endDate}
@@ -146,23 +149,25 @@ class PropertyItemEditor extends Component {
           onFocusChange={focusedInput => {
             this.setState({ focusedInput });
           }}
-          noBorder
         />
         <br />
-        <Button
-          onClick={() => {
-            this.updateAvailability(this.state.startDate, this.state.endDate);
-          }}
-        >
-          Update Availability
-        </Button>
-        <Button
-          className="btn waves-effect waves-light"
-          type="submit"
-          onClick={this.updateProperty}
-        >
-          <Icon right>add</Icon>Update Property
-        </Button>
+        <div>
+          <Button
+            onClick={() => {
+              this.updateAvailability(this.state.startDate, this.state.endDate);
+            }}
+          >
+            <Icon left>date_range</Icon>
+            Update Availability
+          </Button>
+          <Button
+            className="btn waves-effect waves-light"
+            type="submit"
+            onClick={this.updateProperty}
+          >
+            <Icon right>edit</Icon>Update Property
+          </Button>
+        </div>
         <br />
       </div>
     );

@@ -194,21 +194,4 @@ class PropertyForm extends Component {
   }
 }
 
-// <FormItem
-//   name={'availableTo'}
-//   label={'Available From'}
-//   type={'date'}
-//   s={6}
-//   value={this.state.fields[}
-//   updateInputValue={this.updateInputValue}
-// />
-// <FormItem
-//   name={'availableTo'}
-//   label={'Available To'}
-//   type={'date'}
-//   s={6}
-//   value={this.state.fields['availableTo']}
-//   updateInputValue={this.updateInputValue}
-// />
-
 export default PropertyForm;
