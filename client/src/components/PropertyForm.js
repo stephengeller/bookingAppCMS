@@ -24,8 +24,7 @@ class PropertyForm extends Component {
       'addressLine2',
       'city',
       'postcode',
-      'availableFrom',
-      'availableTo',
+
       'bookingEmail'
     ];
     this.requiredFields = [
@@ -35,8 +34,7 @@ class PropertyForm extends Component {
       'addressLine1',
       'city',
       'postcode',
-      'availableFrom',
-      'availableTo',
+
       'bookingEmail'
     ];
 
@@ -53,26 +51,16 @@ class PropertyForm extends Component {
       this.state.fields.postcode
     );
     console.log(fields);
-    const {
-      title,
-      description,
-      availableFrom,
-      availableTo,
-      bookingEmail
-    } = fields;
+    const { title, description, bookingEmail } = fields;
 
     return {
       title,
       description,
-      availableFrom: this.formatter.formatDate(availableFrom),
-      availableTo: this.formatter.formatDate(availableTo),
       location: {
         lat: lngLat.latitude,
         lon: lngLat.longitude
       },
-      facilities: this.formatter.formatItemStringToArray(
-        fields.facilities.toString()
-      ),
+      facilities: this.formatter.formatItemStringToArray(fields.facilities),
       address: await this.formatter.convertAddressToArray(fields),
       ownerId: 'testOwnerId',
       bookingEmail
@@ -135,7 +123,9 @@ class PropertyForm extends Component {
         <div className="error" style={this.state.error.style} id="error">
           {this.state.error.message}
         </div>
-        Details
+        <h5 className="center-align">
+          <strong>Details</strong>
+        </h5>
         <FormItem
           name={'title'}
           label={'Title'}
@@ -163,7 +153,9 @@ class PropertyForm extends Component {
           updateInputValue={this.updateInputValue}
         />
         <br />
-        Address
+        <h5 className="center-align">
+          <strong>Address</strong>
+        </h5>
         <FormItem
           name={'addressLine1'}
           label={'Address Line 1'}
@@ -189,24 +181,7 @@ class PropertyForm extends Component {
           updateInputValue={this.updateInputValue}
         />
         <br />
-        Available Dates
         <Row>
-          <FormItem
-            name={'availableFrom'}
-            label={'Available From'}
-            type={'date'}
-            s={6}
-            value={this.state.fields['availableFrom']}
-            updateInputValue={this.updateInputValue}
-          />
-          <FormItem
-            name={'availableTo'}
-            label={'Available To'}
-            type={'date'}
-            s={6}
-            value={this.state.fields['availableTo']}
-            updateInputValue={this.updateInputValue}
-          />
           <AddPropertyButton addProperty={this.addProperty} />
           <br />
         </Row>
@@ -214,5 +189,22 @@ class PropertyForm extends Component {
     );
   }
 }
+
+// <FormItem
+//   name={'availableTo'}
+//   label={'Available From'}
+//   type={'date'}
+//   s={6}
+//   value={this.state.fields[}
+//   updateInputValue={this.updateInputValue}
+// />
+// <FormItem
+//   name={'availableTo'}
+//   label={'Available To'}
+//   type={'date'}
+//   s={6}
+//   value={this.state.fields['availableTo']}
+//   updateInputValue={this.updateInputValue}
+// />
 
 export default PropertyForm;

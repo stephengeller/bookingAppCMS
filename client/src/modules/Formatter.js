@@ -1,6 +1,6 @@
 class Formatter {
   formatItemStringToArray(string) {
-    return string.split(' ');
+    return string.toString().split(' ');
   }
 
   convertAddressToArray(propertyObject) {

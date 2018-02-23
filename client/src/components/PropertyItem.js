@@ -50,14 +50,13 @@ class PropertyItem extends Component {
         <PropertyLine label={'Description'} field={property.description} />
         <PropertyLine label={'Facilities'} field={property.facilities} />
         <PropertyLine label={'Location'} field={property.address} />
-        <PropertyLine label={'Available From'} field={property.availableFrom} />
-        <PropertyLine label={'Available To'} field={property.availableTo} />
         <div className="container">
+          <EditPropertyButton property={property} />
+          <br />
           <DeletePropertyButton
             property={property}
             deleteProperty={this.props.deleteProperty}
           />
-          <EditPropertyButton property={property} />
         </div>
         <br />
       </Card>
