@@ -50,7 +50,6 @@ class PropertyForm extends Component {
     const lngLat = await this.mapsAPI.getPostcodeResults(
       this.state.fields.postcode
     );
-    console.log(fields);
     const { title, description, bookingEmail } = fields;
 
     return {
@@ -67,6 +66,11 @@ class PropertyForm extends Component {
     };
   }
 
+  cleanFields(fieldsToClean, currentFieldsState) {
+    fieldsToClean.map(fieldName => (currentFieldsState[fieldName] = ''));
+    return currentFieldsState;
+  }
+
   async addProperty() {
     if (
       this.errorHandler.allFieldsAreCompleted(
@@ -74,8 +78,6 @@ class PropertyForm extends Component {
         this.state.fields
       )
     ) {
-      console.log('No empty fields, making axios call to add property');
-
       const fields = await this.setUpFieldsObject(this.state.fields);
 
       axios
@@ -86,13 +88,14 @@ class PropertyForm extends Component {
             message: `Property "${fields.title}" successfully added`,
             style: { color: 'green' }
           };
-          const currentFieldsState = this.state.fields;
-          this.allFields.map(fieldName => (currentFieldsState[fieldName] = ''));
+          const currentFieldsState = this.cleanFields(
+            this.allFields,
+            this.state.fields
+          );
           this.setState({ fields: currentFieldsState, error });
         })
         .catch(error => {
-          console.log(error);
-          console.log(fields);
+          console.log(error, fields);
           const errorMessage = {
             message: error.toString(),
             style: { color: 'red' }

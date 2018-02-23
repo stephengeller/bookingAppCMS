@@ -6,18 +6,16 @@ class EditPropertyButton extends Component {
   render() {
     const { property } = this.props;
     return (
-      <div className="container">
-        <span className="left-align">
-          <Link
-            to={`/properties/edit/${property.id}`}
-            className="edit-property-button"
-          >
-            <button className="btn waves-effect waves-light blue accent-2 hoverable">
-              <Icon right>edit</Icon>Edit Property
-            </button>
-          </Link>
-        </span>
-      </div>
+      <span className="left-align">
+        <Link
+          to={`/properties/edit/${property.id}`}
+          className="edit-property-button"
+        >
+          <button className="btn waves-effect waves-light blue accent-2 hoverable">
+            <Icon right>edit</Icon>Edit Property
+          </button>
+        </Link>
+      </span>
     );
   }
 }
