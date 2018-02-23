@@ -10,7 +10,7 @@ class DeletePropertyButton extends Component {
           <button
             className="btn waves-effect waves-light red accent-4"
             onClick={() => {
-              if (window.confirm('Delete the item?')) {
+              if (window.confirm('Delete the property?')) {
                 this.props.deleteProperty(property);
               }
             }}

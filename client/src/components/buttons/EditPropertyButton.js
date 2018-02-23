@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { Icon } from 'react-materialize';
 
 class EditPropertyButton extends Component {
   render() {
@@ -12,7 +13,7 @@ class EditPropertyButton extends Component {
             className="edit-property-button"
           >
             <button className="btn waves-effect waves-light blue accent-2">
-              Edit Property
+              <Icon right>edit</Icon>Edit Property
             </button>
           </Link>
         </span>

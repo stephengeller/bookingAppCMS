@@ -8,20 +8,35 @@ class PropertyItemEditor extends Component {
     super(props);
     this.updateProperty = this.updateProperty.bind(this);
     this.updateInputValue = this.updateInputValue.bind(this);
-    const property = this.props.property;
     this.state = {
-      fields: property
+      fields: {}
     };
   }
 
+  componentWillMount() {
+    const url = `/properties/${this.props.id}`;
+    console.log(url);
+    axios
+      .get(url)
+      .then(response => {
+        const property = response.data;
+        this.setState({
+          fields: property,
+          property
+        });
+      })
+      .catch(function(error) {
+        console.log('Error getting property: ', error);
+      });
+  }
+
   updateProperty() {
-    const { property } = this.props;
-    const { fields } = this.state;
+    const { fields, property } = this.state;
     const url = `/properties/${property.id}`;
     axios
       .put(url, fields)
       .then(response => {
-        this.props.hideEditor();
+        console.log('successfully updated!');
       })
       .catch(function(error) {
         console.log('Error updating property: ', error);
@@ -40,6 +55,7 @@ class PropertyItemEditor extends Component {
   render() {
     return (
       <div className="container">
+        <h2 className="center-align"> {this.state.fields.title} </h2>
         <br />
         Title
         <FormItem

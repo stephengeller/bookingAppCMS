@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropertyItemEditor from '../components/PropertyItemEditor';
 
 class PropertyDetails extends Component {
   constructor(props) {
@@ -10,12 +11,11 @@ class PropertyDetails extends Component {
   }
 
   render() {
-    console.log(this.props);
-    const { params } = this.props.match;
+    const { id } = this.props.match.params;
     return (
       <div className="">
-        Property Details
-        <h2 className="center">{params.id}</h2>
+        <h2 className="center-align">Property Details</h2>
+        <PropertyItemEditor id={id} />
       </div>
     );
   }
