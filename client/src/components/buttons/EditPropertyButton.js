@@ -12,7 +12,7 @@ class EditPropertyButton extends Component {
             to={`/properties/edit/${property.id}`}
             className="edit-property-button"
           >
-            <button className="btn waves-effect waves-light blue accent-2">
+            <button className="btn waves-effect waves-light blue accent-2 hoverable">
               <Icon right>edit</Icon>Edit Property
             </button>
           </Link>

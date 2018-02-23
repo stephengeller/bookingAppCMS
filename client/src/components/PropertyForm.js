@@ -123,6 +123,7 @@ class PropertyForm extends Component {
         <div className="error" style={this.state.error.style} id="error">
           {this.state.error.message}
         </div>
+        <div className="divider">divider</div>
         <h5 className="center-align">
           <strong>Details</strong>
         </h5>

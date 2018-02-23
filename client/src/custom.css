@@ -5,6 +5,7 @@
 
 .property-line {
   margin-bottom: 2%;
+  font-size: 120%;
 }
 
 .property-line-title {
@@ -19,4 +20,3 @@
 .edit-property-button {
   color: white;
 }
-

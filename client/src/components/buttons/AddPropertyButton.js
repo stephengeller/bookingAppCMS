@@ -5,7 +5,7 @@ class AddPropertyButton extends Component {
   render() {
     return (
       <Button
-        className="btn waves-effect waves-light"
+        className="btn waves-effect waves-light hoverable"
         type="submit"
         onClick={this.props.addProperty}
       >

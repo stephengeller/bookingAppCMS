@@ -43,12 +43,15 @@ class PropertyItem extends Component {
     const { property } = this.state;
     return (
       <Card
-        className="property-item center-align"
+        className="property-item center-align hoverable"
         title={property.title}
         waves="light"
       >
         <PropertyLine label={'Description'} field={property.description} />
-        <PropertyLine label={'Facilities'} field={property.facilities} />
+        <PropertyLine
+          label={'Facilities'}
+          field={property.facilities.join(', ')}
+        />
         <PropertyLine label={'Location'} field={property.address} />
         <div className="container">
           <EditPropertyButton property={property} />
