@@ -36,8 +36,13 @@ class PropertyItemEditor extends Component {
           property
         });
       })
-      .catch(function(error) {
-        console.log('Error getting property: ', error);
+      .catch(error => {
+        const messageString = 'Error getting property: ' + error;
+        const message = this.errorHandler.createErrorMessage(
+          messageString,
+          false
+        );
+        this.setState({ error: message });
       });
   }
 
@@ -70,18 +75,18 @@ class PropertyItemEditor extends Component {
       axios
         .post(url, array)
         .then(response => {
-          const message = 'successfully updated AVAILABILITY';
+          const message = 'Successfully updated availabilty';
           console.log(message, response);
           const error = this.errorHandler.createErrorMessage(message, true);
           this.setState({ error });
         })
         .catch(errorResponse => {
-          const message = 'error updating AVAILABILITY: ' + errorResponse;
+          const message = 'Error updating availabilty: ' + errorResponse;
           const error = this.errorHandler.createErrorMessage(message, false);
           this.setState({ error });
         });
     } else {
-      const message = 'fill in the date fields!';
+      const message = 'Fill in the date fields';
       const error = this.errorHandler.createErrorMessage(message, false);
       this.setState({ error });
     }
