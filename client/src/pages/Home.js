@@ -2,10 +2,6 @@ import React, { Component } from 'react';
 import { Button, Icon } from 'react-materialize';
 
 class Home extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div className="center">

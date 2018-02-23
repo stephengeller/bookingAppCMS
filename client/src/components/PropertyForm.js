@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Icon, Row } from 'react-materialize';
 
-import ArrayFormatter from '../modules/ArrayFormatter';
+import Formatter from '../modules/Formatter';
 import GoogleMapsAPI from '../modules/GoogleMapsAPI';
 import axios from '../modules/axios';
 import FormItem from './FormItem';
@@ -11,7 +11,7 @@ class PropertyForm extends Component {
     super(props);
     this.addProperty = this.addProperty.bind(this);
     this.updateInputValue = this.updateInputValue.bind(this);
-    this.arrayFormatter = new ArrayFormatter();
+    this.arrayFormatter = new Formatter();
     this.mapsAPI = new GoogleMapsAPI();
     this.allFields = [
       'title',
@@ -64,18 +64,6 @@ class PropertyForm extends Component {
     };
   }
 
-  formatDate(date) {
-    var d = new Date(date),
-      month = '' + (d.getMonth() + 1),
-      day = '' + d.getDate(),
-      year = d.getFullYear();
-
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
-
-    return [year, month, day].join('-');
-  }
-
   allFieldsAreCompleted() {
     for (let i = 0; i < this.requiredFields.length; i++) {
       if (!this.state.fields[this.requiredFields[i]]) {
@@ -101,8 +89,8 @@ class PropertyForm extends Component {
     return {
       title,
       description,
-      availableFrom: this.formatDate(availableFrom),
-      availableTo: this.formatDate(availableTo),
+      availableFrom: this.Formatter.formatDate(availableFrom),
+      availableTo: this.Formatter.formatDate(availableTo),
       location: {
         lat: lngLat.latitude,
         lon: lngLat.longitude
