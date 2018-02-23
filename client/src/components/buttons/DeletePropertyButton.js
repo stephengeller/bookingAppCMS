@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Icon } from 'react-materialize';
 
 class DeletePropertyButton extends Component {
   render() {
@@ -8,9 +9,13 @@ class DeletePropertyButton extends Component {
         <span className="right-align">
           <button
             className="btn waves-effect waves-light red accent-4"
-            onClick={() => this.props.deleteProperty(property)}
+            onClick={() => {
+              if (window.confirm('Delete the item?')) {
+                this.props.deleteProperty(property);
+              }
+            }}
           >
-            Delete Property
+            <Icon right>delete</Icon>Delete Property
           </button>
         </span>
       </div>

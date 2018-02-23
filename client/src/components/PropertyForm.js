@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { Button, Icon, Row } from 'react-materialize';
+import { Row } from 'react-materialize';
 
 import Formatter from '../modules/Formatter';
+import ErrorHandler from '../modules/ErrorHandler';
 import GoogleMapsAPI from '../modules/GoogleMapsAPI';
 import axios from '../modules/axios';
+import AddPropertyButton from './buttons/AddPropertyButton';
 import FormItem from './FormItem';
 
 class PropertyForm extends Component {
@@ -11,7 +13,8 @@ class PropertyForm extends Component {
     super(props);
     this.addProperty = this.addProperty.bind(this);
     this.updateInputValue = this.updateInputValue.bind(this);
-    this.Formatter = new Formatter();
+    this.formatter = new Formatter();
+    this.errorHandler = new ErrorHandler();
     this.mapsAPI = new GoogleMapsAPI();
     this.allFields = [
       'title',
@@ -45,34 +48,6 @@ class PropertyForm extends Component {
     };
   }
 
-  emptyBoxErrorHandler(fieldNames) {
-    const missingFields = [];
-
-    fieldNames.forEach(field => {
-      if (!this.state.fields[field]) {
-        console.log('missing:', field);
-        missingFields.push(field);
-      }
-    });
-
-    const messageString =
-      'The following fields are required: ' + missingFields.join(', ');
-
-    return {
-      style: { color: 'red' },
-      message: messageString
-    };
-  }
-
-  allFieldsAreCompleted() {
-    for (let i = 0; i < this.requiredFields.length; i++) {
-      if (!this.state.fields[this.requiredFields[i]]) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   async setUpFieldsObject(fields) {
     const lngLat = await this.mapsAPI.getPostcodeResults(
       this.state.fields.postcode
@@ -89,23 +64,28 @@ class PropertyForm extends Component {
     return {
       title,
       description,
-      availableFrom: this.Formatter.formatDate(availableFrom),
-      availableTo: this.Formatter.formatDate(availableTo),
+      availableFrom: this.formatter.formatDate(availableFrom),
+      availableTo: this.formatter.formatDate(availableTo),
       location: {
         lat: lngLat.latitude,
         lon: lngLat.longitude
       },
-      facilities: this.Formatter.formatItemStringToArray(
+      facilities: this.formatter.formatItemStringToArray(
         fields.facilities.toString()
       ),
-      address: await this.Formatter.convertAddressToArray(fields),
+      address: await this.formatter.convertAddressToArray(fields),
       ownerId: 'testOwnerId',
       bookingEmail
     };
   }
 
   async addProperty() {
-    if (this.allFieldsAreCompleted()) {
+    if (
+      this.errorHandler.allFieldsAreCompleted(
+        this.requiredFields,
+        this.state.fields
+      )
+    ) {
       console.log('No empty fields, making axios call to add property');
 
       const fields = await this.setUpFieldsObject(this.state.fields);
@@ -132,7 +112,10 @@ class PropertyForm extends Component {
           this.setState({ error: errorMessage });
         });
     } else {
-      const error = this.emptyBoxErrorHandler(this.requiredFields);
+      const error = this.errorHandler.emptyBoxErrorHandler(
+        this.requiredFields,
+        this.state
+      );
       this.setState({ error });
     }
   }
@@ -224,13 +207,7 @@ class PropertyForm extends Component {
             value={this.state.fields['availableTo']}
             updateInputValue={this.updateInputValue}
           />
-          <Button
-            className="btn waves-effect waves-light"
-            type="submit"
-            onClick={this.addProperty}
-          >
-            <Icon right>add</Icon>Add Property
-          </Button>
+          <AddPropertyButton addProperty={this.addProperty} />
           <br />
         </Row>
       </div>
