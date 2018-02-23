@@ -20,7 +20,11 @@ class App extends Component {
           <Header />
           <Route exact path="/" component={Home} />
           <Route exact path="/properties" component={Properties} />
-          <Route exact path="/properties/:id" component={PropertyDetails} />
+          <Route
+            exact
+            path="/properties/edit/:id"
+            component={PropertyDetails}
+          />
           <Route exact path="/properties/add" component={AddProperty} />
           <Route path="/logout" component={Logout} />
         </div>
