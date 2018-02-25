@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row } from 'react-materialize';
+import { Row, Preloader } from 'react-materialize';
 
 import Formatter from '../modules/Formatter';
 import ErrorHandler from '../modules/ErrorHandler';
@@ -13,6 +13,7 @@ class PropertyForm extends Component {
     super(props);
     this.addProperty = this.addProperty.bind(this);
     this.updateInputValue = this.updateInputValue.bind(this);
+    this.submissionInProgress = this.submissionInProgress.bind(this);
     this.formatter = new Formatter();
     this.errorHandler = new ErrorHandler();
     this.mapsAPI = new GoogleMapsAPI();
@@ -42,7 +43,8 @@ class PropertyForm extends Component {
       fields: {
         location: {}
       },
-      error: ''
+      error: '',
+      loading: false
     };
   }
 
@@ -71,7 +73,12 @@ class PropertyForm extends Component {
     return currentFieldsState;
   }
 
+  submissionInProgress(bool) {
+    this.setState({ loading: bool });
+  }
+
   async addProperty() {
+    this.submissionInProgress(true);
     if (
       this.errorHandler.allFieldsAreCompleted(
         this.requiredFields,
@@ -83,7 +90,6 @@ class PropertyForm extends Component {
       axios
         .post('/properties/', fields)
         .then(() => {
-          console.log(fields, 'was posted to axios');
           const error = {
             message: `Property "${fields.title}" successfully added`,
             style: { color: 'green' }
@@ -92,6 +98,7 @@ class PropertyForm extends Component {
             this.allFields,
             this.state.fields
           );
+          this.submissionInProgress(false);
           this.setState({ fields: currentFieldsState, error });
         })
         .catch(error => {
@@ -100,6 +107,7 @@ class PropertyForm extends Component {
             message: error.toString(),
             style: { color: 'red' }
           };
+          this.submissionInProgress(false);
           this.setState({ error: errorMessage });
         });
     } else {
@@ -107,6 +115,7 @@ class PropertyForm extends Component {
         this.requiredFields,
         this.state
       );
+      this.submissionInProgress(false);
       this.setState({ error });
     }
   }
@@ -145,7 +154,7 @@ class PropertyForm extends Component {
         />
         <FormItem
           name={'facilities'}
-          label={'Facilities (separated by spaces)'}
+          label={'Facilities (separated by commas)'}
           value={this.state.fields.facilities}
           updateInputValue={this.updateInputValue}
         />
@@ -185,10 +194,14 @@ class PropertyForm extends Component {
           updateInputValue={this.updateInputValue}
         />
         <br />
-        <Row>
-          <AddPropertyButton addProperty={this.addProperty} />
-          <br />
-        </Row>
+        {this.state.loading === false ? (
+          <Row>
+            <AddPropertyButton addProperty={this.addProperty} />
+            <br />
+          </Row>
+        ) : (
+          <Preloader />
+        )}
       </div>
     );
   }
