@@ -1,6 +1,11 @@
 class Formatter {
   formatItemStringToArray(string) {
-    return string.toString().split(' ');
+    return string
+      .toString()
+      .split(',')
+      .filter(element => {
+        return element.replace(/\s/g, '').length !== 0;
+      });
   }
 
   convertAddressToArray(propertyObject) {

@@ -54,7 +54,7 @@ class PropertyItemEditor extends Component {
     axios
       .put(this.url, fields)
       .then(response => {
-        const message = 'successfully updated!';
+        const message = 'successfully updated property!';
         console.log(message);
         this.setState({ error: message });
       })
@@ -150,18 +150,18 @@ class PropertyItemEditor extends Component {
             this.setState({ focusedInput });
           }}
         />
+        <Button
+          onClick={() => {
+            this.updateAvailability(this.state.startDate, this.state.endDate);
+          }}
+        >
+          <Icon left>date_range</Icon>
+          Update Availability
+        </Button>
         <br />
-        <div>
+        <div className={''}>
           <Button
-            onClick={() => {
-              this.updateAvailability(this.state.startDate, this.state.endDate);
-            }}
-          >
-            <Icon left>date_range</Icon>
-            Update Availability
-          </Button>
-          <Button
-            className="btn waves-effect waves-light"
+            className="btn waves-effect waves-light span4 text-right"
             type="submit"
             onClick={this.updateProperty}
           >
