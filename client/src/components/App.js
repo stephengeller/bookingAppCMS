@@ -6,6 +6,10 @@ import Properties from '../pages/Properties';
 import Home from '../pages/Home';
 import AddProperty from '../pages/AddProperty';
 import PropertyDetails from '../pages/PropertyDetails';
+
+import Auth from '../modules/Auth';
+
+Auth.saveAuthDeets();
 const Logout = () => <h2>Logged out</h2>;
 
 // TODO: create route to handle redirect to login page and back (parse & store the token in local storage)
