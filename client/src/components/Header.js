@@ -3,17 +3,9 @@ import { Navbar, NavItem } from 'react-materialize';
 import { Link } from 'react-router-dom';
 
 class Header extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      user: 'user'
-    };
-  }
   renderContent() {
-    switch (this.state.user) {
+    switch (this.props.user) {
       case null:
-        return;
-      case false:
         return [
           <li className="nav-dropdown" key="1">
             <Link to="/login">Login</Link>
@@ -31,7 +23,7 @@ class Header extends Component {
             Manage
           </NavItem>,
           <span key="4" style={{ margin: '0 10px' }}>
-            Welcome {this.state.user}
+            Welcome {this.props.user.given_name}
           </span>
         ];
     }

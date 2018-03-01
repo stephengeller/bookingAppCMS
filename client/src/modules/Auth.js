@@ -20,6 +20,10 @@ module.exports = {
         return Promise.resolve();
     },
 
+    login: () => {
+      window.location.href = "https://cfb-staging.auth.eu-west-2.amazoncognito.com/login?client_id=23q08taipsqnc257mpinu7chcj&redirect_uri=http://localhost:5000/&response_type=token";
+    },
+
     getUserDeets: () => {
         var accessToken = window.localStorage.getItem('cfb-accessToken');
         if (!accessToken || accessToken === 'null') {
