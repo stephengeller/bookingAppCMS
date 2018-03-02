@@ -105,7 +105,6 @@ class PropertyItemEditor extends Component {
     return (
       <div className="container">
         <h2 className="center-align"> {this.state.fields.title} </h2>
-        <div className="divider" />
         <div className="error" style={this.state.error.style} id="error">
           {this.state.error.message}
         </div>
