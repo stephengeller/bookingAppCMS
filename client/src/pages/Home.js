@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Button, Icon } from 'react-materialize';
 
+import GoToManageButton from '../components/buttons/GoToManageButton';
+
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -9,7 +11,13 @@ class Home extends Component {
 
   showButtonOrWelcome(user) {
     if (user) {
-      return <div>Welcome {user.given_name}</div>;
+      return (
+        <div>
+          <h3>Welcome {user.given_name}</h3>
+          <br />
+          <GoToManageButton />
+        </div>
+      );
     } else {
       return (
         <Button waves="light" onClick={this.props.login}>
@@ -24,6 +32,7 @@ class Home extends Component {
     return (
       <div className="center">
         <h2 className="center">Welcome To CareFreeBreaks CMS</h2>
+        <div className="divider" />
         {this.showButtonOrWelcome(user)}
       </div>
     );

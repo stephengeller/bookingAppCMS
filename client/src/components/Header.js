@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Navbar, NavItem } from 'react-materialize';
+import { Navbar, NavItem, NavLink } from 'react-materialize';
 import { Link } from 'react-router-dom';
 
 class Header extends Component {
@@ -8,7 +8,7 @@ class Header extends Component {
       case null:
         return [
           <li className="nav-dropdown" key="1">
-            <Link to="/login">Login</Link>
+            <Link to="/">Login</Link>
           </li>
         ];
       default:
