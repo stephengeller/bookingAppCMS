@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Navbar, NavItem, NavLink } from 'react-materialize';
 import { Link } from 'react-router-dom';
+import { LinkContainer } from 'react-router-bootstrap';
 
 class Header extends Component {
   renderContent() {
@@ -13,15 +14,15 @@ class Header extends Component {
         ];
       default:
         return [
-          <NavItem key="1" href="/">
-            Home
-          </NavItem>,
-          <NavItem key="2" href="/properties/add">
-            Add Property
-          </NavItem>,
-          <NavItem key="3" href="/properties">
-            Manage
-          </NavItem>,
+          <LinkContainer to="/">
+            <NavItem eventKey={1}>Home</NavItem>
+          </LinkContainer>,
+          <LinkContainer to="/properties/add">
+            <NavItem eventKey={2}>Add Property</NavItem>
+          </LinkContainer>,
+          <LinkContainer to="/properties">
+            <NavItem eventKey={3}>Manage</NavItem>
+          </LinkContainer>,
           <span key="4" style={{ margin: '0 10px' }}>
             Welcome {this.props.user.given_name}
           </span>
