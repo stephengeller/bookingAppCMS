@@ -14,6 +14,7 @@ class PropertyForm extends Component {
     this.addProperty = this.addProperty.bind(this);
     this.updateInputValue = this.updateInputValue.bind(this);
     this.submissionInProgress = this.submissionInProgress.bind(this);
+    this.handleMissingFields = this.handleMissingFields.bind(this);
     this.formatter = new Formatter();
     this.errorHandler = new ErrorHandler();
     this.mapsAPI = new GoogleMapsAPI();
@@ -111,13 +112,17 @@ class PropertyForm extends Component {
           this.setState({ error: errorMessage });
         });
     } else {
-      const error = this.errorHandler.emptyBoxErrorHandler(
-        this.requiredFields,
-        this.state
-      );
-      this.submissionInProgress(false);
-      this.setState({ error });
+      this.handleMissingFields();
     }
+  }
+
+  handleMissingFields() {
+    const error = this.errorHandler.emptyBoxErrorHandler(
+      this.requiredFields,
+      this.state
+    );
+    this.submissionInProgress(false);
+    this.setState({ error });
   }
 
   updateInputValue(evt, formName) {
