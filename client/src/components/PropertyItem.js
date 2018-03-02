@@ -55,15 +55,15 @@ class PropertyItem extends Component {
           field={property.facilities.join(', ')}
         />
         <PropertyLine label={'Location'} field={property.address} />
-        <div style={{float: "right"}}>
+        <div style={{ float: 'right' }}>
           <EditPropertyButton property={property} />
         </div>
-        <div style={{float: "left"}} >
+        <div style={{ float: 'left' }}>
           <DeletePropertyButton
             property={property}
             deleteProperty={this.props.deleteProperty}
           />
-          </div>
+        </div>
         <br />
       </Card>
     );
