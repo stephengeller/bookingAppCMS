@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Button, Icon } from 'react-materialize';
 import 'react-dates/initialize';
-
 import 'react-dates/lib/css/_datepicker.css';
 import { DateRangePicker } from 'react-dates';
 
 import DateRangeArrayMaker from '../modules/DateRangeArrayMaker';
+import DateRangeDisplayer from './DateRangeDisplayer';
 import Formatter from '../modules/Formatter';
 import ErrorHandler from '../modules/ErrorHandler';
 import axios from '../modules/axios';
@@ -168,6 +168,7 @@ class PropertyItemEditor extends Component {
           </Button>
         </div>
         <br />
+        <DateRangeDisplayer id={this.props.id} />
       </div>
     );
   }
