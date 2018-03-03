@@ -1,78 +1,68 @@
 const AWS = require('aws-sdk');
+const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
 
-var USER = null;
-var LOGIN_URL = "https://cfb-staging.auth.eu-west-2.amazoncognito.com/login?client_id=23q08taipsqnc257mpinu7chcj&redirect_uri=http://localhost:5000/&response_type=token";
+AWS.config.region = 'eu-west-2';
 
-function GetAccessToken() {
-  return window.localStorage.getItem('cfb-accessToken');
-}
+const COGNITO_APP_ID = '23q08taipsqnc257mpinu7chcj';
+const USER_POOL_ID = 'eu-west-2_BmTJxzD8N';
+const IDENTITY_POOL_ID = 'eu-west-2:8d0fd92c-d085-4a74-98c8-1fef8c18d3e4';
 
-function SetAccessToken(value) {
-  window.localStorage.setItem('cfb-accessToken', value);
-  return value;
-}
-
-function GetUserFromCognito() {
-  var accessToken = GetAccessToken();
-  if (!accessToken || accessToken === 'null') {
-    return Promise.resolve(null);
-  }
-  var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'});
-  var params = {
-    AccessToken: accessToken
-  };
-  return cognitoidentityserviceprovider
-    .getUser(params)
-    .promise()
-    .then(data => {
-      var rawAttrs = data.UserAttributes;
-      var attrs = {};
-      for (var i = 0, l = rawAttrs.length; i < l; i++) {
-        attrs[rawAttrs[i]['Name']] = rawAttrs[i]['Value'];
-        if (rawAttrs[i]['Name'] === 'custom:tokens') {
-          attrs['custom:tokens'] = parseInt(attrs['custom:tokens'], 10);
-        }
-      }
-      return attrs;
-    })
-    .catch(err => {
-      window.localStorage.removeItem('cfb-accessToken');
-      return Promise.reject(err);
+function getCurrentUser() {
+return new Promise((resolve, reject) => {
+  COGNITO_USER.getUserAttributes(function(err, result) {
+    var attr = {};
+    for(var i = 0, l = result.length; i < l; i++) {
+      attr[result[i]['Name']] = result[i]['Value']
+    }
+    resolve(attr);
   });
+});
 }
+
+var COGNITO_USER = null;
 
 module.exports = {
 
-    saveAuthDeets: () => {
-        var rawHash = window.location.hash.substr(1);
-        var aHash = rawHash.split('&');
-        var accessToken = null;
-        for (var i = 0, l = aHash.length; i < l; i++) {
-          var parts = aHash[i].split('=');
-          if (parts[0] === 'access_token') {
-            accessToken = parts[1];
-            break;
-          }
-        }
-        if (!accessToken) {
-          return Promise.resolve();
-        }
-        SetAccessToken(accessToken);
-        return Promise.resolve();
-    },
-
     login: () => {
-      window.location.href = LOGIN_URL;
+      window.location.href = '/login';
     },
 
-    getUserDeets: () => {
-      if(USER) {
-        return Promise.resolve(USER);
-      }
-      return GetUserFromCognito()
-        .then(user => {
-          USER = user;
-          return user;
-        })
-    }
+    logUserIn: (username, password) => {
+    return new Promise((resolve, reject) => {
+      var authenticationData = {
+        Username : username,
+        Password : password,
+      };
+      var authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails(authenticationData);
+      var poolData = {
+        UserPoolId : USER_POOL_ID,
+        ClientId : COGNITO_APP_ID
+      };
+      var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+      var userData = {
+          Username : username,
+          Pool : userPool
+      };
+      COGNITO_USER = new AmazonCognitoIdentity.CognitoUser(userData);
+      COGNITO_USER.authenticateUser(authenticationDetails, {
+        onSuccess: function (result) {
+          var loginUrl = 'cognito-idp.eu-west-2.amazonaws.com/' + USER_POOL_ID;
+          AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+              IdentityPoolId : IDENTITY_POOL_ID,
+              Logins : {
+                [loginUrl] : result.getIdToken().getJwtToken()
+              }
+          });
+          AWS.config.credentials.refreshPromise()
+            .then(getCurrentUser)
+            .then(resolve)
+        },
+        onFailure: function(err) {
+          reject(err);
+        }
+      });
+    });
+    },
+
+    getUserDeets: getCurrentUser
 }
