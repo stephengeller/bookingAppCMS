@@ -27,15 +27,29 @@ class DateRangeDisplayer extends Component {
     if (arrayOfDates) {
       let availableDates = [];
       for (var i = 0; i < arrayOfDates.length; i++) {
+        let date = arrayOfDates[i];
         availableDates.push(
           <div key={i}>
             {arrayOfDates[i].slice(0, 10)}
-            <Button>Delete</Button>
+            <Button onClick={() => this.deleteAvailability(date)}>
+              Delete
+            </Button>
           </div>
         );
       }
       this.setState({ availableDates });
     }
+  }
+
+  deleteAvailability(date) {
+    axios
+      .delete(this.url, { data: [date] })
+      .then(response => {
+        this.setState({});
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   getDatesFromMonth(year, month) {
@@ -53,7 +67,7 @@ class DateRangeDisplayer extends Component {
         //   false
         // );
         console.log(message);
-        // this.setState({ error: message });
+        // this.setState({ errocr: message });
       });
   }
 
