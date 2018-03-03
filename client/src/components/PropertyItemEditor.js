@@ -131,7 +131,15 @@ class PropertyItemEditor extends Component {
           value={this.state.fields.facilities}
           updateInputValue={this.updateInputValue}
         />
-        Available Dates
+        <Button
+          className="btn waves-effect waves-light span4 text-right"
+          type="submit"
+          onClick={this.updateProperty}
+        >
+          <Icon right>edit</Icon>Update Property
+        </Button>
+        <br />
+        <h4 style={{ 'text-align': 'center' }}>Available Dates</h4>
         <br />
         <DateRangePicker
           noBorder
@@ -158,15 +166,7 @@ class PropertyItemEditor extends Component {
           Update Availability
         </Button>
         <br />
-        <div className={''}>
-          <Button
-            className="btn waves-effect waves-light span4 text-right"
-            type="submit"
-            onClick={this.updateProperty}
-          >
-            <Icon right>edit</Icon>Update Property
-          </Button>
-        </div>
+        <div className={''} />
         <br />
         <DateRangeDisplayer id={this.props.id} />
       </div>
