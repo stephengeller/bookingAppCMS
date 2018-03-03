@@ -1,19 +1,68 @@
 const AWS = require('aws-sdk');
-const AUTH = require('./Auth')
+
+const USER_POOL_ID = 'eu-west-2_BmTJxzD8N';
+
+function searchForUser(property, value) {
+    var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+    var params = {
+        UserPoolId: USER_POOL_ID,
+        Filter: property + ' = ' + value,
+        Limit: 1
+    };
+    return cognitoidentityserviceprovider.listUsers(params).promise()
+}
+
+function updateAtrribute(attribute, value, username) {
+    var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+    var params = {
+        UserAttributes: [
+          {
+            Name: attribute,
+            Value: value
+          }
+        ],
+        UserPoolId: USER_POOL_ID,
+        Username: username
+    };
+    return cognitoidentityserviceprovider.adminUpdateUserAttributes(params).promise();
+}
 
 module.exports = {
+    searchByEmail: (email) => {
+        return searchForUser('email', email)
+        .then(result => result.Users[0])
+    },
 
-    searchForUser(property, value) {
+    setNumTokens: (tokens, email) => {
+        return updateAtrribute('custom:tokens', tokens, email);
+    },
+
+    setAddress: (address, email) => {
+        return updateAtrribute('address', address, email);
+    },
+
+    setPhoneNum: (phoneNum, email) => {
+        return updateAtrribute('phone_number', phoneNum, email);
+    },
+
+    setGivenName: (givenName, email) => {
+        return updateAtrribute('given_name', givenName, email);
+    },
+
+    setFamilyName: (familyName, email) => {
+        return updateAtrribute('family_name', familyName, email);
+    },
+
+    setEmail: (oldEmail, newEmail) => {
+        return updateAtrribute('email', newEmail, oldEmail);
+    },
+
+    disableUser: (email) => {
         var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
         var params = {
-            UserPoolId: 'eu-west-2_BmTJxzD8N',
-            Filter: 'email = "chris@ckxgroup.io"',
-            Limit: 10
+            UserPoolId: USER_POOL_ID,
+            Username: email
         };
-        cognitoidentityserviceprovider.listUsers(params, function(err, data) {
-            if (err) console.log(err, err.stack); // an error occurred
-            else     console.log(data);           // successful response
-        });
+        return cognitoidentityserviceprovider.adminDisableUser(params).promise();
     }
-
 }
