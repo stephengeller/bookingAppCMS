@@ -139,32 +139,39 @@ class PropertyItemEditor extends Component {
           <Icon right>edit</Icon>Update Property
         </Button>
         <br />
-        <h4 style={{ 'text-align': 'center' }}>Available Dates</h4>
+        <h4 className="center-align">Available Dates</h4>
         <br />
-        <DateRangePicker
-          noBorder
-          showClearDates
-          showDefaultInputIcon
-          startDate={this.state.startDate}
-          startDateId="your_unique_start_date_id"
-          endDate={this.state.endDate}
-          endDateId="your_unique_end_date_id"
-          onDatesChange={({ startDate, endDate }) => {
-            this.setState({ startDate, endDate });
-          }}
-          focusedInput={this.state.focusedInput}
-          onFocusChange={focusedInput => {
-            this.setState({ focusedInput });
-          }}
-        />
-        <Button
-          onClick={() => {
-            this.updateAvailability(this.state.startDate, this.state.endDate);
-          }}
-        >
-          <Icon left>date_range</Icon>
-          Update Availability
-        </Button>
+        <div className="center-align">
+          <DateRangePicker
+            noBorder
+            showClearDates
+            showDefaultInputIcon
+            startDate={this.state.startDate}
+            startDateId="your_unique_start_date_id"
+            endDate={this.state.endDate}
+            endDateId="your_unique_end_date_id"
+            onDatesChange={({ startDate, endDate }) => {
+              this.setState({ startDate, endDate });
+            }}
+            focusedInput={this.state.focusedInput}
+            onFocusChange={focusedInput => {
+              this.setState({ focusedInput });
+            }}
+          />
+          <div>
+            <Button
+              onClick={() => {
+                this.updateAvailability(
+                  this.state.startDate,
+                  this.state.endDate
+                );
+              }}
+            >
+              <Icon left>date_range</Icon>
+              Update Availability
+            </Button>
+          </div>
+        </div>
         <br />
         <div className={''} />
         <br />
