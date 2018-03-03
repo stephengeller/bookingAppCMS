@@ -41,25 +41,29 @@ class DateRangeDisplayer extends Component {
     if (arrayOfDates) {
       let availableDates = [];
       availableDates.push(
-        <li class="collection-header">
+        <li className="collection-header" key="header">
           <h4>{this.months[month - 1]}</h4>
         </li>
       );
-      for (var i = 0; i < arrayOfDates.length; i++) {
-        let date = arrayOfDates[i];
-        availableDates.push(
-          <li key={i} className="collection-item">
-            <div>
-              {arrayOfDates[i].slice(0, 10)}
-              <a
-                className="secondary-content"
-                onClick={() => this.deleteAvailability(date)}
-              >
-                <Icon class="material-icons">delete</Icon>
-              </a>
-            </div>
-          </li>
-        );
+      if (arrayOfDates instanceof Array) {
+        for (var i = 0; i < arrayOfDates.length; i++) {
+          let date = arrayOfDates[i];
+          availableDates.push(
+            <li key={i} className="collection-item">
+              <div>
+                {arrayOfDates[i].slice(0, 10)}
+                <a
+                  className="secondary-content"
+                  onClick={() => this.deleteAvailability(date)}
+                >
+                  <Icon className="material-icons">delete</Icon>
+                </a>
+              </div>
+            </li>
+          );
+        }
+      } else {
+        availableDates.push('No dates available');
       }
       this.setState({ availableDates });
     }
@@ -69,6 +73,7 @@ class DateRangeDisplayer extends Component {
     axios
       .delete(this.url, { data: [date] })
       .then(response => {
+        alert(`${date.slice(0, 10)} successfully deleted.`);
         const { datesArray } = this.state;
         const index = datesArray.indexOf(date);
         datesArray.splice(index, 1);
@@ -103,7 +108,7 @@ class DateRangeDisplayer extends Component {
   render() {
     const { availableDates } = this.state;
     return (
-      <div className="">
+      <div>
         <Dropdown
           title="Dropdown"
           trigger={<Button>Show availabilty per month</Button>}
@@ -121,7 +126,7 @@ class DateRangeDisplayer extends Component {
             );
           })}
         </Dropdown>
-        <ul className="collection with-header">{this.state.availableDates}</ul>
+        <ul className="collection with-header">{availableDates}</ul>
       </div>
     );
   }
