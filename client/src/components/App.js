@@ -38,6 +38,11 @@ class App extends Component {
     this.state = {
       user: null
     };
+    Auth.getUserDeets()
+      .then(this.onLoggedIn.bind(this))
+      .catch(err => {
+        console.error(err);
+      })
   }
 
   onLoggedIn(user) {
@@ -68,6 +73,7 @@ class App extends Component {
             component={Login}
             logUserIn={Auth.logUserIn}
             onLoggedIn={this.onLoggedIn.bind(this)}
+            user={this.state.user}
           />
           <Route exact path="/properties/add" component={AddProperty} />
           <Route path="/logout" component={Logout} />
