@@ -1,5 +1,46 @@
 const AWS = require('aws-sdk');
 
+var USER = null;
+var LOGIN_URL = "https://cfb-staging.auth.eu-west-2.amazoncognito.com/login?client_id=23q08taipsqnc257mpinu7chcj&redirect_uri=http://localhost:5000/&response_type=token";
+
+function GetAccessToken() {
+  return window.localStorage.getItem('cfb-accessToken');
+}
+
+function SetAccessToken(value) {
+  window.localStorage.setItem('cfb-accessToken', value);
+  return value;
+}
+
+function GetUserFromCognito() {
+  var accessToken = GetAccessToken();
+  if (!accessToken || accessToken === 'null') {
+    return Promise.resolve(null);
+  }
+  var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider({apiVersion: '2016-04-18'});
+  var params = {
+    AccessToken: accessToken
+  };
+  return cognitoidentityserviceprovider
+    .getUser(params)
+    .promise()
+    .then(data => {
+      var rawAttrs = data.UserAttributes;
+      var attrs = {};
+      for (var i = 0, l = rawAttrs.length; i < l; i++) {
+        attrs[rawAttrs[i]['Name']] = rawAttrs[i]['Value'];
+        if (rawAttrs[i]['Name'] === 'custom:tokens') {
+          attrs['custom:tokens'] = parseInt(attrs['custom:tokens'], 10);
+        }
+      }
+      return attrs;
+    })
+    .catch(err => {
+      window.localStorage.removeItem('cfb-accessToken');
+      return Promise.reject(err);
+  });
+}
+
 module.exports = {
 
     saveAuthDeets: () => {
@@ -16,43 +57,22 @@ module.exports = {
         if (!accessToken) {
           return Promise.resolve();
         }
-        window.localStorage.setItem('cfb-accessToken', accessToken);
+        SetAccessToken(accessToken);
         return Promise.resolve();
     },
 
     login: () => {
-      window.location.href = "https://cfb-staging.auth.eu-west-2.amazoncognito.com/login?client_id=23q08taipsqnc257mpinu7chcj&redirect_uri=http://localhost:5000/&response_type=token";
+      window.location.href = LOGIN_URL;
     },
 
     getUserDeets: () => {
-        var accessToken = window.localStorage.getItem('cfb-accessToken');
-        if (!accessToken || accessToken === 'null') {
-          return Promise.resolve(null);
-        }
-        var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider({
-            apiVersion: '2016-04-18',
-            region:     'eu-west-2'
-        });
-        var params = {
-          AccessToken: accessToken
-        };
-        return cognitoidentityserviceprovider
-          .getUser(params)
-          .promise()
-          .then(data => {
-            var rawAttrs = data.UserAttributes;
-            var attrs = {};
-            for (var i = 0, l = rawAttrs.length; i < l; i++) {
-              attrs[rawAttrs[i]['Name']] = rawAttrs[i]['Value'];
-              if (rawAttrs[i]['Name'] === 'custom:tokens') {
-                attrs['custom:tokens'] = parseInt(attrs['custom:tokens'], 10);
-              }
-            }
-            return attrs;
-          })
-          .catch(err => {
-            window.localStorage.removeItem('cfb-accessToken');
-            return Promise.reject(err);
-        });
+      if(USER) {
+        return Promise.resolve(USER);
+      }
+      return GetUserFromCognito()
+        .then(user => {
+          USER = user;
+          return user;
+        })
     }
 }
