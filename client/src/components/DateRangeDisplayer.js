@@ -45,7 +45,11 @@ class DateRangeDisplayer extends Component {
     axios
       .delete(this.url, { data: [date] })
       .then(response => {
-        this.setState({});
+        const { datesArray } = this.state;
+        const index = datesArray.indexOf(date);
+        datesArray.splice(index, 1);
+        this.setState({ datesArray });
+        this.renderDates(datesArray);
       })
       .catch(error => {
         console.log(error);
@@ -58,6 +62,7 @@ class DateRangeDisplayer extends Component {
       .get(url)
       .then(response => {
         const datesArray = this.addMissingZero(response.data);
+        this.setState({ datesArray });
         this.renderDates(datesArray);
       })
       .catch(error => {
