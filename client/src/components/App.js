@@ -40,6 +40,10 @@ class App extends Component {
     };
   }
 
+  onLoggedIn(user) {
+    this.setState({'user': user});
+  }
+
   render() {
     return (
       <BrowserRouter>
@@ -63,6 +67,7 @@ class App extends Component {
             path="/login"
             component={Login}
             logUserIn={Auth.logUserIn}
+            onLoggedIn={this.onLoggedIn.bind(this)}
           />
           <Route exact path="/properties/add" component={AddProperty} />
           <Route path="/logout" component={Logout} />

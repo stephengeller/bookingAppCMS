@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
+import { withRouter } from "react-router-dom";
 
 class Login extends Component {
 
   onSubmit(evt) {
     evt.preventDefault();
     this.props.logUserIn(this.refs.username.value, this.refs.password.value)
-      .then(result => {
-          console.log(result);
-      })
+    .then(this.props.onLoggedIn)
+    .then(function(result) {
+        this.props.history.push("/");
+    }.bind(this));
   }
   
   render() {
@@ -26,4 +28,5 @@ class Login extends Component {
   }
 }
 
-export default Login;
+
+export default withRouter(Login);
