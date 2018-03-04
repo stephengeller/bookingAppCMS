@@ -71,7 +71,7 @@ class DateRangeDisplayer extends Component {
 
   deleteAvailability(date) {
     axios
-      .delete(this.url, { data: [date] })
+      .delete(`${this.url}/${date}`)
       .then(response => {
         alert(`${date.slice(0, 10)} successfully deleted.`);
         const { datesArray } = this.state;
