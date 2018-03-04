@@ -6,6 +6,7 @@ import Properties from '../pages/Properties';
 import Home from '../pages/Home';
 import AddProperty from '../pages/AddProperty';
 import PropertyDetails from '../pages/PropertyDetails';
+import Login from '../pages/Login';
 
 import Auth from '../modules/Auth';
 
@@ -37,17 +38,15 @@ class App extends Component {
     this.state = {
       user: null
     };
-    Auth.saveAuthDeets()
-      .then(Auth.getUserDeets)
-      .then(
-        function(user) {
-          if (user) {
-            this.setState({
-              user: user
-            });
-          }
-        }.bind(this)
-      );
+    Auth.getUserDeets()
+      .then(this.onLoggedIn.bind(this))
+      .catch(err => {
+        console.error(err);
+      })
+  }
+
+  onLoggedIn(user) {
+    this.setState({'user': user});
   }
 
   render() {
@@ -67,6 +66,14 @@ class App extends Component {
             exact
             path="/properties/edit/:id"
             component={PropertyDetails}
+          />
+          <PropsRoute
+            exact
+            path="/login"
+            component={Login}
+            logUserIn={Auth.logUserIn}
+            onLoggedIn={this.onLoggedIn.bind(this)}
+            user={this.state.user}
           />
           <Route exact path="/properties/add" component={AddProperty} />
           <Route path="/logout" component={Logout} />
