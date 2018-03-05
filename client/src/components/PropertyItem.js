@@ -17,7 +17,9 @@ class PropertyItem extends Component {
         location: ''
       }
     };
-    this.mapsAPI = new GoogleMapsAPI();
+    this.mapsAPI = new GoogleMapsAPI({
+      googleApiKey: this.props.googleApiKey
+    });
   }
 
   toggleEditor() {
