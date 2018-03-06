@@ -10,6 +10,7 @@ class DateRangeDisplayer extends Component {
     this.getDatesFromMonth = this.getDatesFromMonth.bind(this);
     this.addMissingZero = this.addMissingZero.bind(this);
     this.url = `/properties/${this.props.id}/available`;
+    this.adminUrl = `/admin/${this.url}`
     this.state = {
       availableDates: null
     };
@@ -51,10 +52,10 @@ class DateRangeDisplayer extends Component {
           availableDates.push(
             <li key={i} className="collection-item">
               <div>
-                {arrayOfDates[i].slice(0, 10)}
+                {date.date.slice(0, 10)}
                 <a
                   className="secondary-content"
-                  onClick={() => this.deleteAvailability(date)}
+                  onClick={() => this.deleteAvailability(date.date)}
                 >
                   <Icon className="material-icons">delete</Icon>
                 </a>
@@ -86,7 +87,7 @@ class DateRangeDisplayer extends Component {
   }
 
   getDatesFromMonth(year, month) {
-    const url = `${this.url}/${year}/${month}`;
+    const url = `${this.adminUrl}/${year}/${month}`;
     axios
       .get(url)
       .then(response => {
