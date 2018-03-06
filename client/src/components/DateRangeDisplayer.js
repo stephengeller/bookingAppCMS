@@ -89,7 +89,16 @@ class DateRangeDisplayer extends Component {
   }
 
   onUpdateNumRooms(date, numRooms) {
-    console.log("Update ", date, "with", numRooms, "number of rooms");
+    const url = `${this.url}/${date}`;
+    axios
+      .patch(url, {"numRooms": numRooms})
+      .then(response => {
+        console.log("Yes!!!", response);
+      })
+      .catch(error => {
+        const message = 'Error updating property rooms: ' + error;
+        console.log(message);
+      });
   }
 
   getDatesFromMonth(year, month) {
