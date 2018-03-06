@@ -52,13 +52,27 @@ class DateRangeDisplayer extends Component {
           availableDates.push(
             <li key={i} className="collection-item">
               <div>
-                {date.date.slice(0, 10)}
+                <span>{date.date.slice(0, 10)}</span>
                 <a
                   className="secondary-content"
                   onClick={() => this.deleteAvailability(date.date)}
                 >
                   <Icon className="material-icons">delete</Icon>
                 </a>
+              </div>
+              <div class="updateNumRooms">
+                <label>
+                  <span>Number of rooms: </span>
+                  <input 
+                    type="number"
+                    min="1"
+                    defaultValue={date.numRooms}></input>
+                </label>
+                <Button
+                  waves='light'>
+                  Update number of rooms
+                  <Icon right>system_update_alt</Icon>
+                </Button>
               </div>
             </li>
           );
