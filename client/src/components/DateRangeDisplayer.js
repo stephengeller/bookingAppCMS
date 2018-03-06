@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
-import { Dropdown, Icon } from 'react-materialize';
+import { Dropdown } from 'react-materialize';
+import DateItem from './DateItem'
 
 import axios from '../modules/axios';
 
@@ -51,29 +52,11 @@ class DateRangeDisplayer extends Component {
           let date = arrayOfDates[i];
           availableDates.push(
             <li key={i} className="collection-item">
-              <div>
-                <span>{date.date.slice(0, 10)}</span>
-                <a
-                  className="secondary-content"
-                  onClick={() => this.deleteAvailability(date.date)}
-                >
-                  <Icon className="material-icons">delete</Icon>
-                </a>
-              </div>
-              <div class="updateNumRooms">
-                <label>
-                  <span>Number of rooms: </span>
-                  <input 
-                    type="number"
-                    min="1"
-                    defaultValue={date.numRooms}></input>
-                </label>
-                <Button
-                  waves='light'>
-                  Update number of rooms
-                  <Icon right>system_update_alt</Icon>
-                </Button>
-              </div>
+            <DateItem
+              date={date}
+              onDeleteAvailability={this.onDeleteAvailability.bind(this, date.date)}
+              onUpdateNumRooms={this.onUpdateNumRooms.bind(this, date.date)}>
+            </DateItem>
             </li>
           );
         }
@@ -84,7 +67,7 @@ class DateRangeDisplayer extends Component {
     }
   }
 
-  deleteAvailability(date) {
+  onDeleteAvailability(date) {
     axios
       .delete(`${this.url}/${date}`)
       .then(response => {
@@ -98,6 +81,10 @@ class DateRangeDisplayer extends Component {
       .catch(error => {
         console.log(error);
       });
+  }
+
+  onUpdateNumRooms(date, numRooms) {
+    console.log("Update ", date, "with", numRooms, "number of rooms");
   }
 
   getDatesFromMonth(year, month) {
