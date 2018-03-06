@@ -71,6 +71,7 @@ class ApiPropertyManager extends Component {
           properties.map(property => {
             return (
               <PropertyItem
+                googleApiKey={this.props.googleApiKey}
                 property={property}
                 key={property.id}
                 deleteProperty={this.deleteProperty}

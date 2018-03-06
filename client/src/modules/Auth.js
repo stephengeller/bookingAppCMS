@@ -3,9 +3,9 @@ const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
 
 AWS.config.region = 'eu-west-2';
 
-const COGNITO_APP_ID = '23q08taipsqnc257mpinu7chcj';
-const USER_POOL_ID = 'eu-west-2_BmTJxzD8N';
-const IDENTITY_POOL_ID = 'eu-west-2:8d0fd92c-d085-4a74-98c8-1fef8c18d3e4';
+var COGNITO_APP_ID = '';
+var USER_POOL_ID = '';
+var IDENTITY_POOL_ID = '';
 
 function quickLogin() {
 return new Promise((resolve, reject) => {
@@ -77,6 +77,12 @@ function getCurrentUser() {
 var COGNITO_USER = null;
 
 module.exports = {
+
+    init: (options) => {
+      COGNITO_APP_ID = options["COGNITO_APP_ID"];
+      USER_POOL_ID = options["USER_POOL_ID"];
+      IDENTITY_POOL_ID = options["IDENTITY_POOL_ID"];
+    },
 
     login: () => {
       window.location.href = '/login';

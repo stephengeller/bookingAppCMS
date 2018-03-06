@@ -38,6 +38,13 @@ class App extends Component {
     this.state = {
       user: null
     };
+    
+    Auth.init({
+      "COGNITO_APP_ID": this.props["COGNITO_APP_ID"],
+      "USER_POOL_ID": this.props["USER_POOL_ID"],
+      "IDENTITY_POOL_ID": this.props["IDENTITY_POOL_ID"]
+    });
+
     Auth.getUserDeets()
       .then(this.onLoggedIn.bind(this))
       .catch(err => {
@@ -61,7 +68,11 @@ class App extends Component {
             login={Auth.login}
             user={this.state.user}
           />
-          <Route exact path="/properties" component={Properties} />
+          <PropsRoute
+            exact
+            path="/properties"
+            googleApiKey={this.props["GOOGLE_API_KEY"]}
+            component={Properties} />
           <Route
             exact
             path="/properties/edit/:id"
