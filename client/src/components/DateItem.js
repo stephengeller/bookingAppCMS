@@ -13,16 +13,12 @@ class DateItem extends Component {
     <div>
       <div>
         <span>{this.props.date.date.slice(0, 10)}</span>
-        <a
-          className="secondary-content"
-          onClick={() => this.props.onDeleteAvailability()}
-        >
         <Button
+          onClick={() => this.props.onDeleteAvailability()}
           waves='light'>
           Delete
           <Icon>delete</Icon>
         </Button>
-        </a>
       </div>
       <div className="updateNumRooms">
         <label>

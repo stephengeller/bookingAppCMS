@@ -71,9 +71,14 @@ class DateRangeDisplayer extends Component {
     axios
       .delete(`${this.url}/${date}`)
       .then(response => {
-        alert(`${date.slice(0, 10)} successfully deleted.`);
         const { datesArray } = this.state;
-        const index = datesArray.indexOf(date);
+        let index = -1;
+        for(var i = 0, l = datesArray.length; i < l; i++) {
+          if(datesArray[i].date === date) {
+            index = i;
+            break;
+          }
+        }
         datesArray.splice(index, 1);
         this.setState({ datesArray });
         this.renderDates(datesArray);
