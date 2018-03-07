@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input } from 'react-materialize';
+import { Input, Button } from 'react-materialize';
 
 import EditButton from './buttons/EditButton';
 import CognitoUserStore from '../modules/CognitoUserStore';
@@ -16,12 +16,15 @@ class UserManager extends Component {
     if (user) {
       return (
         <div>
+          <div className="divider" style={{ margin: '20px' }} />
           {user.Attributes[7].Value} {user.Attributes[8].Value}
-          <EditButton
-            type="users"
-            props={user}
-            id={`${user.Attributes[9].Value}`}
-          />
+          <div style={{ float: 'right' }}>
+            <EditButton
+              type="users"
+              props={user}
+              id={`${user.Attributes[9].Value}`}
+            />
+          </div>
         </div>
       );
     } else {
@@ -52,20 +55,22 @@ class UserManager extends Component {
 
     return (
       <div className="container">
-        Search for a user by email:
+        <h5 className="center-align">Search for a user by email:</h5>
         <Input
           type="email"
           label="Email"
-          validate
-          // value={email}
           value={email}
           onChange={e => {
             this.setState({ email: e.target.value });
           }}
         />
-        <button onClick={() => this.searchForUser(email)}>
+        <Button
+          validate
+          modal={'confirm'}
+          onClick={() => this.searchForUser(email)}
+        >
           Search for user
-        </button>
+        </Button>
         <div>{userDeets}</div>
       </div>
     );

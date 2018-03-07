@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+import CognitoUserStore from '../modules/CognitoUserStore';
 import UserEditor from '../components/UserEditor';
 
 class UserDetails extends Component {
@@ -8,19 +9,43 @@ class UserDetails extends Component {
     this.state = {
       error: {}
     };
+    this.getUserEmail = this.getUserEmail.bind(this);
+  }
+
+  componentWillMount() {
+    this.getUserEmail();
+  }
+
+  async getUserEmail() {
+    const url = this.props.location.pathname;
+    const email = url.slice(url.indexOf('edit/') + 5);
+    let user;
+    await CognitoUserStore.searchByEmail(email)
+      .then(r => {
+        console.log(r);
+        user = r;
+      })
+      .catch(err => console.log(err));
+    this.setState({ user });
+    return user;
   }
 
   render() {
-    const user = this.props.location.state.props;
+    const { user } = this.state;
+    const editor = user ? (
+      <div>
+        <h5 className="center-align">
+          {user.Attributes[7].Value} {user.Attributes[8].Value}
+        </h5>
+        <UserEditor user={user} />
+      </div>
+    ) : (
+      'no user'
+    );
     return (
       <div className="container">
-        <h4 className="center-align">
-          {user.Attributes[7].Value} {user.Attributes[8].Value}
-        </h4>
-        <div className="error" style={this.state.error.style} id="error">
-          {this.state.error.message}
-        </div>
-        <UserEditor user={user} />
+        <h3 className="center-align">Edit User</h3>
+        {editor}
       </div>
     );
   }
