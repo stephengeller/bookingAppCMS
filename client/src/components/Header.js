@@ -14,16 +14,16 @@ class Header extends Component {
         ];
       default:
         return [
-          <LinkContainer key={1} to="/">
+          <LinkContainer key={'home'} to="/">
             <NavItem>Home</NavItem>
           </LinkContainer>,
-          <LinkContainer key={2} to="/properties/add">
-            <NavItem>Add Property</NavItem>
+          <LinkContainer key={'properties'} to="/properties">
+            <NavItem>Properties</NavItem>
           </LinkContainer>,
-          <LinkContainer key={3} to="/properties">
-            <NavItem>Manage</NavItem>
+          <LinkContainer key={'users'} to="/users">
+            <NavItem>Users</NavItem>
           </LinkContainer>,
-          <span key={4} style={{ margin: '0 10px' }}>
+          <span key={'welcome'} style={{ margin: '0 10px' }}>
             Welcome {this.props.user.given_name}
           </span>
         ];
