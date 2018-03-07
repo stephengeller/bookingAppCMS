@@ -34,6 +34,9 @@ class UserDetails extends Component {
     const { user } = this.state;
     const editor = user ? (
       <div>
+        <h5 className="center-align">
+          {user.Attributes[7].Value} {user.Attributes[8].Value}
+        </h5>
         <UserEditor user={user} />
       </div>
     ) : (
@@ -41,7 +44,7 @@ class UserDetails extends Component {
     );
     return (
       <div className="container">
-        <h4 className="center-align" />
+        <h3 className="center-align">Edit User</h3>
         {editor}
       </div>
     );
