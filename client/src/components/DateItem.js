@@ -26,7 +26,7 @@ class DateItem extends Component {
             </Button>
           </div>
           <span>{this.props.date.date.slice(0, 10)}</span>
-          <span style={{ 'margin-left': '10px' }}>
+          <span style={{ marginLeft: '10px' }}>
             <Button
               onClick={() => this.props.onDeleteAvailability()}
               waves="light"
