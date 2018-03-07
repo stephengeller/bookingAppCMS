@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter, Redirect } from 'react-router-dom';
 
-import { Input } from 'react-materialize';
+import { Input, Button, Icon } from 'react-materialize';
 
 class Login extends Component {
   onSubmit(evt) {
@@ -25,9 +25,10 @@ class Login extends Component {
             <label>
               Password: <Input ref="password" type="password" />
             </label>
-            <button onClick={this.onSubmit.bind(this)} type="submit">
+            <Button onClick={this.onSubmit.bind(this)} type="submit">
+              <Icon right>person</Icon>
               Login
-            </button>
+            </Button>
           </form>
         </div>
       );
