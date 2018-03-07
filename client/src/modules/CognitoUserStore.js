@@ -6,7 +6,7 @@ function searchForUser(property, value) {
     var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
     var params = {
         UserPoolId: USER_POOL_ID,
-        Filter: property + ' = ' + value,
+        Filter: `${property} = "${value}"`,
         Limit: 1
     };
     return cognitoidentityserviceprovider.listUsers(params).promise()
