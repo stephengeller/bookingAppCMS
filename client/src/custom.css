@@ -21,13 +21,16 @@
   color: white;
 }
 
+.updateNumRooms {
+  float: right;
+}
+
 .updateNumRooms input {
   width: 30px;
   margin-left: 10px;
   margin-right: 10px;
   height: auto;
 }
-
 
 .updateNumRooms i {
   vertical-align: middle;
