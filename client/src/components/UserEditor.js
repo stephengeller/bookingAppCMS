@@ -79,22 +79,26 @@ class UserEditor extends Component {
   render() {
     const { error } = this.state;
     const input = (
-      <input
+      <Input
         value={this.state.inputValue}
+        s={6}
+        label={this.state.inputField}
         onChange={e => this.handleChange(e)}
       />
     );
     const button = (
-      <Button onClick={() => this.updateField()}>
-        Update {this.state.inputField}
-      </Button>
+      <div className="center">
+        <Button onClick={() => this.updateField()}>
+          Update {this.state.inputField}
+        </Button>
+      </div>
     );
     return (
-      <div>
+      <div style={{ margin: '30px' }}>
         <h5 style={error.style}>{error.message}</h5>
         <Row>
           <Input
-            s={12}
+            s={6}
             type="select"
             label="Field to edit"
             icon="edit"
@@ -110,8 +114,8 @@ class UserEditor extends Component {
               );
             })}
           </Input>
+          {input}
         </Row>
-        {input}
         {button}
       </div>
     );
