@@ -24,8 +24,8 @@ class UserEditor extends Component {
   }
 
   async resetComponent() {
-    this.user = await CognitoUserStore.searchByEmail(this.userObject.email);
-    this.userObject = this.createUserObject(this.user.Attributes);
+    // const user = await CognitoUserStore.searchByEmail(this.userObject.email);
+    // this.userObject = this.createUserObject(user.Attributes);
     console.log(this.state);
   }
 
