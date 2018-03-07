@@ -1,0 +1,23 @@
+# Carefreebreaks React SPA deployment
+image: node:6.9.4
+
+pipelines:
+
+  branches:
+    master:
+      - step:
+          caches:
+            - node
+          script:
+            # --- # install aws # --- #
+            - apt-get update && apt-get install -y python-dev
+            - curl -O https://bootstrap.pypa.io/get-pip.py
+            - python get-pip.py
+            - pip install awscli
+            - cd ./client/
+            # --- # plugins # --- #
+            - npm install
+            # --- # build # --- #
+            - REACT_APP_ENV=staging npm run build
+            # --- # deploy # --- #
+            - aws s3 cp build/ $AWS_STATING_S3_BUCKET --recursive --region eu-west-2
