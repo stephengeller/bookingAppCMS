@@ -86,7 +86,12 @@ class App extends Component {
             onLoggedIn={this.onLoggedIn.bind(this)}
             user={this.state.user}
           />
-          <Route exact path="/properties/add" component={AddProperty} />
+          <PropsRoute
+            exact
+            path="/properties/add"
+            component={AddProperty}
+            googleApiKey={this.props["GOOGLE_API_KEY"]}
+          />
           <Route path="/logout" component={Logout} />
         </div>
       </BrowserRouter>

@@ -17,7 +17,9 @@ class PropertyForm extends Component {
     this.handleMissingFields = this.handleMissingFields.bind(this);
     this.formatter = new Formatter();
     this.errorHandler = new ErrorHandler();
-    this.mapsAPI = new GoogleMapsAPI();
+    this.mapsAPI = new GoogleMapsAPI({
+      googleApiKey: this.props.googleApiKey
+    });
     this.allFields = [
       'title',
       'description',

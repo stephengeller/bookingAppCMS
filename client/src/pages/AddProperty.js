@@ -15,7 +15,9 @@ class AddProperty extends Component {
       <div className="">
         <h2 className="center">Add Property</h2>
         <br />
-        <PropertyForm />
+        <PropertyForm
+          googleApiKey={this.props.googleApiKey}
+        />
       </div>
     );
   }
