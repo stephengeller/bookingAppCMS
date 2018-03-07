@@ -7,6 +7,7 @@ import Users from '../pages/Users';
 import Home from '../pages/Home';
 import AddProperty from '../pages/AddProperty';
 import PropertyDetails from '../pages/PropertyDetails';
+import UserDetails from '../pages/UserDetails';
 import Login from '../pages/Login';
 
 import Auth from '../modules/Auth';
@@ -75,17 +76,18 @@ class App extends Component {
             googleApiKey={this.props['GOOGLE_API_KEY']}
             component={Properties}
           />
+          <Route
+            exact
+            path="/properties/edit/:id"
+            component={PropertyDetails}
+          />
           <PropsRoute
             exact
             path="/users"
             googleApiKey={this.props['GOOGLE_API_KEY']}
             component={Users}
           />
-          <Route
-            exact
-            path="/properties/edit/:id"
-            component={PropertyDetails}
-          />
+          <Route exact path="/users/edit/:id" component={UserDetails} />
           <PropsRoute
             exact
             path="/login"
