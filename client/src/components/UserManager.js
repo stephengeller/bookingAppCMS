@@ -20,7 +20,7 @@ class UserManager extends Component {
           <EditButton
             type="users"
             props={user}
-            id={`${user.Attributes[7].Value.toLowerCase()}${user.Attributes[8].Value.toLowerCase()}`}
+            id={`${user.Attributes[9].Value}`}
           />
         </div>
       );
