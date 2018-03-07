@@ -40,6 +40,7 @@ class UserEditor extends Component {
       if (obj[field.name]) {
         return (obj['functions'][field.name] = field.func);
       }
+      return null;
     });
     return obj;
   }
