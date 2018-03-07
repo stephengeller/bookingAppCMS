@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Preloader } from 'react-materialize';
 
 import PropertyItem from '../components/PropertyItem';
+import GoToAddPropertyButton from './buttons/GoToAddPropertyButton';
 import axios from '../modules/axios';
 
 class ApiPropertyManager extends Component {
@@ -63,6 +64,7 @@ class ApiPropertyManager extends Component {
         <div className="error" style={this.state.error.style} id="error">
           {this.state.error.message}
         </div>
+        <GoToAddPropertyButton />
         {this.loaded === false ? (
           <div className="center-align">
             <Preloader flashing />

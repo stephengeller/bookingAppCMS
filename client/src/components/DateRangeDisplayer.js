@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 import { Dropdown } from 'react-materialize';
-import DateItem from './DateItem'
+import DateItem from './DateItem';
 
 import axios from '../modules/axios';
 
@@ -11,7 +11,7 @@ class DateRangeDisplayer extends Component {
     this.getDatesFromMonth = this.getDatesFromMonth.bind(this);
     this.addMissingZero = this.addMissingZero.bind(this);
     this.url = `/properties/${this.props.id}/available`;
-    this.adminUrl = `/admin/${this.url}`
+    this.adminUrl = `/admin/${this.url}`;
     this.state = {
       availableDates: null
     };
@@ -52,11 +52,14 @@ class DateRangeDisplayer extends Component {
           let date = arrayOfDates[i];
           availableDates.push(
             <li key={i} className="collection-item">
-            <DateItem
-              date={date}
-              onDeleteAvailability={this.onDeleteAvailability.bind(this, date.date)}
-              onUpdateNumRooms={this.onUpdateNumRooms.bind(this, date.date)}>
-            </DateItem>
+              <DateItem
+                date={date}
+                onDeleteAvailability={this.onDeleteAvailability.bind(
+                  this,
+                  date.date
+                )}
+                onUpdateNumRooms={this.onUpdateNumRooms.bind(this, date.date)}
+              />
             </li>
           );
         }
@@ -73,8 +76,8 @@ class DateRangeDisplayer extends Component {
       .then(response => {
         const { datesArray } = this.state;
         let index = -1;
-        for(var i = 0, l = datesArray.length; i < l; i++) {
-          if(datesArray[i].date === date) {
+        for (var i = 0, l = datesArray.length; i < l; i++) {
+          if (datesArray[i].date === date) {
             index = i;
             break;
           }
@@ -91,9 +94,9 @@ class DateRangeDisplayer extends Component {
   onUpdateNumRooms(date, numRooms) {
     const url = `${this.url}/${date}`;
     axios
-      .patch(url, {"numRooms": numRooms})
+      .patch(url, { numRooms: numRooms })
       .then(response => {
-        console.log("Yes!!!", response);
+        console.log('Yes!!!', response);
       })
       .catch(error => {
         const message = 'Error updating property rooms: ' + error;

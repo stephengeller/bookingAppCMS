@@ -4,7 +4,7 @@ export default class GoogleMapsAPI {
   constructor(options) {
     this.state = {
       selected: 'mi',
-      key: options.googleApiKey,
+      key: process.env.REACT_APP_GOOGLE_API_KEY,
       getCoordinates: 'https://maps.googleapis.com/maps/api/geocode/json'
     };
     this.data = {
