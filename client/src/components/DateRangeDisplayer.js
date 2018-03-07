@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
-import { Dropdown, Icon } from 'react-materialize';
+import { Dropdown } from 'react-materialize';
+import DateItem from './DateItem'
 
 import axios from '../modules/axios';
 
@@ -10,6 +11,7 @@ class DateRangeDisplayer extends Component {
     this.getDatesFromMonth = this.getDatesFromMonth.bind(this);
     this.addMissingZero = this.addMissingZero.bind(this);
     this.url = `/properties/${this.props.id}/available`;
+    this.adminUrl = `/admin/${this.url}`
     this.state = {
       availableDates: null
     };
@@ -50,15 +52,11 @@ class DateRangeDisplayer extends Component {
           let date = arrayOfDates[i];
           availableDates.push(
             <li key={i} className="collection-item">
-              <div>
-                {arrayOfDates[i].slice(0, 10)}
-                <a
-                  className="secondary-content"
-                  onClick={() => this.deleteAvailability(date)}
-                >
-                  <Icon className="material-icons">delete</Icon>
-                </a>
-              </div>
+            <DateItem
+              date={date}
+              onDeleteAvailability={this.onDeleteAvailability.bind(this, date.date)}
+              onUpdateNumRooms={this.onUpdateNumRooms.bind(this, date.date)}>
+            </DateItem>
             </li>
           );
         }
@@ -69,13 +67,18 @@ class DateRangeDisplayer extends Component {
     }
   }
 
-  deleteAvailability(date) {
+  onDeleteAvailability(date) {
     axios
       .delete(`${this.url}/${date}`)
       .then(response => {
-        alert(`${date.slice(0, 10)} successfully deleted.`);
         const { datesArray } = this.state;
-        const index = datesArray.indexOf(date);
+        let index = -1;
+        for(var i = 0, l = datesArray.length; i < l; i++) {
+          if(datesArray[i].date === date) {
+            index = i;
+            break;
+          }
+        }
         datesArray.splice(index, 1);
         this.setState({ datesArray });
         this.renderDates(datesArray);
@@ -85,8 +88,21 @@ class DateRangeDisplayer extends Component {
       });
   }
 
+  onUpdateNumRooms(date, numRooms) {
+    const url = `${this.url}/${date}`;
+    axios
+      .patch(url, {"numRooms": numRooms})
+      .then(response => {
+        console.log("Yes!!!", response);
+      })
+      .catch(error => {
+        const message = 'Error updating property rooms: ' + error;
+        console.log(message);
+      });
+  }
+
   getDatesFromMonth(year, month) {
-    const url = `${this.url}/${year}/${month}`;
+    const url = `${this.adminUrl}/${year}/${month}`;
     axios
       .get(url)
       .then(response => {
