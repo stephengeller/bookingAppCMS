@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Button, Icon } from 'react-materialize';
 import 'react-dates/initialize';
-
 import 'react-dates/lib/css/_datepicker.css';
 import { DateRangePicker } from 'react-dates';
 
 import DateRangeArrayMaker from '../modules/DateRangeArrayMaker';
+import DateRangeDisplayer from './DateRangeDisplayer';
 import Formatter from '../modules/Formatter';
 import ErrorHandler from '../modules/ErrorHandler';
 import axios from '../modules/axios';
@@ -131,43 +131,51 @@ class PropertyItemEditor extends Component {
           value={this.state.fields.facilities}
           updateInputValue={this.updateInputValue}
         />
-        Available Dates
-        <br />
-        <DateRangePicker
-          noBorder
-          showClearDates
-          showDefaultInputIcon
-          startDate={this.state.startDate}
-          startDateId="your_unique_start_date_id"
-          endDate={this.state.endDate}
-          endDateId="your_unique_end_date_id"
-          onDatesChange={({ startDate, endDate }) => {
-            this.setState({ startDate, endDate });
-          }}
-          focusedInput={this.state.focusedInput}
-          onFocusChange={focusedInput => {
-            this.setState({ focusedInput });
-          }}
-        />
         <Button
-          onClick={() => {
-            this.updateAvailability(this.state.startDate, this.state.endDate);
-          }}
+          className="btn waves-effect waves-light span4 text-right"
+          type="submit"
+          onClick={this.updateProperty}
         >
-          <Icon left>date_range</Icon>
-          Update Availability
+          <Icon right>edit</Icon>Update Property
         </Button>
         <br />
-        <div className={''}>
-          <Button
-            className="btn waves-effect waves-light span4 text-right"
-            type="submit"
-            onClick={this.updateProperty}
-          >
-            <Icon right>edit</Icon>Update Property
-          </Button>
+        <h4 className="center-align">Available Dates</h4>
+        <br />
+        <div className="center-align">
+          <DateRangePicker
+            noBorder
+            showClearDates
+            showDefaultInputIcon
+            startDate={this.state.startDate}
+            startDateId="your_unique_start_date_id"
+            endDate={this.state.endDate}
+            endDateId="your_unique_end_date_id"
+            onDatesChange={({ startDate, endDate }) => {
+              this.setState({ startDate, endDate });
+            }}
+            focusedInput={this.state.focusedInput}
+            onFocusChange={focusedInput => {
+              this.setState({ focusedInput });
+            }}
+          />
+          <div>
+            <Button
+              onClick={() => {
+                this.updateAvailability(
+                  this.state.startDate,
+                  this.state.endDate
+                );
+              }}
+            >
+              <Icon left>date_range</Icon>
+              Update Availability
+            </Button>
+          </div>
         </div>
         <br />
+        <div className={''} />
+        <br />
+        <DateRangeDisplayer id={this.props.id} />
       </div>
     );
   }

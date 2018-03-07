@@ -1,11 +1,10 @@
 import axios from 'axios';
-import keys from '../dev';
 
 export default class GoogleMapsAPI {
-  constructor() {
+  constructor(options) {
     this.state = {
       selected: 'mi',
-      key: keys.GoogleMapsAPIKey,
+      key: options.googleApiKey,
       getCoordinates: 'https://maps.googleapis.com/maps/api/geocode/json'
     };
     this.data = {
