@@ -35,3 +35,7 @@
 .updateNumRooms i {
   vertical-align: middle;
 }
+
+.center-align {
+  text-align: center;
+}

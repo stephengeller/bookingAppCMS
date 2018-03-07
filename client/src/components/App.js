@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 
 import Header from './Header';
 import Properties from '../pages/Properties';
+import Users from '../pages/Users';
 import Home from '../pages/Home';
 import AddProperty from '../pages/AddProperty';
 import PropertyDetails from '../pages/PropertyDetails';
@@ -38,22 +39,22 @@ class App extends Component {
     this.state = {
       user: null
     };
-    
+
     Auth.init({
-      "COGNITO_APP_ID": this.props["COGNITO_APP_ID"],
-      "USER_POOL_ID": this.props["USER_POOL_ID"],
-      "IDENTITY_POOL_ID": this.props["IDENTITY_POOL_ID"]
+      COGNITO_APP_ID: this.props['COGNITO_APP_ID'],
+      USER_POOL_ID: this.props['USER_POOL_ID'],
+      IDENTITY_POOL_ID: this.props['IDENTITY_POOL_ID']
     });
 
     Auth.getUserDeets()
       .then(this.onLoggedIn.bind(this))
       .catch(err => {
         console.error(err);
-      })
+      });
   }
 
   onLoggedIn(user) {
-    this.setState({'user': user});
+    this.setState({ user: user });
   }
 
   render() {
@@ -71,8 +72,15 @@ class App extends Component {
           <PropsRoute
             exact
             path="/properties"
-            googleApiKey={this.props["GOOGLE_API_KEY"]}
-            component={Properties} />
+            googleApiKey={this.props['GOOGLE_API_KEY']}
+            component={Properties}
+          />
+          <PropsRoute
+            exact
+            path="/users"
+            googleApiKey={this.props['GOOGLE_API_KEY']}
+            component={Users}
+          />
           <Route
             exact
             path="/properties/edit/:id"
