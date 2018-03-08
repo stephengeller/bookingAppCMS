@@ -114,7 +114,7 @@ class UserEditor extends Component {
             className="button"
             onClick={() => this.updateField(this.state.inputField)}
           >
-            <Icon right>create</Icon> Update {inputField}
+            <Icon right>create</Icon> Update {inputField.replace(/custom:/, '').replace(/_/, ' ')}
           </Button>
         </div>
         <div className="divider" />
@@ -153,7 +153,7 @@ class UserEditor extends Component {
               const name = field.attrName;
               return (
                 <option key={name} value={name}>
-                  {name}
+                  {name.replace(/custom:/, '').replace(/_/, ' ')}
                 </option>
               );
             })}
