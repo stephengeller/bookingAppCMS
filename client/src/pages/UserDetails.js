@@ -47,6 +47,14 @@ class UserDetails extends Component {
         <h3 className="center-align">Edit User</h3>
         {editor}
       </div>
+    ) : (
+      'no user'
+    );
+    return (
+      <div className="container">
+        <h3 className="center-align">Edit User</h3>
+        {editor}
+      </div>
     );
   }
 }
