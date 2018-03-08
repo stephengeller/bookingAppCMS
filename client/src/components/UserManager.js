@@ -22,7 +22,7 @@ class UserManager extends Component {
             <EditButton
               type="users"
               props={user}
-              id={`${user.attr['sub']}`}
+              id={`${user.attr['email']}`}
             />
           </div>
         </div>

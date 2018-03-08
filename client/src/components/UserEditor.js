@@ -11,7 +11,8 @@ class UserEditor extends Component {
       { name: 'address', func: 'setAddress' },
       { name: 'phone_number', func: 'setPhoneNum' },
       { name: 'given_name', func: 'setGivenName' },
-      { name: 'family_name', func: 'setFamilyName' }
+      { name: 'family_name', func: 'setFamilyName' },
+      { name: 'custom:tokens', func: 'setNumTokens' }
     ];
     this.user = this.props.user;
     this.userObject = this.createUserObject(this.user.Attributes);
@@ -105,7 +106,7 @@ class UserEditor extends Component {
             {this.changeableFields.map(field => {
               return (
                 <option key={field.name} value={field.name}>
-                  {field.name}
+                  {field.name.replace(/custom\:/, '').replace(/_/, ' ')}
                 </option>
               );
             })}
