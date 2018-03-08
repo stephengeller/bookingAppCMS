@@ -20,7 +20,7 @@ class UserManager extends Component {
       return (
         <div>
           <div className="divider" style={{ margin: '20px' }} />
-          {user.attr['given_name']} {user.Attributes['family_name']}
+          {user.attr['given_name']} {user.attr['family_name']}
           <div style={{ float: 'right' }}>
             <EditButton
               type="users"

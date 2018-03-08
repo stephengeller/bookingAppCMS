@@ -35,7 +35,7 @@ class UserDetails extends Component {
     const editor = user ? (
       <div>
         <h5 className="center-align">
-          {user.Attributes['given_name']} {user.Attributes['family_name']}
+          {user.attr['given_name']} {user.attr['family_name']}
         </h5>
         <UserEditor user={user} />
       </div>
