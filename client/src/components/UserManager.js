@@ -41,7 +41,7 @@ class UserManager extends Component {
       CognitoUserStore.searchByEmail(email)
         .then(r => {
           if (r !== undefined) {
-            console.log(r);
+            console.log('Successfully found user', r);
             this.setState({ user: r });
           } else {
             console.log('No USER found here, Frodo');

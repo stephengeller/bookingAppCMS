@@ -39,3 +39,11 @@
 .center-align {
   text-align: center;
 }
+
+.button {
+  margin: 10px;
+}
+
+.updateUserField {
+  margin: 20px;
+}

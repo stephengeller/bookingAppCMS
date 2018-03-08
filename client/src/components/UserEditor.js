@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Row, Input } from 'react-materialize';
+import { Button, Row, Input, Icon } from 'react-materialize';
 
 import CognitoUserStore from '../modules/CognitoUserStore';
 
@@ -7,20 +7,39 @@ class UserEditor extends Component {
   constructor(props) {
     super(props);
     this.changeableFields = [
-      { name: 'email', func: 'setEmail' },
-      { name: 'address', func: 'setAddress' },
-      { name: 'phone_number', func: 'setPhoneNum' },
-      { name: 'given_name', func: 'setGivenName' },
-      { name: 'family_name', func: 'setFamilyName' }
+      { attrName: 'email', label: 'Email', func: 'setEmail' },
+      { attrName: 'address', label: 'Address', func: 'setAddress' },
+      { attrName: 'phone_number', label: 'Phone Number', func: 'setPhoneNum' },
+      { attrName: 'given_name', label: 'Given Name', func: 'setGivenName' },
+      { attrName: 'family_name', label: 'Family Name', func: 'setFamilyName' },
+      {
+        attrName: 'custom:tokens',
+        label: 'Number of Tokens',
+        func: 'setNumTokens'
+      }
     ];
     this.user = this.props.user;
     this.userObject = this.createUserObject(this.user.Attributes);
     this.loadField = this.loadField.bind(this);
     this.updateField = this.updateField.bind(this);
+    this.disableUser = this.disableUser.bind(this);
+    this.resetUserPassword = this.resetUserPassword.bind(this);
     this.state = {
       inputField: '',
       error: {}
     };
+  }
+
+  resetUserPassword(email) {
+    CognitoUserStore.resetUserPassword(email)
+      .then(r => console.log(r))
+      .catch(err => console.log(err));
+  }
+
+  disableUser(email) {
+    CognitoUserStore.disableUser(email)
+      .then(r => console.log(r))
+      .catch(err => console.log(err));
   }
 
   async resetComponent() {
@@ -37,11 +56,12 @@ class UserEditor extends Component {
       obj[attributes[i].Name] = attributes[i].Value;
     }
     this.changeableFields.map(field => {
-      if (obj[field.name]) {
-        return (obj['functions'][field.name] = field.func);
+      if (obj[field.attrName]) {
+        return (obj['functions'][field.attrName] = field.func);
       }
       return null;
     });
+    console.log(obj);
     return obj;
   }
 
@@ -51,11 +71,12 @@ class UserEditor extends Component {
   }
 
   loadField(key) {
+    console.log(this.userObject, key);
     this.setState({ inputValue: this.userObject[key], inputField: key });
   }
 
-  updateField() {
-    const functionName = this.userObject.functions[this.state.inputField];
+  updateField(field) {
+    const functionName = this.userObject.functions[field];
     const cognitoFunction = CognitoUserStore[functionName];
 
     cognitoFunction(this.state.inputValue, this.userObject.email)
@@ -77,20 +98,42 @@ class UserEditor extends Component {
   }
 
   render() {
-    const { error } = this.state;
+    const { error, userObject, inputField, inputValue } = this.state;
     const input = (
       <Input
-        value={this.state.inputValue}
+        value={inputValue}
         s={6}
-        label={this.state.inputField}
+        label={inputField}
         onChange={e => this.handleChange(e)}
       />
     );
-    const button = (
+    const buttons = (
       <div className="center">
-        <Button onClick={() => this.updateField()}>
-          Update {this.state.inputField}
-        </Button>
+        <div>
+          <Button
+            className="button"
+            onClick={() => this.updateField(this.state.inputField)}
+          >
+            <Icon right>create</Icon> Update {inputField}
+          </Button>
+        </div>
+        <div className="divider" />
+        <div>
+          <Button
+            className={'blue darken-1 button'}
+            onClick={() => this.resetUserPassword(userObject.email)}
+          >
+            <Icon right>cached</Icon>Reset user password
+          </Button>
+        </div>
+        <div>
+          <Button
+            className={'red accent-4 button'}
+            onClick={() => this.disableUser(userObject.email)}
+          >
+            <Icon right>block</Icon>Disable user
+          </Button>
+        </div>
       </div>
     );
     return (
@@ -107,16 +150,17 @@ class UserEditor extends Component {
             }}
           >
             {this.changeableFields.map(field => {
+              const name = field.attrName;
               return (
-                <option key={field.name} value={field.name}>
-                  {field.name}
+                <option key={name} value={name}>
+                  {name}
                 </option>
               );
             })}
           </Input>
           {input}
+          {buttons}
         </Row>
-        {button}
       </div>
     );
   }
