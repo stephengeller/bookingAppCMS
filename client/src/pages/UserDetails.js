@@ -18,16 +18,13 @@ class UserDetails extends Component {
 
   async getUserEmail() {
     const url = this.props.location.pathname;
-    const email = url.slice(url.indexOf('edit/') + 5);
-    let user;
+    const email = url.slice(url.indexOf('users/') + 6);
     await CognitoUserStore.searchByEmail(email)
-      .then(r => {
-        console.log(r);
-        user = r;
+      .then(user => {
+        console.log(user);
+        this.setState({ user });
       })
       .catch(err => console.log(err));
-    this.setState({ user });
-    return user;
   }
 
   render() {

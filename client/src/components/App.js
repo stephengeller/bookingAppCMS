@@ -30,10 +30,6 @@ const PropsRoute = ({ component, ...rest }) => {
   );
 };
 
-// TODO: create route to handle redirect to login page and back (parse & store the token in local storage)
-// TODO: set the token in the Header for all the calls to the API
-// TODO: create global config components (eg for URL, maybe token)
-
 class App extends Component {
   constructor(props) {
     super(props);
@@ -87,7 +83,7 @@ class App extends Component {
             googleApiKey={this.props['GOOGLE_API_KEY']}
             component={Users}
           />
-          <Route exact path="/users/edit/:id" component={UserDetails} />
+          <Route exact path="/users/:id" component={UserDetails} />
           <PropsRoute
             exact
             path="/login"
@@ -100,7 +96,7 @@ class App extends Component {
             exact
             path="/properties/add"
             component={AddProperty}
-            googleApiKey={this.props["GOOGLE_API_KEY"]}
+            googleApiKey={this.props['GOOGLE_API_KEY']}
           />
           <Route path="/logout" component={Logout} />
         </div>
