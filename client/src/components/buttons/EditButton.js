@@ -9,7 +9,7 @@ class EditButton extends Component {
       <span className="left-align">
         <Link
           to={{
-            pathname: `/${type}/edit/${id}`,
+            pathname: `/${type}/${id}`,
             state: {
               props
             }
