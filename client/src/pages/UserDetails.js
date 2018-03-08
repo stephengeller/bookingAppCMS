@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import { Preloader } from 'react-materialize';
+
 import CognitoUserStore from '../modules/CognitoUserStore';
 import UserEditor from '../components/UserEditor';
 
@@ -37,7 +39,9 @@ class UserDetails extends Component {
         <UserEditor user={user} />
       </div>
     ) : (
-      'no user'
+      <div className="center-align center">
+        <Preloader />
+      </div>
     );
     return (
       <div className="container">
