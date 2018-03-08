@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, Button } from 'react-materialize';
+import { Input, Button, Preloader } from 'react-materialize';
 
 import EditButton from './buttons/EditButton';
 import CognitoUserStore from '../modules/CognitoUserStore';
@@ -7,7 +7,10 @@ import CognitoUserStore from '../modules/CognitoUserStore';
 class UserManager extends Component {
   constructor(props) {
     super(props);
-    this.state = { email: '' };
+    this.state = {
+      email: '',
+      loading: false
+    };
     this.searchForUser = this.searchForUser.bind(this);
     this.checkForUser = this.checkForUser.bind(this);
   }
@@ -34,14 +37,16 @@ class UserManager extends Component {
 
   searchForUser(email) {
     if (email) {
+      this.setState({ loading: true });
       CognitoUserStore.searchByEmail(email)
         .then(r => {
           if (r !== undefined) {
-            console.log(r);
+            console.log('Successfully found user', r);
             this.setState({ user: r });
           } else {
             console.log('No USER found here, Frodo');
           }
+          this.setState({ loading: false });
         })
         .catch(err => console.log(err));
     } else {
@@ -59,18 +64,20 @@ class UserManager extends Component {
         <Input
           type="email"
           label="Email"
+          validate
           value={email}
           onChange={e => {
             this.setState({ email: e.target.value });
           }}
         />
-        <Button
-          validate
-          modal={'confirm'}
-          onClick={() => this.searchForUser(email)}
-        >
-          Search for user
-        </Button>
+        {this.state.loading ? (
+          <Preloader />
+        ) : (
+          <Button modal={'confirm'} onClick={() => this.searchForUser(email)}>
+            Search for user
+          </Button>
+        )}
+
         <div>{userDeets}</div>
       </div>
     );
