@@ -17,12 +17,12 @@ class UserManager extends Component {
       return (
         <div>
           <div className="divider" style={{ margin: '20px' }} />
-          {user.Attributes[7].Value} {user.Attributes[8].Value}
+          {user.attr['given_name']} {user.Attributes['family_name']}
           <div style={{ float: 'right' }}>
             <EditButton
               type="users"
               props={user}
-              id={`${user.Attributes[9].Value}`}
+              id={`${user.attr['sub']}`}
             />
           </div>
         </div>

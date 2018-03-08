@@ -31,7 +31,15 @@ function updateAtrribute(attribute, value, username) {
 
 module.exports = {
   searchByEmail: email => {
-    return searchForUser('email', email).then(result => result.Users[0]);
+    return searchForUser('email', email)
+      .then(result => result.Users[0])
+      .then(result => {
+        result.attr = {};
+        for(var i = 0, l = result.Attributes.length; i < l; i++) {
+          result.attr[result.Attributes[i]['Name']] = result.Attributes[i]['Value'];
+        }
+        return result;
+      })
   },
 
   setNumTokens: (tokens, email) => {
