@@ -7,7 +7,7 @@ class Login extends Component {
   onSubmit(evt) {
     evt.preventDefault();
     this.props
-      .logUserIn(this.refs.username.value, this.refs.password.value)
+      .logUserIn(this.refs.username.state.value, this.refs.password.state.value)
       .then(this.props.onLoggedIn);
   }
 
