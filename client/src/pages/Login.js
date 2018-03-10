@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter, Redirect } from 'react-router-dom';
-
+import { Alert } from 'react-bootstrap';
 import { Input, Button, Icon } from 'react-materialize';
 
 class Login extends Component {
@@ -8,23 +8,38 @@ class Login extends Component {
   constructor(props){
     super(props);
     this.state = {
-      disableLogin: false
+      disableLogin: false,
+      errorMessage: null
     }
   }
 
   onSubmit(evt) {
     evt.preventDefault();
     this.setState({
-      disableLogin: true
+      disableLogin: true,
+      errorMessage: null
     })
     this.props
       .logUserIn(this.refs.username.state.value, this.refs.password.state.value)
       .then(this.props.onLoggedIn)
       .catch(err => {
         this.setState({
-          disableLogin: false
+          disableLogin: false,
+          errorMessage: err.message
         })
       })
+  }
+
+  renderError() {
+    if(this.state.errorMessage === null) {
+      return;
+    }
+    return (
+      <Alert bsStyle="danger">
+        <h4>Login error!</h4>
+        <p>{this.state.errorMessage}</p>
+      </Alert>
+    )
   }
 
   renderButton() {
@@ -66,6 +81,7 @@ class Login extends Component {
             </label>
             {this.renderButton()}
           </form>
+          {this.renderError()}
         </div>
       );
     }
