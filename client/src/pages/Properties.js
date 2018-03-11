@@ -13,10 +13,8 @@ class Properties extends Component {
   render() {
     return (
       <div>
-        <h2 className="center-align">Properties</h2>
-        <PropertyManager
-          googleApiKey={this.props.googleApiKey}
-        />
+        <h2 className="center-align">Property Manager</h2>
+        <PropertyManager googleApiKey={this.props.googleApiKey} />
       </div>
     );
   }

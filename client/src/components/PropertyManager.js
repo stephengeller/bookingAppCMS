@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Preloader } from 'react-materialize';
+import { Preloader, Input } from 'react-materialize';
 
 import PropertyItem from '../components/PropertyItem';
 import GoToAddPropertyButton from './buttons/GoToAddPropertyButton';
@@ -16,6 +16,7 @@ class ApiPropertyManager extends Component {
     this.loaded = false;
     this.deleteProperty = this.deleteProperty.bind(this);
     this.getProperties = this.getProperties.bind(this);
+    this.filterResults = this.filterResults.bind(this);
   }
 
   deleteProperty(property) {
@@ -39,7 +40,7 @@ class ApiPropertyManager extends Component {
       .then(response => {
         const properties = response.data;
         this.loaded = true;
-        this.setState({ properties });
+        this.setState({ properties, allProperties: properties });
         return properties;
       })
       .catch(error => {
@@ -51,6 +52,13 @@ class ApiPropertyManager extends Component {
         };
         this.setState({ error: errorMessage });
       });
+  }
+
+  filterResults(propertyName) {
+    const properties = this.state.allProperties.filter(property => {
+      return property.title.toLowerCase().includes(propertyName.toLowerCase());
+    });
+    this.setState({ properties });
   }
 
   componentDidMount() {
@@ -65,6 +73,11 @@ class ApiPropertyManager extends Component {
           {this.state.error.message}
         </div>
         <GoToAddPropertyButton />
+        <Input
+          s={6}
+          onChange={e => this.filterResults(e.target.value)}
+          label="Search properties"
+        />
         {this.loaded === false ? (
           <div className="center-align">
             <Preloader flashing />
