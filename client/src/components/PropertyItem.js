@@ -32,8 +32,8 @@ class PropertyItem extends Component {
   }
 
   componentWillMount() {
-    const property = this.props.property;
-    if (property.address) {
+    const { property } = this.props;
+    if (property.address && typeof property.address === Array) {
       property.address = property.address.join(', ');
     } else if (property.location) {
       property.address = `${property.location.lat}, ${property.location.lon}`;

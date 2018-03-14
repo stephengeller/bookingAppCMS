@@ -7,7 +7,7 @@ class GoToManageButton extends Component {
     return (
       <span className="left-align">
         <Link to={`/properties`} className="edit-property-button">
-          <Button className="btn waves-effect waves-light blue accent-2 hoverable">
+          <Button className="btn waves-effect waves-light hoverable">
             <Icon right>folder</Icon>Manage Properties
           </Button>
         </Link>
