@@ -48,6 +48,12 @@ class UserEditor extends Component {
       .catch(err => console.log(err));
   }
 
+  deleteUser(email) {
+    CognitoUserStore.deleteUser(email)
+      .then(r => console.log(r))
+      .catch(err => console.log(err));
+  }
+
   async resetComponent() {
     // const user = await CognitoUserStore.searchByEmail(this.userObject.email);
     // this.userObject = this.createUserObject(user.Attributes);
@@ -124,6 +130,19 @@ class UserEditor extends Component {
     )
   }
 
+  renderDeleteBtn() {
+    if(!this.props.user.Enabled) {
+      return (
+        <Button
+          className={'red accent-4 button'}
+          onClick={() => this.deleteUser(this.userObject.email)}
+        >
+          <Icon right>block</Icon>Delete user
+        </Button>
+      )
+    }
+  }
+
   render() {
     const { error, userObject, inputField, inputValue } = this.state;
     const input = (
@@ -155,6 +174,7 @@ class UserEditor extends Component {
         </div>
         <div>
           {this.renderDisableBtn()}
+          {this.renderDeleteBtn()}
         </div>
       </div>
     );

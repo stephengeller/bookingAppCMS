@@ -84,6 +84,15 @@ module.exports = {
     return cognitoidentityserviceprovider.adminEnableUser(params).promise();
   },
 
+  deleteUser: email => {
+    var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+    var params = {
+      UserPoolId: USER_POOL_ID,
+      Username: email
+    };
+    return cognitoidentityserviceprovider.adminDeleteUser(params).promise();
+  },
+
   resetUserPassword: email => {
     var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
     var params = {
