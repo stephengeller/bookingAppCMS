@@ -138,7 +138,7 @@ class UserEditor extends Component {
     );
     return (
       <div style={{ margin: '30px' }}>
-        <h6 className="center-align">({this.props.user.UserStatus})</h6>
+        <h6 className="center-align">({this.props.user.UserStatus} / {this.props.user.Enabled ? 'enabled' : 'disabled'})</h6>
         <h5 style={error.style}>{error.message}</h5>
         <Row>
           <Input
