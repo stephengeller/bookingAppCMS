@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Input, Button, Preloader } from 'react-materialize';
 
+import { Alert } from 'react-bootstrap';
 import EditButton from './buttons/EditButton';
 import CognitoUserStore from '../modules/CognitoUserStore';
 
@@ -9,6 +10,7 @@ class UserManager extends Component {
     super(props);
     this.state = {
       email: '',
+      errorMsg: null,
       loading: false
     };
     this.searchForUser = this.searchForUser.bind(this);
@@ -36,6 +38,7 @@ class UserManager extends Component {
   }
 
   searchForUser(email) {
+    this.setState({errorMsg: null});
     if (email) {
       this.setState({ loading: true });
       CognitoUserStore.searchByEmail(email)
@@ -48,10 +51,26 @@ class UserManager extends Component {
           }
           this.setState({ loading: false });
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          this.setState({
+            errorMsg: err.message,
+            loading: false
+          });
+        });
     } else {
       console.log('add an email');
     }
+  }
+
+  renderError() {
+    if(this.state.errorMsg === null) {
+      return;
+    }
+    return (
+      <Alert bsStyle="danger">
+        <p>{this.state.errorMsg}</p>
+      </Alert>
+    );
   }
 
   render() {
@@ -70,6 +89,7 @@ class UserManager extends Component {
             this.setState({ email: e.target.value });
           }}
         />
+        {this.renderError()}
         {this.state.loading ? (
           <Preloader />
         ) : (
@@ -77,7 +97,6 @@ class UserManager extends Component {
             Search for user
           </Button>
         )}
-
         <div>{userDeets}</div>
       </div>
     );

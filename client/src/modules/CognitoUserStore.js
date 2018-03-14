@@ -32,6 +32,12 @@ function updateAtrribute(attribute, value, username) {
 module.exports = {
   searchByEmail: email => {
     return searchForUser('email', email)
+      .then(result => {
+        if(result.Users.length === 0) {
+          throw new Error('User not found');
+        }
+        return result;
+      })
       .then(result => result.Users[0])
       .then(result => {
         result.attr = {};
