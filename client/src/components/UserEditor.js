@@ -129,7 +129,7 @@ class UserEditor extends Component {
         <div>
           <Button
             className={'red accent-4 button'}
-            onClick={() => this.disableUser(userObject.email)}
+            onClick={() => this.disableUser(this.userObject.email)}
           >
             <Icon right>block</Icon>Disable user
           </Button>
