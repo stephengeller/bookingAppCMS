@@ -18,6 +18,10 @@ class UserDetails extends Component {
     this.getUserEmail();
   }
 
+  onUserChanged() {
+    this.getUserEmail();
+  }
+
   async getUserEmail() {
     const url = this.props.location.pathname;
     const email = url.slice(url.indexOf('users/') + 6);
@@ -36,7 +40,9 @@ class UserDetails extends Component {
         <h5 className="center-align">
           {user.attr['given_name']} {user.attr['family_name']}
         </h5>
-        <UserEditor user={user} />
+        <UserEditor
+          user={user}
+          onUserChanged={this.onUserChanged.bind(this)}/>
       </div>
     ) : (
       <div className="center-align center">

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Button, Row, Input, Icon } from 'react-materialize';
 
+import { Redirect } from 'react-router-dom';
+
 import CognitoUserStore from '../modules/CognitoUserStore';
 
 class UserEditor extends Component {
@@ -26,19 +28,35 @@ class UserEditor extends Component {
     this.resetUserPassword = this.resetUserPassword.bind(this);
     this.state = {
       inputField: '',
-      error: {}
+      error: {},
+      redirect: false
     };
   }
 
   resetUserPassword(email) {
     CognitoUserStore.resetUserPassword(email)
-      .then(r => console.log(r))
+    .then(this.props.onUserChanged)
       .catch(err => console.log(err));
   }
 
   disableUser(email) {
     CognitoUserStore.disableUser(email)
-      .then(r => console.log(r))
+    .then(this.props.onUserChanged)
+      .catch(err => console.log(err));
+  }
+
+  enableUser(email) {
+    CognitoUserStore.enableUser(email)
+    .then(this.props.onUserChanged)
+      .catch(err => console.log(err));
+  }
+
+  deleteUser(email) {
+    this.setState();
+    CognitoUserStore.deleteUser(email)
+      .then(() => {
+        this.setState({redirect: true});
+      })
       .catch(err => console.log(err));
   }
 
@@ -97,7 +115,50 @@ class UserEditor extends Component {
     this.loadField('email');
   }
 
+  renderBackToParent() {
+    if (this.state.redirect) {
+      return <Redirect to='/users'></Redirect>
+    }
+  }
+
+  renderDisableBtn() {
+    if(this.props.user.Enabled) {
+      return (
+        <Button
+          className={'red accent-4 button'}
+          onClick={() => this.disableUser(this.userObject.email)}
+        >
+          <Icon right>block</Icon>Disable user
+        </Button>
+      )
+    }
+    return (
+      <Button
+        className={'green accent-4 button'}
+        onClick={() => this.enableUser(this.userObject.email)}
+      >
+        <Icon right>check</Icon>Enable user
+      </Button>
+    )
+  }
+
+  renderDeleteBtn() {
+    if(!this.props.user.Enabled) {
+      return (
+        <Button
+          className={'red accent-4 button'}
+          onClick={() => this.deleteUser(this.userObject.email)}
+        >
+          <Icon right>block</Icon>Delete user
+        </Button>
+      )
+    }
+  }
+
   render() {
+    if(this.state.redirect) {
+      return this.renderBackToParent();
+    }
     const { error, userObject, inputField, inputValue } = this.state;
     const input = (
       <Input
@@ -127,17 +188,14 @@ class UserEditor extends Component {
           </Button>
         </div>
         <div>
-          <Button
-            className={'red accent-4 button'}
-            onClick={() => this.disableUser(userObject.email)}
-          >
-            <Icon right>block</Icon>Disable user
-          </Button>
+          {this.renderDisableBtn()}
+          {this.renderDeleteBtn()}
         </div>
       </div>
     );
     return (
       <div style={{ margin: '30px' }}>
+        <h6 className="center-align">({this.props.user.UserStatus} / {this.props.user.Enabled ? 'enabled' : 'disabled'})</h6>
         <h5 style={error.style}>{error.message}</h5>
         <Row>
           <Input
