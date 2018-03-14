@@ -101,7 +101,7 @@ class UserEditor extends Component {
     const { error, userObject, inputField, inputValue } = this.state;
     const input = (
       <Input
-        value={inputValue}
+        value={inputValue || ''}
         s={6}
         label={inputField}
         onChange={e => this.handleChange(e)}
