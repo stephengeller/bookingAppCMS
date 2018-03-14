@@ -42,6 +42,12 @@ class UserEditor extends Component {
       .catch(err => console.log(err));
   }
 
+  enableUser(email) {
+    CognitoUserStore.enableUser(email)
+      .then(r => console.log(r))
+      .catch(err => console.log(err));
+  }
+
   async resetComponent() {
     // const user = await CognitoUserStore.searchByEmail(this.userObject.email);
     // this.userObject = this.createUserObject(user.Attributes);
@@ -97,6 +103,27 @@ class UserEditor extends Component {
     this.loadField('email');
   }
 
+  renderDisableBtn() {
+    if(this.props.user.Enabled) {
+      return (
+        <Button
+          className={'red accent-4 button'}
+          onClick={() => this.disableUser(this.userObject.email)}
+        >
+          <Icon right>block</Icon>Disable user
+        </Button>
+      )
+    }
+    return (
+      <Button
+        className={'green accent-4 button'}
+        onClick={() => this.enableUser(this.userObject.email)}
+      >
+        <Icon right>check</Icon>Enable user
+      </Button>
+    )
+  }
+
   render() {
     const { error, userObject, inputField, inputValue } = this.state;
     const input = (
@@ -127,12 +154,7 @@ class UserEditor extends Component {
           </Button>
         </div>
         <div>
-          <Button
-            className={'red accent-4 button'}
-            onClick={() => this.disableUser(this.userObject.email)}
-          >
-            <Icon right>block</Icon>Disable user
-          </Button>
+          {this.renderDisableBtn()}
         </div>
       </div>
     );
