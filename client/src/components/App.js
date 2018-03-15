@@ -72,11 +72,7 @@ class App extends Component {
             googleApiKey={this.props['GOOGLE_API_KEY']}
             component={Properties}
           />
-          <Route
-            exact
-            path="/properties/edit/:id"
-            component={PropertyDetails}
-          />
+          <Route exact path="/properties/:id" component={PropertyDetails} />
           <PropsRoute
             exact
             path="/users"
