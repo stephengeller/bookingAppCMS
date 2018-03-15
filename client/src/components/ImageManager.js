@@ -11,6 +11,7 @@ class ImageManager extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.id = this.props.match.params.id;
     this.url = `/properties/${this.id}/image`;
+    this.state = { files: [] };
   }
 
   submitPicture() {
@@ -30,7 +31,10 @@ class ImageManager extends Component {
       });
   }
 
-  getFiles(files) {
+  getFiles(file) {
+    this.displayImages(file[0]);
+    const { files } = this.state;
+    files.push(file[0]);
     this.setState({ files });
     console.log(this.state);
   }
@@ -39,10 +43,28 @@ class ImageManager extends Component {
     this.setState({ priority: e.target.value });
   }
 
+  displayImages(base64Object) {
+    const { file } = base64Object;
+    const reader = new FileReader();
+    reader.onload = (function(theFile) {
+      return function(e) {
+        document.getElementById('list').innerHTML += [
+          '<img src="',
+          e.target.result,
+          '" title="',
+          theFile.name,
+          '" width="50" />'
+        ].join('');
+      };
+    })(file);
+    return reader.readAsDataURL(file);
+  }
+
   render() {
     return (
       <div className="container center-align">
         <h2>ImageManager</h2>
+        <div id="list" />
         <Row>
           <FileBase64 multiple={true} onDone={this.getFiles.bind(this)} />
           <Input
