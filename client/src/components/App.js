@@ -44,11 +44,14 @@ class App extends Component {
       }
     };
     Auth.init(this.state.awsConfig);
-    UserStore.init(this.props['USER_POOL_ID']);
   }
 
   logIn(username, password) {
     return Auth.logIn(username, password)
+    .then(Auth.getCurrentSession)
+    .then(sesh => {
+      UserStore.init(sesh, this.state.awsConfig)
+    })
     .then(Auth.getUserDeets)
     .then(this.onLoggedIn.bind(this))
   }

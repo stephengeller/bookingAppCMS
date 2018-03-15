@@ -1,4 +1,4 @@
-import Amplify from 'aws-amplify'
+import Amplify, { Auth } from 'aws-amplify'
 
 var exp = {};
 
@@ -27,6 +27,10 @@ exp.getUserDeets = () =>  {
       resolve(attr);
     });
   });
+}
+
+exp.getCurrentSession = () => {
+  return Auth.currentSession();
 }
 
 export default exp
