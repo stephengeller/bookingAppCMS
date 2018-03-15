@@ -9,6 +9,7 @@ class ImageManager extends Component {
     this.getFiles = this.getFiles.bind(this);
     this.submitPictures = this.submitPictures.bind(this);
     this.getPreexistingImages = this.getPreexistingImages.bind(this);
+    this.addHTMLImageToList = this.addHTMLImageToList.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.id = this.props.match.params.id;
     this.url = `/properties/${this.id}/image`;
@@ -19,7 +20,8 @@ class ImageManager extends Component {
     let { files } = this.state;
     files = files.map(file => {
       return {
-        priority: Math.floor(Math.random() * 10 + 1),
+        // priority: Math.floor(Math.random() * 10 + 1),
+        priority: 1,
         base64: file.base64
       };
     });
@@ -38,21 +40,20 @@ class ImageManager extends Component {
 
   getPreexistingImages() {
     axios.get(`${this.url}s`).then(response => {
-      console.log(response);
-
       if (response.data.length > 0) {
-        console.log('longer than 0');
-        response.data.forEach(image => this.displayURLs(image.url));
+        console.log(response.data);
+        response.data.forEach(image =>
+          this.addHTMLImageToList(image.url, image.id)
+        );
       }
       this.setState({ uploadedImages: response.data });
     });
   }
 
-  displayURLs(url) {
-    console.log(url);
+  addHTMLImageToList(src, id) {
     document.getElementById(
       'list'
-    ).innerHTML += `<img src=${url} width="250" />`;
+    ).innerHTML += `<img src=${src} title=${id} id=${id} width="200" />`;
   }
 
   getFiles(file) {
@@ -60,7 +61,6 @@ class ImageManager extends Component {
     const { files } = this.state;
     files.push(file[0]);
     this.setState({ files });
-    console.log(this.state);
   }
 
   handleChange(e) {
@@ -70,15 +70,9 @@ class ImageManager extends Component {
   displayImages(base64Object) {
     const { file } = base64Object;
     const reader = new FileReader();
-    reader.onload = (function(theFile) {
-      return function(e) {
-        document.getElementById('list').innerHTML += [
-          '<img src="',
-          e.target.result,
-          '" title="',
-          theFile.name,
-          '" width="100" />'
-        ].join('');
+    reader.onload = (theFile => {
+      return e => {
+        this.addHTMLImageToList(e.target.result, theFile.name);
       };
     })(file);
     return reader.readAsDataURL(file);
@@ -90,10 +84,9 @@ class ImageManager extends Component {
 
   render() {
     return (
-      <div className="container center-align">
+      <div className="center-align">
         <h2>ImageManager</h2>
-        <div id="list" />
-        <Row>
+        <Row className="container">
           <FileBase64 multiple={true} onDone={this.getFiles.bind(this)} />
           <Input
             s={1}
@@ -103,6 +96,7 @@ class ImageManager extends Component {
           />
         </Row>
         <Button onClick={() => this.submitPictures()}>Submit</Button>
+        <div id="list" />
       </div>
     );
   }
