@@ -8,6 +8,7 @@ class ImageManager extends Component {
     super(props);
     this.getFiles = this.getFiles.bind(this);
     this.submitPictures = this.submitPictures.bind(this);
+    this.getPreexistingImages = this.getPreexistingImages.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.id = this.props.match.params.id;
     this.url = `/properties/${this.id}/image`;
@@ -22,7 +23,6 @@ class ImageManager extends Component {
         base64: file.base64
       };
     });
-    console.log(files);
     files.forEach(file => {
       axios
         .post(this.url, file)
@@ -34,6 +34,25 @@ class ImageManager extends Component {
           console.log(errorResponse);
         });
     });
+  }
+
+  getPreexistingImages() {
+    axios.get(`${this.url}s`).then(response => {
+      console.log(response);
+
+      if (response.data.length > 0) {
+        console.log('longer than 0');
+        response.data.forEach(image => this.displayURLs(image.url));
+      }
+      this.setState({ uploadedImages: response.data });
+    });
+  }
+
+  displayURLs(url) {
+    console.log(url);
+    document.getElementById(
+      'list'
+    ).innerHTML += `<img src=${url} width="250" />`;
   }
 
   getFiles(file) {
@@ -63,6 +82,10 @@ class ImageManager extends Component {
       };
     })(file);
     return reader.readAsDataURL(file);
+  }
+
+  componentWillMount() {
+    this.getPreexistingImages();
   }
 
   render() {
