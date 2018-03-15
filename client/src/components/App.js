@@ -86,6 +86,21 @@ class App extends Component {
         </div>
       )
     }
+    if(!this.state.user) {
+      return (
+        <BrowserRouter>
+          <div>
+            <Header user={this.state.user} />
+            <PropsRoute
+              exact
+              logIn={this.logIn.bind(this)}
+              component={Login}
+              user={this.state.user}
+            />
+          </div>
+        </BrowserRouter>
+      )
+    }
     return (
       <BrowserRouter>
         <div>
