@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk');
 
-const USER_POOL_ID = 'eu-west-2_BmTJxzD8N';
+var USER_POOL_ID = null;
 
 function searchForUser(property, value) {
   var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
@@ -30,6 +30,11 @@ function updateAtrribute(attribute, value, username) {
 }
 
 module.exports = {
+
+  init: userPoolId => {
+    USER_POOL_ID = userPoolId
+  },
+
   searchByEmail: email => {
     return searchForUser('email', email)
       .then(result => {

@@ -6,7 +6,9 @@ class Users extends Component {
     return (
       <div>
         <h2 className="center-align">Users</h2>
-        <UserManager />
+        <UserManager
+          userStore={this.props.userStore}
+        />
       </div>
     );
   }
