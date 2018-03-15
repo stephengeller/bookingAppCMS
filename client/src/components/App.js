@@ -9,6 +9,7 @@ import AddProperty from '../pages/AddProperty';
 import PropertyDetails from '../pages/PropertyDetails';
 import UserDetails from '../pages/UserDetails';
 import Login from '../pages/Login';
+import UserStore from '../modules/CognitoUserStore';
 
 import Auth from '../modules/Auth';
 
@@ -42,6 +43,8 @@ class App extends Component {
       USER_POOL_ID: this.props['USER_POOL_ID'],
       IDENTITY_POOL_ID: this.props['IDENTITY_POOL_ID']
     });
+
+    UserStore.init(this.props['USER_POOL_ID'])
 
     Auth.getUserDeets()
       .then(this.onLoggedIn.bind(this))
@@ -80,10 +83,14 @@ class App extends Component {
           <PropsRoute
             exact
             path="/users"
+            userStore={UserStore}
             googleApiKey={this.props['GOOGLE_API_KEY']}
             component={Users}
           />
-          <Route exact path="/users/:id" component={UserDetails} />
+          <PropsRoute
+            exact path="/users/:id"
+            userStore={UserStore}
+            component={UserDetails} />
           <PropsRoute
             exact
             path="/login"

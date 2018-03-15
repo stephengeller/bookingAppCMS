@@ -3,8 +3,6 @@ import { Button, Row, Input, Icon } from 'react-materialize';
 
 import { Redirect } from 'react-router-dom';
 
-import CognitoUserStore from '../modules/CognitoUserStore';
-
 class UserEditor extends Component {
   constructor(props) {
     super(props);
@@ -34,26 +32,26 @@ class UserEditor extends Component {
   }
 
   resetUserPassword(email) {
-    CognitoUserStore.resetUserPassword(email)
+    this.props.userStore.resetUserPassword(email)
     .then(this.props.onUserChanged)
       .catch(err => console.log(err));
   }
 
   disableUser(email) {
-    CognitoUserStore.disableUser(email)
+    this.props.userStore.disableUser(email)
     .then(this.props.onUserChanged)
       .catch(err => console.log(err));
   }
 
   enableUser(email) {
-    CognitoUserStore.enableUser(email)
+    this.props.userStore.enableUser(email)
     .then(this.props.onUserChanged)
       .catch(err => console.log(err));
   }
 
   deleteUser(email) {
     this.setState();
-    CognitoUserStore.deleteUser(email)
+    this.props.userStore.deleteUser(email)
       .then(() => {
         this.setState({redirect: true});
       })
@@ -61,7 +59,7 @@ class UserEditor extends Component {
   }
 
   async resetComponent() {
-    // const user = await CognitoUserStore.searchByEmail(this.userObject.email);
+    // const user = await this.props.userStore.searchByEmail(this.userObject.email);
     // this.userObject = this.createUserObject(user.Attributes);
     console.log(this.state);
   }
@@ -95,7 +93,7 @@ class UserEditor extends Component {
 
   updateField(field) {
     const functionName = this.userObject.functions[field];
-    const cognitoFunction = CognitoUserStore[functionName];
+    const cognitoFunction = this.props.userStore[functionName];
 
     cognitoFunction(this.state.inputValue, this.userObject.email)
       .then(r => {
