@@ -7,28 +7,33 @@ class ImageManager extends Component {
   constructor(props) {
     super(props);
     this.getFiles = this.getFiles.bind(this);
-    this.submitPicture = this.submitPicture.bind(this);
+    this.submitPictures = this.submitPictures.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.id = this.props.match.params.id;
     this.url = `/properties/${this.id}/image`;
     this.state = { files: [] };
   }
 
-  submitPicture() {
-    const { files } = this.state;
-    const json = {
-      priority: this.state.priority,
-      base64: files[0].base64
-    };
-    axios
-      .post(this.url, json)
-      .then(response => {
-        console.log('Success!');
-        console.log(response);
-      })
-      .catch(errorResponse => {
-        console.log(errorResponse);
-      });
+  submitPictures() {
+    let { files } = this.state;
+    files = files.map(file => {
+      return {
+        priority: Math.floor(Math.random() * 10 + 1),
+        base64: file.base64
+      };
+    });
+    console.log(files);
+    files.forEach(file => {
+      axios
+        .post(this.url, file)
+        .then(response => {
+          console.log('Success!');
+          console.log(response);
+        })
+        .catch(errorResponse => {
+          console.log(errorResponse);
+        });
+    });
   }
 
   getFiles(file) {
@@ -53,7 +58,7 @@ class ImageManager extends Component {
           e.target.result,
           '" title="',
           theFile.name,
-          '" width="50" />'
+          '" width="100" />'
         ].join('');
       };
     })(file);
@@ -74,7 +79,7 @@ class ImageManager extends Component {
             onChange={e => this.handleChange(e)}
           />
         </Row>
-        <Button onClick={() => this.submitPicture()}>Submit</Button>
+        <Button onClick={() => this.submitPictures()}>Submit</Button>
       </div>
     );
   }
