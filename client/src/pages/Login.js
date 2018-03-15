@@ -19,9 +19,7 @@ class Login extends Component {
       disableLogin: true,
       errorMessage: null
     })
-    this.props
-      .logUserIn(this.refs.username.state.value, this.refs.password.state.value)
-      .then(this.props.onLoggedIn)
+    this.props.logIn(this.refs.username.state.value, this.refs.password.state.value)
       .catch(err => {
         this.setState({
           disableLogin: false,

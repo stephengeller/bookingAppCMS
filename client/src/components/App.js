@@ -34,24 +34,25 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: null
+      user: null,
+      awsConfig: {
+        identityPoolId: this.props['IDENTITY_POOL_ID'],
+        region: 'eu-west-2',
+        userPoolId: this.props['USER_POOL_ID'],
+        userPoolWebClientId: this.props['COGNITO_APP_ID']
+      }
     };
+    Auth.init(this.state.awsConfig);
+  }
 
-    Auth.init({
-      COGNITO_APP_ID: this.props['COGNITO_APP_ID'],
-      USER_POOL_ID: this.props['USER_POOL_ID'],
-      IDENTITY_POOL_ID: this.props['IDENTITY_POOL_ID']
-    });
-
-    Auth.getUserDeets()
-      .then(this.onLoggedIn.bind(this))
-      .catch(err => {
-        console.error(err);
-      });
+  logIn(username, password) {
+    return Auth.logIn(username, password)
+    .then(Auth.getUserDeets)
+    .then(this.onLoggedIn.bind(this))
   }
 
   onLoggedIn(user) {
-    this.setState({ user: user });
+    this.setState({user: user})
   }
 
   render() {
@@ -63,7 +64,7 @@ class App extends Component {
             exact
             path="/"
             component={Home}
-            login={Auth.login}
+            login=''//{Auth.login}
             user={this.state.user}
           />
           <PropsRoute
@@ -87,9 +88,8 @@ class App extends Component {
           <PropsRoute
             exact
             path="/login"
+            logIn={this.logIn.bind(this)}
             component={Login}
-            logUserIn={Auth.logUserIn}
-            onLoggedIn={this.onLoggedIn.bind(this)}
             user={this.state.user}
           />
           <PropsRoute
