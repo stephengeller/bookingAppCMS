@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 import { Preloader } from 'react-materialize';
 
-import CognitoUserStore from '../modules/CognitoUserStore';
 import UserEditor from '../components/UserEditor';
 
 class UserDetails extends Component {
@@ -25,7 +24,7 @@ class UserDetails extends Component {
   async getUserEmail() {
     const url = this.props.location.pathname;
     const email = url.slice(url.indexOf('users/') + 6);
-    await CognitoUserStore.searchByEmail(email)
+    await this.props.userStore.searchByEmail(email)
       .then(user => {
         console.log(user);
         this.setState({ user });
@@ -42,6 +41,7 @@ class UserDetails extends Component {
         </h5>
         <UserEditor
           user={user}
+          userStore={this.props.userStore}
           onUserChanged={this.onUserChanged.bind(this)}/>
       </div>
     ) : (

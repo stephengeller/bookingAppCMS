@@ -3,7 +3,6 @@ import { Input, Button, Preloader } from 'react-materialize';
 
 import { Alert } from 'react-bootstrap';
 import EditButton from './buttons/EditButton';
-import CognitoUserStore from '../modules/CognitoUserStore';
 
 class UserManager extends Component {
   constructor(props) {
@@ -41,7 +40,7 @@ class UserManager extends Component {
     this.setState({errorMsg: null});
     if (email) {
       this.setState({ loading: true });
-      CognitoUserStore.searchByEmail(email)
+      this.props.userStore.searchByEmail(email)
         .then(r => {
           if (r !== undefined) {
             console.log('Successfully found user', r);
