@@ -3,6 +3,7 @@ import { Button, Icon } from 'react-materialize';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import { DateRangePicker } from 'react-dates';
+import { Link } from 'react-router-dom';
 
 import DateRangeArrayMaker from '../modules/DateRangeArrayMaker';
 import DateRangeDisplayer from './DateRangeDisplayer';
@@ -146,6 +147,11 @@ class PropertyItemEditor extends Component {
             >
               <Icon right>edit</Icon>Update Property
             </Button>
+            <Link to={`${this.url}/images`} style={{ float: 'right' }}>
+              <Button>
+                Edit pictures<Icon right>camera_alt</Icon>
+              </Button>
+            </Link>
             <br />
             <h4 className="center-align">Available Dates</h4>
             <br />

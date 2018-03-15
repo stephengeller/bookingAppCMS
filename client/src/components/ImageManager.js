@@ -6,16 +6,11 @@ import axios from '../modules/axios';
 class ImageManager extends Component {
   constructor(props) {
     super(props);
-    this.readFile = this.readFile.bind(this);
     this.getFiles = this.getFiles.bind(this);
     this.submitPicture = this.submitPicture.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.id = this.props.match.params.id;
     this.url = `/properties/${this.id}/image`;
-  }
-
-  readFile() {
-    console.log(this.props.match.params.id);
   }
 
   submitPicture() {
@@ -24,8 +19,6 @@ class ImageManager extends Component {
       priority: this.state.priority,
       base64: files[0].base64
     };
-    const array = [json, json];
-    console.log(json, this.url);
     axios
       .post(this.url, json)
       .then(response => {
@@ -43,7 +36,6 @@ class ImageManager extends Component {
   }
 
   handleChange(e) {
-    console.log(e.target.value);
     this.setState({ priority: e.target.value });
   }
 
@@ -54,9 +46,9 @@ class ImageManager extends Component {
         <Row>
           <FileBase64 multiple={true} onDone={this.getFiles.bind(this)} />
           <Input
-            s={6}
+            s={1}
             type="number"
-            placeholder="priority"
+            label="priority"
             onChange={e => this.handleChange(e)}
           />
         </Row>
