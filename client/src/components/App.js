@@ -43,7 +43,16 @@ class App extends Component {
         userPoolWebClientId: this.props['COGNITO_APP_ID']
       }
     };
-    Auth.init(this.state.awsConfig);
+    Auth.init(this.state.awsConfig)
+    .then(Auth.getCurrentSession)
+    .then(sesh => {
+      UserStore.init(sesh, this.state.awsConfig)
+    })
+    .then(Auth.getUserDeets)
+    .then(this.onLoggedIn.bind(this))
+    .catch(err => {
+      console.log('Auth failed');
+    })
   }
 
   logIn(username, password) {

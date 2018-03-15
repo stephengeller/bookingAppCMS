@@ -6,6 +6,8 @@ var AWS_USER = null;
 
 exp.init = (awsConf) => {
   Amplify.configure(awsConf);
+  return Auth.currentAuthenticatedUser()
+  .then(user => AWS_USER = user);
 }
 
 exp.logIn = (username, password) => {
