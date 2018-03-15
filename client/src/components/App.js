@@ -1,5 +1,6 @@
 import { BrowserRouter, Route } from 'react-router-dom';
 import React, { Component } from 'react';
+import { Preloader } from 'react-materialize';
 
 import Header from './Header';
 import Properties from '../pages/Properties';
@@ -40,8 +41,9 @@ class App extends Component {
         identityPoolId: this.props['IDENTITY_POOL_ID'],
         region: 'eu-west-2',
         userPoolId: this.props['USER_POOL_ID'],
-        userPoolWebClientId: this.props['COGNITO_APP_ID']
-      }
+        userPoolWebClientId: this.props['COGNITO_APP_ID'],
+      },
+      loggingIn: true
     };
     Auth.init(this.state.awsConfig)
     .then(Auth.getCurrentSession)
@@ -51,6 +53,9 @@ class App extends Component {
     .then(Auth.getUserDeets)
     .then(this.onLoggedIn.bind(this))
     .catch(err => {
+      this.setState({
+        loggingIn: false
+      });
       console.log('Auth failed');
     })
   }
@@ -66,10 +71,21 @@ class App extends Component {
   }
 
   onLoggedIn(user) {
-    this.setState({user: user})
+    this.setState({
+      user: user,
+      loggingIn: false
+    })
   }
 
   render() {
+    if(this.state.loggingIn) {
+      return (
+        <div className="center container preloader-page">
+          <h3>Loading, please wait...</h3>
+          <Preloader flashing size='big'/>
+        </div>
+      )
+    }
     return (
       <BrowserRouter>
         <div>

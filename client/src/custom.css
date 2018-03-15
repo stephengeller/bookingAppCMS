@@ -47,3 +47,7 @@
 .updateUserField {
   margin: 20px;
 }
+
+.container.preloader-page {
+  margin-top: 30%;
+}
