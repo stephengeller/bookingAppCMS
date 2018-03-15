@@ -6,6 +6,7 @@ import Properties from '../pages/Properties';
 import Users from '../pages/Users';
 import Home from '../pages/Home';
 import AddProperty from '../pages/AddProperty';
+import ImageManager from '../components/ImageManager';
 import PropertyDetails from '../pages/PropertyDetails';
 import UserDetails from '../pages/UserDetails';
 import Login from '../pages/Login';
@@ -73,6 +74,7 @@ class App extends Component {
             component={Properties}
           />
           <Route exact path="/properties/:id" component={PropertyDetails} />
+          <Route exact path="/properties/:id/images" component={ImageManager} />
           <PropsRoute
             exact
             path="/users"
