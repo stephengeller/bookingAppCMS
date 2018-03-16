@@ -8,7 +8,6 @@ import DateRangeArrayMaker from '../modules/DateRangeArrayMaker';
 import DateRangeDisplayer from './DateRangeDisplayer';
 import Formatter from '../modules/Formatter';
 import ErrorHandler from '../modules/ErrorHandler';
-import axios from '../modules/axios';
 import FormItem from './FormItem';
 
 class PropertyItemEditor extends Component {
@@ -27,7 +26,7 @@ class PropertyItemEditor extends Component {
   }
 
   componentWillMount() {
-    axios
+    this.props.apiClient
       .get(this.url)
       .then(response => {
         const property = response.data;
@@ -51,7 +50,7 @@ class PropertyItemEditor extends Component {
     fields.facilities = this.formatter.formatItemStringToArray(
       fields.facilities
     );
-    axios
+    this.props.apiClient
       .put(this.url, fields)
       .then(response => {
         const message = 'successfully updated property!';
@@ -72,7 +71,7 @@ class PropertyItemEditor extends Component {
         endDate._d
       );
       const url = `${this.url}/available`;
-      axios
+      this.props.apiClient
         .post(url, array)
         .then(response => {
           const message = 'Successfully updated availabilty';
@@ -175,7 +174,9 @@ class PropertyItemEditor extends Component {
         <br />
         <div className={''} />
         <br />
-        <DateRangeDisplayer id={this.props.id} />
+        <DateRangeDisplayer
+          apiClient={this.props.apiClient}
+          id={this.props.id} />
       </div>
     );
   }

@@ -4,7 +4,6 @@ import { Row, Preloader } from 'react-materialize';
 import Formatter from '../modules/Formatter';
 import ErrorHandler from '../modules/ErrorHandler';
 import GoogleMapsAPI from '../modules/GoogleMapsAPI';
-import axios from '../modules/axios';
 import AddPropertyButton from './buttons/AddPropertyButton';
 import FormItem from './FormItem';
 
@@ -90,7 +89,7 @@ class PropertyForm extends Component {
     ) {
       const fields = await this.setUpFieldsObject(this.state.fields);
 
-      axios
+      this.props.apiClient
         .post('/properties/', fields)
         .then(() => {
           const error = {

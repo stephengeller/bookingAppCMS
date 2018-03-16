@@ -5,7 +5,9 @@ var exp = {};
 var AWS_USER = null;
 
 exp.init = (awsConf) => {
-  Amplify.configure(awsConf);
+  Amplify.configure({
+    Auth: awsConf,
+  });
   return Auth.currentAuthenticatedUser()
   .then(user => AWS_USER = user);
 }
@@ -35,4 +37,25 @@ exp.getCurrentSession = () => {
   return Auth.currentSession();
 }
 
+exp.getIdToken = () => {
+  return exp.getCurrentSession()
+  .then(result => result.getIdToken().getJwtToken())
+}
+
 export default exp
+
+var axios = require('axios');
+
+var api = {};
+
+api.create = (baseDomain) => {
+  return exp.getIdToken()
+  .then(token => {
+    return axios.create({
+      baseURL: baseDomain,
+      headers: {'authorization': token}
+    });
+  })
+}
+
+export {api as ApiClient}

@@ -3,8 +3,6 @@ import { Button } from 'react-bootstrap';
 import { Dropdown } from 'react-materialize';
 import DateItem from './DateItem';
 
-import axios from '../modules/axios';
-
 class DateRangeDisplayer extends Component {
   constructor(props) {
     super(props);
@@ -71,7 +69,7 @@ class DateRangeDisplayer extends Component {
   }
 
   onDeleteAvailability(date) {
-    axios
+    this.props.apiClient
       .delete(`${this.url}/${date}`)
       .then(response => {
         const { datesArray } = this.state;
@@ -93,7 +91,7 @@ class DateRangeDisplayer extends Component {
 
   onUpdateNumRooms(date, numRooms) {
     const url = `${this.url}/${date}`;
-    axios
+    this.props.apiClient
       .patch(url, { numRooms: numRooms })
       .then(response => {
         console.log('Yes!!!', response);
@@ -106,7 +104,7 @@ class DateRangeDisplayer extends Component {
 
   getDatesFromMonth(year, month) {
     const url = `${this.adminUrl}/${year}/${month}`;
-    axios
+    this.props.apiClient
       .get(url)
       .then(response => {
         const datesArray = this.addMissingZero(response.data);

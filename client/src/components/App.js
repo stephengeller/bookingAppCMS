@@ -12,7 +12,7 @@ import UserDetails from '../pages/UserDetails';
 import Login from '../pages/Login';
 import UserStore from '../modules/CognitoUserStore';
 
-import Auth from '../modules/Auth';
+import Auth, {ApiClient} from '../modules/Auth';
 
 const Logout = () => <h2>Logged out</h2>;
 
@@ -43,37 +43,46 @@ class App extends Component {
         userPoolId: this.props['USER_POOL_ID'],
         userPoolWebClientId: this.props['COGNITO_APP_ID'],
       },
+      apiClient: null,
       loggingIn: true
     };
     Auth.init(this.state.awsConfig)
-    .then(Auth.getCurrentSession)
+    .then(this.postAuth.bind(this));
+  }
+
+  logIn(username, password) {
+    return Auth.logIn(username, password)
+    .then(this.postAuth.bind(this));
+  }
+
+  postAuth() {
+    return Auth.getCurrentSession()
     .then(sesh => {
       UserStore.init(sesh, this.state.awsConfig)
     })
     .then(Auth.getUserDeets)
     .then(this.onLoggedIn.bind(this))
+    .then(() => {
+      return ApiClient.create(this.props['API'])
+      .then(api => {
+        this.setState({
+          apiClient: api,
+          loggingIn: false
+        })
+      })
+    })
     .catch(err => {
       this.setState({
         loggingIn: false
       });
       console.log('Auth failed');
+      return err;
     })
-  }
-
-  logIn(username, password) {
-    return Auth.logIn(username, password)
-    .then(Auth.getCurrentSession)
-    .then(sesh => {
-      UserStore.init(sesh, this.state.awsConfig)
-    })
-    .then(Auth.getUserDeets)
-    .then(this.onLoggedIn.bind(this))
   }
 
   onLoggedIn(user) {
     this.setState({
-      user: user,
-      loggingIn: false
+      user: user
     })
   }
 
@@ -116,11 +125,13 @@ class App extends Component {
             exact
             path="/properties"
             googleApiKey={this.props['GOOGLE_API_KEY']}
+            apiClient={this.state.apiClient}
             component={Properties}
           />
-          <Route
+          <PropsRoute
             exact
             path="/properties/edit/:id"
+            apiClient={this.state.apiClient}
             component={PropertyDetails}
           />
           <PropsRoute
@@ -145,6 +156,7 @@ class App extends Component {
             exact
             path="/properties/add"
             component={AddProperty}
+            apiClient={this.state.apiClient}
             googleApiKey={this.props['GOOGLE_API_KEY']}
           />
           <Route path="/logout" component={Logout} />

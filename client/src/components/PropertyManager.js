@@ -3,7 +3,6 @@ import { Preloader, Input } from 'react-materialize';
 
 import PropertyItem from '../components/PropertyItem';
 import GoToAddPropertyButton from './buttons/GoToAddPropertyButton';
-import axios from '../modules/axios';
 
 class ApiPropertyManager extends Component {
   constructor(props) {
@@ -20,7 +19,7 @@ class ApiPropertyManager extends Component {
   }
 
   deleteProperty(property) {
-    axios
+    this.props.apiClient
       .delete('/properties/' + property.id)
       .then(() => {
         const properties = this.state.properties;
@@ -35,7 +34,7 @@ class ApiPropertyManager extends Component {
   }
 
   getProperties() {
-    axios
+    this.props.apiClient
       .get('/properties/search')
       .then(response => {
         const properties = response.data;
