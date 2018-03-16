@@ -1,4 +1,5 @@
 const AWS = require('aws-sdk');
+AWS.config.region = 'eu-west-2';
 
 var USER_POOL_ID = null;
 
@@ -28,11 +29,18 @@ function updateAtrribute(attribute, value, username) {
     .adminUpdateUserAttributes(params)
     .promise();
 }
-
 module.exports = {
 
-  init: userPoolId => {
-    USER_POOL_ID = userPoolId
+  init: (session, awsConfig) => {
+    USER_POOL_ID = awsConfig['userPoolId'];
+    var loginUrl = 'cognito-idp.eu-west-2.amazonaws.com/' + USER_POOL_ID;
+    AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+      IdentityPoolId : awsConfig['identityPoolId'],
+      Logins : {
+        [loginUrl] : session.getIdToken().getJwtToken()
+      }
+    });
+    return AWS.config.credentials.refreshPromise()
   },
 
   searchByEmail: email => {
