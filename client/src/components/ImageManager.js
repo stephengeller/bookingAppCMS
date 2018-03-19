@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import FileBase64 from 'react-file-base64';
 import { Row, Button, Input, Preloader } from 'react-materialize';
+import { Alert } from 'react-bootstrap';
 
 class ImageManager extends Component {
   constructor(props) {
@@ -13,6 +14,7 @@ class ImageManager extends Component {
     this.addToUploadArray = this.addToUploadArray.bind(this);
     this.clearImageDiv = this.clearImageDiv.bind(this);
     this.handlePriority = this.handlePriority.bind(this);
+    this.renderError = this.renderError.bind(this);
     this.id = this.props.match.params.id;
     this.url = `/properties/${this.id}/image`;
     this.state = {
@@ -20,13 +22,15 @@ class ImageManager extends Component {
       filesToUpload: [],
       uploadedImages: [],
       priority: '',
-      loading: false
+      loading: false,
+      errorMsg: null
     };
   }
 
   addToUploadArray(oneItemArray) {
     if (oneItemArray && oneItemArray[0]) {
       if (this.state.priority) {
+        this.setState({ errorMsg: null });
         const file = oneItemArray[0];
         file.priority = Number(this.state.priority);
         const { filesToUpload } = this.state;
@@ -36,9 +40,15 @@ class ImageManager extends Component {
         this.displayBase64Images(file, 'add', 'toUpload');
         this.clearImageDiv('toAdd');
       } else {
+        this.setState({
+          errorMsg: 'Choose priority'
+        });
         console.log('choose priority');
       }
     } else {
+      this.setState({
+        errorMsg: 'Choose a file'
+      });
       console.log('choose a file');
     }
   }
@@ -142,12 +152,24 @@ class ImageManager extends Component {
     this.getPreexistingImages();
   }
 
+  renderError() {
+    if (this.state.errorMsg === null) {
+      return;
+    }
+    return (
+      <Alert bsStyle="danger">
+        <p>{this.state.errorMsg}</p>
+      </Alert>
+    );
+  }
+
   render() {
-    const { file, filesToUpload } = this.state;
+    const { file, filesToUpload, errorMsg } = this.state;
     return (
       <div className="center-align">
         <h4 style={{ margin: '30px' }}>Manage images for {this.id}</h4>
         <Row className="container">
+          {this.renderError()}
           <FileBase64 multiple={true} onDone={file => this.getFiles(file)} />
           <Input
             s={1}
