@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import FileBase64 from 'react-file-base64';
 import { Row, Button, Input, Preloader } from 'react-materialize';
-import axios from '../modules/axios';
 
 class ImageManager extends Component {
   constructor(props) {
@@ -57,7 +56,7 @@ class ImageManager extends Component {
       });
       // TODO: fix this await to await for axios and not forEach
       await files.forEach(file => {
-        axios
+        this.props.apiClient
           .post(this.url, file)
           .then(response => {
             console.log('Success!');
@@ -81,7 +80,7 @@ class ImageManager extends Component {
 
   getPreexistingImages() {
     this.clearImageDiv('alreadyOnline');
-    axios.get(`${this.url}s`).then(response => {
+    this.props.apiClient.get(`${this.url}s`).then(response => {
       if (
         response.data.length > 0 &&
         this.state.uploadedImages.length !== response.data.lenght

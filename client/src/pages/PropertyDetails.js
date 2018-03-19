@@ -14,7 +14,9 @@ class PropertyDetails extends Component {
     const { id } = this.props.match.params;
     return (
       <div className="">
-        <PropertyItemEditor id={id} />
+        <PropertyItemEditor
+          apiClient={this.props.apiClient}
+          id={id} />
       </div>
     );
   }

@@ -1,5 +1,6 @@
 import { BrowserRouter, Route } from 'react-router-dom';
 import React, { Component } from 'react';
+import { Preloader } from 'react-materialize';
 
 import Header from './Header';
 import Properties from '../pages/Properties';
@@ -10,8 +11,9 @@ import ImageManager from '../components/ImageManager';
 import PropertyDetails from '../pages/PropertyDetails';
 import UserDetails from '../pages/UserDetails';
 import Login from '../pages/Login';
+import UserStore from '../modules/CognitoUserStore';
 
-import Auth from '../modules/Auth';
+import Auth, { ApiClient } from '../modules/Auth';
 
 const Logout = () => <h2>Logged out</h2>;
 
@@ -35,27 +37,77 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: null
+      user: null,
+      awsConfig: {
+        identityPoolId: this.props['IDENTITY_POOL_ID'],
+        region: 'eu-west-2',
+        userPoolId: this.props['USER_POOL_ID'],
+        userPoolWebClientId: this.props['COGNITO_APP_ID']
+      },
+      apiClient: null,
+      loggingIn: true
     };
+    Auth.init(this.state.awsConfig).then(this.postAuth.bind(this));
+  }
 
-    Auth.init({
-      COGNITO_APP_ID: this.props['COGNITO_APP_ID'],
-      USER_POOL_ID: this.props['USER_POOL_ID'],
-      IDENTITY_POOL_ID: this.props['IDENTITY_POOL_ID']
-    });
+  logIn(username, password) {
+    return Auth.logIn(username, password).then(this.postAuth.bind(this));
+  }
 
-    Auth.getUserDeets()
+  postAuth() {
+    return Auth.getCurrentSession()
+      .then(sesh => {
+        UserStore.init(sesh, this.state.awsConfig);
+      })
+      .then(Auth.getUserDeets)
       .then(this.onLoggedIn.bind(this))
+      .then(() => {
+        return ApiClient.create(this.props['API']).then(api => {
+          this.setState({
+            apiClient: api,
+            loggingIn: false
+          });
+        });
+      })
       .catch(err => {
-        console.error(err);
+        this.setState({
+          loggingIn: false
+        });
+        console.log('Auth failed');
+        return err;
       });
   }
 
   onLoggedIn(user) {
-    this.setState({ user: user });
+    this.setState({
+      user: user
+    });
   }
 
   render() {
+    if (this.state.loggingIn) {
+      return (
+        <div className="center container preloader-page">
+          <h3>Loading, please wait...</h3>
+          <Preloader flashing size="big" />
+        </div>
+      );
+    }
+    if (!this.state.user) {
+      return (
+        <BrowserRouter>
+          <div>
+            <Header user={this.state.user} />
+            <PropsRoute
+              exact
+              logIn={this.logIn.bind(this)}
+              component={Login}
+              user={this.state.user}
+            />
+          </div>
+        </BrowserRouter>
+      );
+    }
     return (
       <BrowserRouter>
         <div>
@@ -64,36 +116,53 @@ class App extends Component {
             exact
             path="/"
             component={Home}
-            login={Auth.login}
+            login="" //{Auth.login}
             user={this.state.user}
           />
           <PropsRoute
             exact
             path="/properties"
             googleApiKey={this.props['GOOGLE_API_KEY']}
+            apiClient={this.state.apiClient}
             component={Properties}
           />
-          <Route exact path="/properties/:id" component={PropertyDetails} />
-          <Route exact path="/properties/:id/images" component={ImageManager} />
+          <PropsRoute
+            exact
+            path="/properties/:id"
+            apiClient={this.state.apiClient}
+            component={PropertyDetails}
+          />
+          <PropsRoute
+            exact
+            path="/properties/:id/images"
+            apiClient={this.state.apiClient}
+            component={ImageManager}
+          />
           <PropsRoute
             exact
             path="/users"
+            userStore={UserStore}
             googleApiKey={this.props['GOOGLE_API_KEY']}
             component={Users}
           />
-          <Route exact path="/users/:id" component={UserDetails} />
+          <PropsRoute
+            exact
+            path="/users/:id"
+            userStore={UserStore}
+            component={UserDetails}
+          />
           <PropsRoute
             exact
             path="/login"
+            logIn={this.logIn.bind(this)}
             component={Login}
-            logUserIn={Auth.logUserIn}
-            onLoggedIn={this.onLoggedIn.bind(this)}
             user={this.state.user}
           />
           <PropsRoute
             exact
             path="/properties/add"
             component={AddProperty}
+            apiClient={this.state.apiClient}
             googleApiKey={this.props['GOOGLE_API_KEY']}
           />
           <Route path="/logout" component={Logout} />

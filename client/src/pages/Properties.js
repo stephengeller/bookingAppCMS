@@ -14,7 +14,9 @@ class Properties extends Component {
     return (
       <div>
         <h2 className="center-align">Property Manager</h2>
-        <PropertyManager googleApiKey={this.props.googleApiKey} />
+        <PropertyManager
+          apiClient={this.props.apiClient}
+          googleApiKey={this.props.googleApiKey} />
       </div>
     );
   }

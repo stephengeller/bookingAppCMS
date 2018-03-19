@@ -1,129 +1,61 @@
-const AWS = require('aws-sdk');
-const AmazonCognitoIdentity = require('amazon-cognito-identity-js');
+import Amplify, { Auth } from 'aws-amplify'
 
-AWS.config.region = 'eu-west-2';
+var exp = {};
 
-var COGNITO_APP_ID = '';
-var USER_POOL_ID = '';
-var IDENTITY_POOL_ID = '';
+var AWS_USER = null;
 
-function quickLogin() {
-return new Promise((resolve, reject) => {
-  var poolData = {
-    UserPoolId : USER_POOL_ID,
-    ClientId : COGNITO_APP_ID
-  };
-  var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
-  var cognitoUser = userPool.getCurrentUser();
+exp.init = (awsConf) => {
+  Amplify.configure({
+    Auth: awsConf,
+  });
+  return Auth.currentAuthenticatedUser()
+  .then(user => AWS_USER = user);
+}
 
-  if (cognitoUser != null) {
-    cognitoUser.getSession(function(err, session) {
+exp.logIn = (username, password) => {
+  return Amplify.Auth.signIn(username, password)
+  .then(user => AWS_USER = user);
+}
+
+exp.getUserDeets = () =>  {
+  return new Promise((resolve, reject) => {
+    AWS_USER.getUserAttributes(function(err, result) {
       if(err) {
         reject(err);
         return;
       }
-      console.log('session validity: ' + session.isValid());
-
-      var loginUrl = 'cognito-idp.eu-west-2.amazonaws.com/' + USER_POOL_ID;
-      AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-        IdentityPoolId : IDENTITY_POOL_ID,
-        Logins : {
-          [loginUrl] : session.getIdToken().getJwtToken()
-        }
-      });
-      AWS.config.credentials.refreshPromise()
-        .then(() => {
-          COGNITO_USER = cognitoUser;
-        })
-        .then(resolve)
-        .catch(reject);
+      var attr = {};
+      for(var i = 0, l = result.length; i < l; i++) {
+        attr[result[i]['Name']] = result[i]['Value']
+      }
+      resolve(attr);
     });
-  } else {
-    resolve();
-  }
-});
-}
-
-function getUserAttributes(cognitoUser) {
-return new Promise((resolve, reject) => {
-  if(cognitoUser === null) {
-    resolve(null);
-  }
-  cognitoUser.getUserAttributes(function(err, result) {
-    if(err) {
-      reject(err);
-      return;
-    }
-    var attr = {};
-    for(var i = 0, l = result.length; i < l; i++) {
-      attr[result[i]['Name']] = result[i]['Value']
-    }
-    resolve(attr);
   });
-});
 }
 
-function getCurrentUser() {
-  if(COGNITO_USER === null) {
-    return quickLogin()
-    .then(() => {
-      return getUserAttributes(COGNITO_USER);
-    })
-  } else {
-    return getUserAttributes(COGNITO_USER);
-  }
+exp.getCurrentSession = () => {
+  return Auth.currentSession();
 }
 
-var COGNITO_USER = null;
+exp.getIdToken = () => {
+  return exp.getCurrentSession()
+  .then(result => result.getIdToken().getJwtToken())
+}
 
-module.exports = {
+export default exp
 
-    init: (options) => {
-      COGNITO_APP_ID = options["COGNITO_APP_ID"];
-      USER_POOL_ID = options["USER_POOL_ID"];
-      IDENTITY_POOL_ID = options["IDENTITY_POOL_ID"];
-    },
+var axios = require('axios');
 
-    login: () => {
-      window.location.href = '/login';
-    },
+var api = {};
 
-    logUserIn: (username, password) => {
-    return new Promise((resolve, reject) => {
-      var authenticationData = {
-        Username : username,
-        Password : password,
-      };
-      var authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails(authenticationData);
-      var poolData = {
-        UserPoolId : USER_POOL_ID,
-        ClientId : COGNITO_APP_ID
-      };
-      var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
-      var userData = {
-          Username : username,
-          Pool : userPool
-      };
-      COGNITO_USER = new AmazonCognitoIdentity.CognitoUser(userData);
-      COGNITO_USER.authenticateUser(authenticationDetails, {
-        onSuccess: function (result) {
-          var loginUrl = 'cognito-idp.eu-west-2.amazonaws.com/' + USER_POOL_ID;
-          AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-              IdentityPoolId : IDENTITY_POOL_ID,
-              Logins : {
-                [loginUrl] : result.getIdToken().getJwtToken()
-              }
-          });
-          AWS.config.credentials.refreshPromise()
-            .then(getCurrentUser)
-            .then(resolve)
-        },
-        onFailure: function(err) {
-          reject(err);
-        }
-      });
+api.create = (baseDomain) => {
+  return exp.getIdToken()
+  .then(token => {
+    return axios.create({
+      baseURL: baseDomain,
+      headers: {'authorization': token}
     });
-    },
-
-    getUserDeets: getCurrentUser
+  })
 }
+
+export {api as ApiClient}
