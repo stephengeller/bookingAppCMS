@@ -51,7 +51,13 @@ class PropertyItem extends Component {
       >
         <div className="divider" />
         <br />
-        <PropertyLine label={'Description'} field={property.description} />
+        <PropertyLine
+          label={'Description'}
+          field={`${property.description
+            .split(' ')
+            .splice(0, 20)
+            .join(' ')}...`}
+        />
         <PropertyLine
           label={'Facilities'}
           field={property.facilities.join(', ')}
