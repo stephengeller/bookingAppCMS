@@ -48,7 +48,13 @@ class App extends Component {
       loggingIn: true
     };
     Auth.init(this.state.awsConfig)
-    .then(this.postAuth.bind(this));
+    .then(this.postAuth.bind(this))
+    .catch(err => {
+      this.setState({
+        loggingIn: false
+      });
+      return err;
+    })
   }
 
   logIn(username, password) {
@@ -71,14 +77,7 @@ class App extends Component {
           loggingIn: false
         })
       })
-    })
-    .catch(err => {
-      this.setState({
-        loggingIn: false
-      });
-      console.log('Auth failed');
-      return err;
-    })
+    });
   }
 
   onLoggedIn(user) {
