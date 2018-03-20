@@ -164,7 +164,7 @@ class ImageManager extends Component {
   }
 
   render() {
-    const { file, filesToUpload, errorMsg } = this.state;
+    const { file, filesToUpload } = this.state;
     return (
       <div className="center-align">
         <h4 style={{ margin: '30px' }}>Manage images for {this.id}</h4>
