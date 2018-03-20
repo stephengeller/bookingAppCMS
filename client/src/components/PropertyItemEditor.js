@@ -3,6 +3,7 @@ import { Button, Icon } from 'react-materialize';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import { DateRangePicker } from 'react-dates';
+import { Link } from 'react-router-dom';
 
 import DateRangeArrayMaker from '../modules/DateRangeArrayMaker';
 import DateRangeDisplayer from './DateRangeDisplayer';
@@ -101,82 +102,98 @@ class PropertyItemEditor extends Component {
   }
 
   render() {
+    const { fields, error } = this.state;
     return (
       <div className="container">
-        <h2 className="center-align"> {this.state.fields.title} </h2>
-        <div className="error" style={this.state.error.style} id="error">
-          {this.state.error.message}
-        </div>
-        <br />
-        Title
-        <FormItem
-          name={'title'}
-          type={'text'}
-          placeholder={'title'}
-          value={this.state.fields.title}
-          updateInputValue={this.updateInputValue}
-        />
-        Description
-        <FormItem
-          name={'description'}
-          type={'textarea'}
-          placeholder={'description'}
-          value={this.state.fields.description}
-          updateInputValue={this.updateInputValue}
-        />
-        Facilities
-        <FormItem
-          name={'facilities'}
-          value={this.state.fields.facilities}
-          updateInputValue={this.updateInputValue}
-        />
-        <Button
-          className="btn waves-effect waves-light span4 text-right"
-          type="submit"
-          onClick={this.updateProperty}
-        >
-          <Icon right>edit</Icon>Update Property
-        </Button>
-        <br />
-        <h4 className="center-align">Available Dates</h4>
-        <br />
-        <div className="center-align">
-          <DateRangePicker
-            noBorder
-            showClearDates
-            showDefaultInputIcon
-            startDate={this.state.startDate}
-            startDateId="your_unique_start_date_id"
-            endDate={this.state.endDate}
-            endDateId="your_unique_end_date_id"
-            onDatesChange={({ startDate, endDate }) => {
-              this.setState({ startDate, endDate });
-            }}
-            focusedInput={this.state.focusedInput}
-            onFocusChange={focusedInput => {
-              this.setState({ focusedInput });
-            }}
-          />
-          <div>
-            <Button
-              onClick={() => {
-                this.updateAvailability(
-                  this.state.startDate,
-                  this.state.endDate
-                );
-              }}
-            >
-              <Icon left>date_range</Icon>
-              Update Availability
-            </Button>
+        <h2 className="center-align"> {fields.title} </h2>
+
+        {error ? (
+          <div className="error" style={error.style} id="error">
+            {error.message}
           </div>
-        </div>
-        <br />
-        <div className={''} />
-        <br />
-        <DateRangeDisplayer
-          apiClient={this.props.apiClient}
-          id={this.props.id} />
+        ) : (
+          <div>
+            <div className="error" style={error.style} id="error">
+              {error.message}
+            </div>
+            <br />
+            Title
+            <FormItem
+              name={'title'}
+              type={'text'}
+              placeholder={'title'}
+              value={fields.title}
+              updateInputValue={this.updateInputValue}
+            />
+            Description
+            <FormItem
+              name={'description'}
+              type={'textarea'}
+              placeholder={'description'}
+              value={fields.description}
+              updateInputValue={this.updateInputValue}
+            />
+            Facilities
+            <FormItem
+              name={'facilities'}
+              value={fields.facilities}
+              updateInputValue={this.updateInputValue}
+            />
+            <Button
+              className="btn waves-effect waves-light span4 text-right"
+              type="submit"
+              onClick={this.updateProperty}
+            >
+              <Icon right>edit</Icon>Update Property
+            </Button>
+            <Link to={`${this.url}/images`} style={{ float: 'right' }}>
+              <Button>
+                Edit pictures<Icon right>camera_alt</Icon>
+              </Button>
+            </Link>
+            <br />
+            <h4 className="center-align">Available Dates</h4>
+            <br />
+            <div className="center-align">
+              <DateRangePicker
+                noBorder
+                showClearDates
+                showDefaultInputIcon
+                startDate={this.state.startDate}
+                startDateId="your_unique_start_date_id"
+                endDate={this.state.endDate}
+                endDateId="your_unique_end_date_id"
+                onDatesChange={({ startDate, endDate }) => {
+                  this.setState({ startDate, endDate });
+                }}
+                focusedInput={this.state.focusedInput}
+                onFocusChange={focusedInput => {
+                  this.setState({ focusedInput });
+                }}
+              />
+              <div>
+                <Button
+                  onClick={() => {
+                    this.updateAvailability(
+                      this.state.startDate,
+                      this.state.endDate
+                    );
+                  }}
+                >
+                  <Icon left>date_range</Icon>
+                  Update Availability
+                </Button>
+              </div>
+            </div>
+            <br />
+            <div className={''} />
+            <br />
+            <DateRangeDisplayer
+              apiClient={this.props.apiClient}
+              id={this.props.id}
+            />
+          </div>
+        )}
       </div>
     );
   }

@@ -7,6 +7,7 @@ import Properties from '../pages/Properties';
 import Users from '../pages/Users';
 import Home from '../pages/Home';
 import AddProperty from '../pages/AddProperty';
+import ImageManager from '../components/ImageManager';
 import PropertyDetails from '../pages/PropertyDetails';
 import UserDetails from '../pages/UserDetails';
 import Login from '../pages/Login';
@@ -47,7 +48,13 @@ class App extends Component {
       loggingIn: true
     };
     Auth.init(this.state.awsConfig)
-    .then(this.postAuth.bind(this));
+    .then(this.postAuth.bind(this))
+    .catch(err => {
+      this.setState({
+        loggingIn: false
+      });
+      return err;
+    })
   }
 
   logIn(username, password) {
@@ -70,32 +77,25 @@ class App extends Component {
           loggingIn: false
         })
       })
-    })
-    .catch(err => {
-      this.setState({
-        loggingIn: false
-      });
-      console.log('Auth failed');
-      return err;
-    })
+    });
   }
 
   onLoggedIn(user) {
     this.setState({
       user: user
-    })
+    });
   }
 
   render() {
-    if(this.state.loggingIn) {
+    if (this.state.loggingIn) {
       return (
         <div className="center container preloader-page">
           <h3>Loading, please wait...</h3>
-          <Preloader flashing size='big'/>
+          <Preloader flashing size="big" />
         </div>
-      )
+      );
     }
-    if(!this.state.user) {
+    if (!this.state.user) {
       return (
         <BrowserRouter>
           <div>
@@ -130,9 +130,15 @@ class App extends Component {
           />
           <PropsRoute
             exact
-            path="/properties/edit/:id"
+            path="/properties/:id"
             apiClient={this.state.apiClient}
             component={PropertyDetails}
+          />
+          <PropsRoute
+            exact
+            path="/properties/:id/images"
+            apiClient={this.state.apiClient}
+            component={ImageManager}
           />
           <PropsRoute
             exact

@@ -25,6 +25,10 @@
   float: right;
 }
 
+.thumbnail {
+  margin: 10px;
+}
+
 .updateNumRooms input {
   width: 30px;
   margin-left: 10px;
