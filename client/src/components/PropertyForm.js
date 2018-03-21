@@ -138,7 +138,6 @@ class PropertyForm extends Component {
     const { error } = this.state;
     if (error) {
       const { message, style } = error;
-      console.log(error);
       return (
         <Alert bsStyle={style}>
           <p>{message}</p>

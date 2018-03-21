@@ -17,6 +17,7 @@ class PropertyItemEditor extends Component {
     super(props);
     this.updateProperty = this.updateProperty.bind(this);
     this.updateInputValue = this.updateInputValue.bind(this);
+    this.renderError = this.renderError.bind(this);
     this.dateRangeArrayMaker = new DateRangeArrayMaker();
     this.errorHandler = new ErrorHandler();
     this.formatter = new Formatter();
@@ -103,21 +104,25 @@ class PropertyItemEditor extends Component {
   }
 
   renderError() {
-    if (this.state.errorMsg === null) {
-      return;
+    const { error } = this.state;
+    if (error) {
+      const { message, style } = error;
+      console.log(error);
+      return (
+        <Alert bsStyle={style}>
+          <p>{message}</p>
+        </Alert>
+      );
     }
-    return (
-      <Alert bsStyle="danger">
-        <p>{this.state.errorMsg}</p>
-      </Alert>
-    );
+    return;
   }
 
   render() {
-    const { fields, error } = this.state;
+    const { fields } = this.state;
     return (
       <div className="container">
         <h2 className="center-align"> {fields.title} </h2>
+        {this.renderError()}
         Title
         <FormItem
           name={'title'}

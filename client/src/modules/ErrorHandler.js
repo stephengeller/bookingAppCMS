@@ -13,7 +13,7 @@ class ErrorHandler {
       'The following fields are required: ' + missingFields.join(', ');
 
     return {
-      style: { color: 'red' },
+      style: 'danger',
       message: messageString
     };
   }
