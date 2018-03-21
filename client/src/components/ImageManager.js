@@ -28,25 +28,29 @@ class ImageManager extends Component {
     };
   }
 
+  createImageObject(image, array, priority) {
+    image.priority = Number(priority);
+    return array.push(image);
+  }
+
+  resetState(filesToUpload) {
+    this.setState({
+      filesToUpload,
+      file: null,
+      preview: null,
+      errorMsg: null,
+      priority: ''
+    });
+  }
+
   addToUploadArray(oneItemArray) {
     if (oneItemArray && oneItemArray[0]) {
-      const { priority, filesToUpload } = this.state;
+      const image = oneItemArray[0];
+      let { priority, filesToUpload } = this.state;
       if (priority) {
-        const fileToAddToArray = oneItemArray[0];
-        fileToAddToArray.priority = Number(priority);
-        filesToUpload.push(fileToAddToArray);
-        this.setState({
-          filesToUpload,
-          file: null,
-          priority: '',
-          preview: null,
-          errorMsg: null
-        });
-        this.displayBase64Images(
-          fileToAddToArray,
-          'add',
-          fileToAddToArray.name
-        );
+        filesToUpload = this.createImageObject(image, filesToUpload, priority);
+        this.resetState(filesToUpload);
+        this.displayBase64Images(image, 'add', image.name);
       } else {
         this.setState({
           errorMsg: 'Choose priority'

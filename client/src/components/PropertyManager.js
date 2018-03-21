@@ -37,7 +37,7 @@ class ApiPropertyManager extends Component {
     this.props.apiClient
       .get('/properties/search')
       .then(response => {
-        const properties = response.data;
+        const properties = response.data.reverse();
         this.loaded = true;
         this.setState({ properties, allProperties: properties });
         return properties;
@@ -65,11 +65,12 @@ class ApiPropertyManager extends Component {
   }
 
   render() {
-    let properties = this.state.properties;
+    let { properties, error } = this.state;
+    console.log(properties);
     return (
       <div className="container">
-        <div className="error" style={this.state.error.style} id="error">
-          {this.state.error.message}
+        <div className="error" style={error.style} id="error">
+          {error.message}
         </div>
         <GoToAddPropertyButton />
         <Input

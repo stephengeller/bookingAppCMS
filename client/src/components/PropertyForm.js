@@ -158,6 +158,7 @@ class PropertyForm extends Component {
       city,
       postcode
     } = this.state.fields;
+    const { loading } = this.state;
 
     return (
       <div className="container">
@@ -220,7 +221,7 @@ class PropertyForm extends Component {
           updateInputValue={this.updateInputValue}
         />
         <br />
-        {this.state.loading === false ? (
+        {loading === false ? (
           <Row>
             <AddPropertyButton addProperty={this.addProperty} />
             <br />

@@ -18,6 +18,7 @@ class PropertyItemEditor extends Component {
     this.updateProperty = this.updateProperty.bind(this);
     this.updateInputValue = this.updateInputValue.bind(this);
     this.renderError = this.renderError.bind(this);
+    this.setErrorState = this.setErrorState.bind(this);
     this.dateRangeArrayMaker = new DateRangeArrayMaker();
     this.errorHandler = new ErrorHandler();
     this.formatter = new Formatter();
@@ -39,12 +40,8 @@ class PropertyItemEditor extends Component {
         });
       })
       .catch(error => {
-        const messageString = 'Error getting property: ' + error;
-        const message = this.errorHandler.createErrorMessage(
-          messageString,
-          false
-        );
-        this.setState({ error: message });
+        const message = 'Error getting property: ' + error;
+        this.setErrorState(message, false);
       });
   }
 
@@ -56,14 +53,11 @@ class PropertyItemEditor extends Component {
     this.props.apiClient
       .put(this.url, fields)
       .then(response => {
-        const message = 'successfully updated property!';
-        console.log(message);
-        this.setState({ error: message });
+        this.setErrorState('Successfully updated property detail', true);
       })
-      .catch(function(error) {
-        const message = ('Error updating property: ', error);
-        console.log(message);
-        this.setState({ error: message });
+      .catch(errorMsg => {
+        const message = ('Error updating property: ', errorMsg);
+        this.setErrorState(message, false);
       });
   }
 
@@ -77,21 +71,21 @@ class PropertyItemEditor extends Component {
       this.props.apiClient
         .post(url, array)
         .then(response => {
-          const message = 'Successfully updated availabilty';
-          console.log(message, response);
-          const error = this.errorHandler.createErrorMessage(message, true);
-          this.setState({ error });
+          this.setErrorState('Successfully updated availabilty', true);
         })
         .catch(errorResponse => {
           const message = 'Error updating availabilty: ' + errorResponse;
-          const error = this.errorHandler.createErrorMessage(message, false);
-          this.setState({ error });
+          this.setErrorState(message, false);
         });
     } else {
-      const message = 'Fill in the date fields';
-      const error = this.errorHandler.createErrorMessage(message, false);
-      this.setState({ error });
+      this.setErrorState('Fill in the date fields', false);
     }
+  }
+
+  setErrorState(message, boolean) {
+    this.setState({
+      error: this.errorHandler.createErrorMessage(message, boolean)
+    });
   }
 
   updateInputValue(evt, input) {
@@ -107,7 +101,6 @@ class PropertyItemEditor extends Component {
     const { error } = this.state;
     if (error) {
       const { message, style } = error;
-      console.log(error);
       return (
         <Alert bsStyle={style}>
           <p>{message}</p>
