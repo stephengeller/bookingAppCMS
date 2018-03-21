@@ -9,17 +9,18 @@ class ImageManager extends Component {
     this.getFiles = this.getFiles.bind(this);
     this.submitPictures = this.submitPictures.bind(this);
     this.getPreexistingImages = this.getPreexistingImages.bind(this);
-    this.addHTMLImageToList = this.addHTMLImageToList.bind(this);
     this.setHTMLImageToList = this.setHTMLImageToList.bind(this);
     this.addToUploadArray = this.addToUploadArray.bind(this);
     this.clearImageDiv = this.clearImageDiv.bind(this);
     this.handlePriority = this.handlePriority.bind(this);
     this.renderError = this.renderError.bind(this);
+    this.goToImage = this.goToImage.bind(this);
     this.id = this.props.match.params.id;
     this.url = `/properties/${this.id}/image`;
     this.state = {
       file: null,
       filesToUpload: [],
+      toUploadThumbnails: [],
       uploadedImages: [],
       priority: '',
       loading: false,
@@ -35,22 +36,27 @@ class ImageManager extends Component {
         file.priority = Number(this.state.priority);
         const { filesToUpload } = this.state;
         filesToUpload.push(file);
-        this.setState({ filesToUpload, file: null, priority: '' });
-        console.log(file);
+        this.setState({
+          filesToUpload,
+          file: null,
+          priority: '',
+          preview: null
+        });
         this.displayBase64Images(file, 'add', 'toUpload');
-        this.clearImageDiv('toAdd');
       } else {
         this.setState({
           errorMsg: 'Choose priority'
         });
-        console.log('choose priority');
       }
     } else {
       this.setState({
         errorMsg: 'Choose a file'
       });
-      console.log('choose a file');
     }
+  }
+
+  goToImage(e) {
+    console.log('clicked on:', e.target);
   }
 
   async submitPictures(files) {
@@ -59,7 +65,6 @@ class ImageManager extends Component {
       await this.setState({ loading: true });
       files = files.map(file => {
         return {
-          // priority: Math.floor(Math.random() * 10 + 1),
           priority: Number(file.priority),
           base64: file.base64
         };
@@ -88,21 +93,23 @@ class ImageManager extends Component {
     }
   }
 
-  getPreexistingImages() {
+  async getPreexistingImages() {
     this.clearImageDiv('alreadyOnline');
-    this.props.apiClient.get(`${this.url}s`).then(response => {
+    await this.props.apiClient.get(`${this.url}s`).then(response => {
       if (
         response.data.length > 0 &&
         this.state.uploadedImages.length !== response.data.lenght
       ) {
-        response.data.forEach(image =>
-          this.addHTMLImageToList(
-            'alreadyOnline',
-            image.url,
-            image.id,
-            image.priority
+        this.setState({
+          alreadyOnline: response.data.map(image =>
+            this.setHTMLImageToList(
+              'alreadyOnline',
+              image.url,
+              image.id,
+              image.priority
+            )
           )
-        );
+        });
       }
       this.setState({ uploadedImages: response.data });
     });
@@ -110,22 +117,26 @@ class ImageManager extends Component {
 
   clearImageDiv(divID) {
     document.getElementById(divID).innerHTML = '';
-  }
-
-  addHTMLImageToList(list, src, id, priority = 0) {
-    document.getElementById(
-      list
-    ).innerHTML += `<img src=${src} style="margin: 10px" title=${priority} id=${id} width="200" />`;
+    this.setState({});
   }
 
   setHTMLImageToList(list, src, id, priority = 0) {
-    document.getElementById(
-      list
-    ).innerHTML = `<img src=${src} style="margin: 10px" title=${priority} id=${id} width="200" />`;
+    return (
+      <img
+        key={id}
+        alt={src}
+        src={src}
+        style={{ margin: '10px', cursor: 'pointer' }}
+        title={priority}
+        id={id}
+        width="200"
+        onClick={e => this.goToImage(e)}
+      />
+    );
   }
 
   getFiles(file) {
-    this.displayBase64Images(file[0], 'set', 'toAdd');
+    this.displayBase64Images(file[0], 'set', 'preview');
     this.setState({ file });
   }
 
@@ -133,15 +144,27 @@ class ImageManager extends Component {
     this.setState({ priority: e.target.value });
   }
 
-  displayBase64Images(base64Object, setOrAdd = 'add', id = 'toUpload') {
+  displayBase64Images(base64Object, setOrAdd = 'add', id) {
     const { file } = base64Object;
     const reader = new FileReader();
     reader.onload = (theFile => {
       return e => {
         if (setOrAdd === 'add') {
-          this.addHTMLImageToList(id, e.target.result, theFile.name);
+          const { toUploadThumbnails } = this.state;
+          console.log(this.state);
+          toUploadThumbnails.push(
+            this.setHTMLImageToList(id, e.target.result, theFile.name)
+          );
+          this.setState({
+            toUploadThumbnails
+          });
         } else {
-          this.setHTMLImageToList(id, e.target.result, theFile.name);
+          const preview = this.setHTMLImageToList(
+            id,
+            e.target.result,
+            theFile.name
+          );
+          this.setState({ preview });
         }
       };
     })(file);
@@ -164,7 +187,14 @@ class ImageManager extends Component {
   }
 
   render() {
-    const { file, filesToUpload } = this.state;
+    const {
+      file,
+      toUploadThumbnails,
+      filesToUpload,
+      preview,
+      toUpload,
+      alreadyOnline
+    } = this.state;
     return (
       <div className="center-align">
         <h4 style={{ margin: '30px' }}>Manage images for {this.id}</h4>
@@ -174,16 +204,21 @@ class ImageManager extends Component {
           <Input
             s={1}
             type="number"
+            limit={0}
             label="priority"
             value={this.state.priority}
             onChange={e => this.handlePriority(e)}
           />
         </Row>
         {this.state.file ? <h5>Preview</h5> : ''}
-        <div id="toAdd" style={{ margin: '20px' }} />
+        <div id="preview" style={{ margin: '20px' }}>
+          {preview}
+        </div>
         <Button onClick={() => this.addToUploadArray(file)}>Add</Button>
         <h5>To Upload to CareFreeBreaks</h5>
-        <div id="toUpload" style={{ margin: '20px' }} />
+        <div id="toUpload" style={{ margin: '20px' }}>
+          {toUploadThumbnails}
+        </div>
         {this.state.loading ? (
           <Preloader />
         ) : (
@@ -193,7 +228,7 @@ class ImageManager extends Component {
         )}
         <div className="divider" style={{ margin: '20px' }} />
         <h5>Currently Online</h5>
-        <div id="alreadyOnline" />
+        <div id="alreadyOnline">{alreadyOnline}</div>
       </div>
     );
   }
