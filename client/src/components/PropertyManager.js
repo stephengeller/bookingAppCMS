@@ -66,7 +66,6 @@ class ApiPropertyManager extends Component {
 
   render() {
     let { properties, error } = this.state;
-    console.log(properties);
     return (
       <div className="container">
         <div className="error" style={error.style} id="error">

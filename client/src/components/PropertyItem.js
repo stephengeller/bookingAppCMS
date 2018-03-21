@@ -43,6 +43,7 @@ class PropertyItem extends Component {
 
   render() {
     const { property } = this.state;
+    console.log(property.title, property.description.length);
     return (
       <Card
         className="property-item center-align hoverable"
@@ -53,10 +54,14 @@ class PropertyItem extends Component {
         <br />
         <PropertyLine
           label={'Description'}
-          field={`${property.description
-            .split(' ')
-            .splice(0, 20)
-            .join(' ')}...`}
+          field={
+            property.description.length > 20
+              ? `${property.description
+                  .split(' ')
+                  .splice(0, 20)
+                  .join(' ')}...`
+              : property.description
+          }
         />
         <PropertyLine
           label={'Facilities'}
