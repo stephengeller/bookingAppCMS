@@ -28,7 +28,7 @@ class ErrorHandler {
   }
 
   createErrorMessage(message, boolean) {
-    const color = boolean ? 'green' : 'red';
+    const color = boolean ? 'success' : 'danger';
     return {
       message,
       style: { color }

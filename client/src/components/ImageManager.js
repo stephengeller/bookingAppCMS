@@ -8,7 +8,7 @@ class ImageManager extends Component {
     super(props);
     this.getFiles = this.getFiles.bind(this);
     this.submitPictures = this.submitPictures.bind(this);
-    this.getPreexistingImages = this.getPreexistingImages.bind(this);
+    this.fetchImagesFromAPI = this.fetchImagesFromAPI.bind(this);
     this.createImage = this.createImage.bind(this);
     this.addToUploadArray = this.addToUploadArray.bind(this);
     this.handlePriority = this.handlePriority.bind(this);
@@ -63,10 +63,11 @@ class ImageManager extends Component {
     console.log('clicked on:', e.target);
   }
 
-  async submitPictures(files) {
+  submitPictures(files) {
+    console.log('files', files, files.length);
     if (files.length > 0) {
       let counter = 0;
-      await this.setState({ loading: true });
+      this.setState({ loading: true });
       files = files.map(file => {
         return {
           priority: Number(file.priority),
@@ -74,19 +75,21 @@ class ImageManager extends Component {
         };
       });
       // TODO: fix this await to await for axios and not forEach
-      await files.forEach(file => {
+      files.forEach(file => {
+        console.log('posting:', `Counter: ${counter}`, file);
         this.props.apiClient
           .post(this.url, file)
           .then(response => {
-            console.log('Success!');
             counter++;
+            console.log('Success!', 'counter:', counter, file, response);
             if (counter >= files.length) {
+              console.log('Done!');
               this.setState({
                 filesToUpload: [],
                 toUploadThumbnails: [],
                 loading: false
               });
-              this.getPreexistingImages();
+              this.fetchImagesFromAPI();
             }
           })
           .catch(errorResponse => {
@@ -100,7 +103,8 @@ class ImageManager extends Component {
     }
   }
 
-  async getPreexistingImages() {
+  async fetchImagesFromAPI() {
+    console.log('fetching images from api');
     await this.props.apiClient.get(`${this.url}s`).then(response => {
       if (
         response.data.length > 0 &&
@@ -168,7 +172,7 @@ class ImageManager extends Component {
   }
 
   componentDidMount() {
-    this.getPreexistingImages();
+    this.fetchImagesFromAPI();
   }
 
   renderError() {

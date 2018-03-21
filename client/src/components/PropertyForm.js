@@ -93,7 +93,7 @@ class PropertyForm extends Component {
         .then(() => {
           const error = {
             message: `Property "${fields.title}" successfully added`,
-            style: { color: 'green' }
+            style: 'success'
           };
           const currentFieldsState = this.cleanFields(
             this.allFields,
@@ -106,7 +106,7 @@ class PropertyForm extends Component {
           console.log(error, fields);
           const errorMessage = {
             message: error.toString(),
-            style: { color: 'red' }
+            style: 'danger'
           };
           this.submissionInProgress(false);
           this.setState({ error: errorMessage });
@@ -138,8 +138,9 @@ class PropertyForm extends Component {
     const { error } = this.state;
     if (error) {
       const { message, style } = error;
+      console.log(error);
       return (
-        <Alert bsStyle="danger">
+        <Alert bsStyle={style}>
           <p>{message}</p>
         </Alert>
       );
