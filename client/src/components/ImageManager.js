@@ -9,10 +9,10 @@ class ImageManager extends Component {
     this.getFiles = this.getFiles.bind(this);
     this.submitPictures = this.submitPictures.bind(this);
     this.getPreexistingImages = this.getPreexistingImages.bind(this);
-    this.setHTMLImageToList = this.setHTMLImageToList.bind(this);
+    this.createImage = this.createImage.bind(this);
     this.addToUploadArray = this.addToUploadArray.bind(this);
-    this.clearImageDiv = this.clearImageDiv.bind(this);
     this.handlePriority = this.handlePriority.bind(this);
+    this.showPreviewThumbnail = this.showPreviewThumbnail.bind(this);
     this.renderError = this.renderError.bind(this);
     this.goToImage = this.goToImage.bind(this);
     this.id = this.props.match.params.id;
@@ -30,19 +30,23 @@ class ImageManager extends Component {
 
   addToUploadArray(oneItemArray) {
     if (oneItemArray && oneItemArray[0]) {
-      if (this.state.priority) {
-        this.setState({ errorMsg: null });
-        const file = oneItemArray[0];
-        file.priority = Number(this.state.priority);
-        const { filesToUpload } = this.state;
-        filesToUpload.push(file);
+      const { priority, filesToUpload } = this.state;
+      if (priority) {
+        const fileToAddToArray = oneItemArray[0];
+        fileToAddToArray.priority = Number(priority);
+        filesToUpload.push(fileToAddToArray);
         this.setState({
           filesToUpload,
           file: null,
           priority: '',
-          preview: null
+          preview: null,
+          errorMsg: null
         });
-        this.displayBase64Images(file, 'add', 'toUpload');
+        this.displayBase64Images(
+          fileToAddToArray,
+          'add',
+          fileToAddToArray.name
+        );
       } else {
         this.setState({
           errorMsg: 'Choose priority'
@@ -77,8 +81,11 @@ class ImageManager extends Component {
             console.log('Success!');
             counter++;
             if (counter >= files.length) {
-              this.setState({ filesToUpload: [], loading: false });
-              this.clearImageDiv('toUpload');
+              this.setState({
+                filesToUpload: [],
+                toUploadThumbnails: [],
+                loading: false
+              });
               this.getPreexistingImages();
             }
           })
@@ -94,20 +101,14 @@ class ImageManager extends Component {
   }
 
   async getPreexistingImages() {
-    this.clearImageDiv('alreadyOnline');
     await this.props.apiClient.get(`${this.url}s`).then(response => {
       if (
         response.data.length > 0 &&
-        this.state.uploadedImages.length !== response.data.lenght
+        this.state.uploadedImages.length !== response.data.length
       ) {
         this.setState({
           alreadyOnline: response.data.map(image =>
-            this.setHTMLImageToList(
-              'alreadyOnline',
-              image.url,
-              image.id,
-              image.priority
-            )
+            this.createImage(image.url, image.id, image.priority)
           )
         });
       }
@@ -115,19 +116,13 @@ class ImageManager extends Component {
     });
   }
 
-  clearImageDiv(divID) {
-    document.getElementById(divID).innerHTML = '';
-    this.setState({});
-  }
-
-  setHTMLImageToList(list, src, id, priority = 0) {
+  createImage(src, id, priority = 0) {
     return (
       <img
         key={id}
         alt={src}
         src={src}
         style={{ margin: '10px', cursor: 'pointer' }}
-        title={priority}
         id={id}
         width="200"
         onClick={e => this.goToImage(e)}
@@ -136,12 +131,25 @@ class ImageManager extends Component {
   }
 
   getFiles(file) {
-    this.displayBase64Images(file[0], 'set', 'preview');
+    this.displayBase64Images(file[0], 'set', file[0].name);
     this.setState({ file });
   }
 
   handlePriority(e) {
     this.setState({ priority: e.target.value });
+  }
+
+  addThumbnailToToUpload(src, id) {
+    const { toUploadThumbnails } = this.state;
+    toUploadThumbnails.push(this.createImage(src, id));
+    this.setState({
+      toUploadThumbnails
+    });
+  }
+
+  showPreviewThumbnail(src, id) {
+    const preview = this.createImage(src, id);
+    this.setState({ preview });
   }
 
   displayBase64Images(base64Object, setOrAdd = 'add', id) {
@@ -150,21 +158,9 @@ class ImageManager extends Component {
     reader.onload = (theFile => {
       return e => {
         if (setOrAdd === 'add') {
-          const { toUploadThumbnails } = this.state;
-          console.log(this.state);
-          toUploadThumbnails.push(
-            this.setHTMLImageToList(id, e.target.result, theFile.name)
-          );
-          this.setState({
-            toUploadThumbnails
-          });
+          this.addThumbnailToToUpload(e.target.result, id);
         } else {
-          const preview = this.setHTMLImageToList(
-            id,
-            e.target.result,
-            theFile.name
-          );
-          this.setState({ preview });
+          this.showPreviewThumbnail(e.target.result, id);
         }
       };
     })(file);
@@ -192,9 +188,9 @@ class ImageManager extends Component {
       toUploadThumbnails,
       filesToUpload,
       preview,
-      toUpload,
       alreadyOnline
     } = this.state;
+
     return (
       <div className="center-align">
         <h4 style={{ margin: '30px' }}>Manage images for {this.id}</h4>
@@ -215,6 +211,7 @@ class ImageManager extends Component {
           {preview}
         </div>
         <Button onClick={() => this.addToUploadArray(file)}>Add</Button>
+
         <h5>To Upload to CareFreeBreaks</h5>
         <div id="toUpload" style={{ margin: '20px' }}>
           {toUploadThumbnails}
