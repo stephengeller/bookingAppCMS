@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Preloader } from 'react-materialize';
+import { Alert } from 'react-bootstrap';
 
 import Formatter from '../modules/Formatter';
 import ErrorHandler from '../modules/ErrorHandler';
@@ -27,7 +28,6 @@ class PropertyForm extends Component {
       'addressLine2',
       'city',
       'postcode',
-
       'bookingEmail'
     ];
     this.requiredFields = [
@@ -37,7 +37,6 @@ class PropertyForm extends Component {
       'addressLine1',
       'city',
       'postcode',
-
       'bookingEmail'
     ];
 
@@ -45,7 +44,7 @@ class PropertyForm extends Component {
       fields: {
         location: {}
       },
-      error: '',
+      error: null,
       loading: false
     };
   }
@@ -135,39 +134,61 @@ class PropertyForm extends Component {
     });
   }
 
+  renderError() {
+    const { error } = this.state;
+    if (error) {
+      const { message, style } = error;
+      return (
+        <Alert bsStyle="danger">
+          <p>{message}</p>
+        </Alert>
+      );
+    }
+    return;
+  }
+
   render() {
+    const {
+      title,
+      description,
+      facilities,
+      bookingEmail,
+      addressLine1,
+      addressLine2,
+      city,
+      postcode
+    } = this.state.fields;
+
     return (
       <div className="container">
-        <div className="error" style={this.state.error.style} id="error">
-          {this.state.error.message}
-        </div>
+        {this.renderError()}
         <h5 className="center-align">
           <strong>Details</strong>
         </h5>
         <FormItem
           name={'title'}
           label={'Title'}
-          value={this.state.fields.title}
+          value={title}
           updateInputValue={this.updateInputValue}
         />
         <FormItem
           name={'description'}
           type={'textarea'}
           label={'Property Description'}
-          value={this.state.fields.description}
+          value={description}
           updateInputValue={this.updateInputValue}
         />
         <FormItem
           name={'facilities'}
           label={'Facilities (separated by commas)'}
-          value={this.state.fields.facilities}
+          value={facilities}
           updateInputValue={this.updateInputValue}
         />
         <FormItem
           name={'bookingEmail'}
           label={'Booking Email'}
           type={'email'}
-          value={this.state.fields.bookingEmail}
+          value={bookingEmail}
           updateInputValue={this.updateInputValue}
         />
         <br />
@@ -177,25 +198,25 @@ class PropertyForm extends Component {
         <FormItem
           name={'addressLine1'}
           label={'Address Line 1'}
-          value={this.state.fields['addressLine1']}
+          value={addressLine1}
           updateInputValue={this.updateInputValue}
         />
         <FormItem
           name={'addressLine2'}
           label={'Address Line 2 (optional)'}
-          value={this.state.fields['addressLine2']}
+          value={addressLine2}
           updateInputValue={this.updateInputValue}
         />
         <FormItem
           name={'city'}
           label={'City'}
-          value={this.state.fields['city']}
+          value={city}
           updateInputValue={this.updateInputValue}
         />
         <FormItem
           name={'postcode'}
           label={'Post Code'}
-          value={this.state.fields['postcode']}
+          value={postcode}
           updateInputValue={this.updateInputValue}
         />
         <br />
