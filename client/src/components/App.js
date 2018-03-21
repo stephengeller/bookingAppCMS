@@ -13,7 +13,7 @@ import UserDetails from '../pages/UserDetails';
 import Login from '../pages/Login';
 import UserStore from '../modules/CognitoUserStore';
 
-import Auth, {ApiClient} from '../modules/Auth';
+import Auth, { ApiClient } from '../modules/Auth';
 
 const Logout = () => <h2>Logged out</h2>;
 
@@ -42,42 +42,40 @@ class App extends Component {
         identityPoolId: this.props['IDENTITY_POOL_ID'],
         region: 'eu-west-2',
         userPoolId: this.props['USER_POOL_ID'],
-        userPoolWebClientId: this.props['COGNITO_APP_ID'],
+        userPoolWebClientId: this.props['COGNITO_APP_ID']
       },
       apiClient: null,
       loggingIn: true
     };
     Auth.init(this.state.awsConfig)
-    .then(this.postAuth.bind(this))
-    .catch(err => {
-      this.setState({
-        loggingIn: false
+      .then(this.postAuth.bind(this))
+      .catch(err => {
+        this.setState({
+          loggingIn: false
+        });
+        return err;
       });
-      return err;
-    })
   }
 
   logIn(username, password) {
-    return Auth.logIn(username, password)
-    .then(this.postAuth.bind(this));
+    return Auth.logIn(username, password).then(this.postAuth.bind(this));
   }
 
   postAuth() {
     return Auth.getCurrentSession()
-    .then(sesh => {
-      UserStore.init(sesh, this.state.awsConfig)
-    })
-    .then(Auth.getUserDeets)
-    .then(this.onLoggedIn.bind(this))
-    .then(() => {
-      return ApiClient.create(this.props['API'])
-      .then(api => {
-        this.setState({
-          apiClient: api,
-          loggingIn: false
-        })
+      .then(sesh => {
+        UserStore.init(sesh, this.state.awsConfig);
       })
-    });
+      .then(Auth.getUserDeets)
+      .then(this.onLoggedIn.bind(this))
+      .then(() => {
+        return ApiClient.create(this.props['API']).then(api => {
+          this.setState({
+            apiClient: api,
+            loggingIn: false
+          });
+        });
+      });
   }
 
   onLoggedIn(user) {
@@ -108,7 +106,7 @@ class App extends Component {
             />
           </div>
         </BrowserRouter>
-      )
+      );
     }
     return (
       <BrowserRouter>
@@ -118,7 +116,7 @@ class App extends Component {
             exact
             path="/"
             component={Home}
-            login=''//{Auth.login}
+            login="" //{Auth.login}
             user={this.state.user}
           />
           <PropsRoute
@@ -130,7 +128,14 @@ class App extends Component {
           />
           <PropsRoute
             exact
-            path="/properties/:id"
+            path="/properties/add"
+            component={AddProperty}
+            apiClient={this.state.apiClient}
+            googleApiKey={this.props['GOOGLE_API_KEY']}
+          />
+          <PropsRoute
+            exact
+            path="/properties/edit/:id"
             apiClient={this.state.apiClient}
             component={PropertyDetails}
           />
@@ -148,22 +153,17 @@ class App extends Component {
             component={Users}
           />
           <PropsRoute
-            exact path="/users/:id"
+            exact
+            path="/users/:id"
             userStore={UserStore}
-            component={UserDetails} />
+            component={UserDetails}
+          />
           <PropsRoute
             exact
             path="/login"
             logIn={this.logIn.bind(this)}
             component={Login}
             user={this.state.user}
-          />
-          <PropsRoute
-            exact
-            path="/properties/add"
-            component={AddProperty}
-            apiClient={this.state.apiClient}
-            googleApiKey={this.props['GOOGLE_API_KEY']}
           />
           <Route path="/logout" component={Logout} />
         </div>

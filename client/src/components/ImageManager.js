@@ -64,7 +64,6 @@ class ImageManager extends Component {
   }
 
   async submitPictures(files) {
-    console.log('files', files, files.length);
     if (files.length > 0) {
       let counter = 0;
       this.setState({ loading: true });

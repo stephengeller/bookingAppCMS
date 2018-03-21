@@ -8,7 +8,7 @@ class EditPropertyButton extends Component {
     return (
       <span className="left-align">
         <Link
-          to={`/properties/${property.id}`}
+          to={`/properties/edit/${property.id}`}
           className="edit-property-button"
         >
           <button className="btn waves-effect waves-light blue accent-2 hoverable">

@@ -31,7 +31,7 @@ class ErrorHandler {
     const color = boolean ? 'success' : 'danger';
     return {
       message,
-      style: { color }
+      style: color
     };
   }
 }
