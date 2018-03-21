@@ -63,7 +63,7 @@ class ImageManager extends Component {
     console.log('clicked on:', e.target);
   }
 
-  submitPictures(files) {
+  async submitPictures(files) {
     console.log('files', files, files.length);
     if (files.length > 0) {
       let counter = 0;
@@ -75,9 +75,9 @@ class ImageManager extends Component {
         };
       });
       // TODO: fix this await to await for axios and not forEach
-      files.forEach(file => {
+      for (let file of files) {
         console.log('posting:', `Counter: ${counter}`, file);
-        this.props.apiClient
+        await this.props.apiClient
           .post(this.url, file)
           .then(response => {
             counter++;
@@ -97,7 +97,7 @@ class ImageManager extends Component {
             counter++;
             this.setState({ loading: false });
           });
-      });
+      }
     } else {
       console.log('nothing to upload');
     }
