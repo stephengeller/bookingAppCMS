@@ -11,6 +11,7 @@ class PropertyItem extends Component {
     super(props);
     this.toggleEditor = this.toggleEditor.bind(this);
     this.hideEditor = this.hideEditor.bind(this);
+    this.truncateDescription = this.truncateDescription.bind(this);
     this.state = {
       showPropertyEditor: false,
       property: {
@@ -29,6 +30,17 @@ class PropertyItem extends Component {
 
   hideEditor() {
     this.setState({ showPropertyEditor: false });
+  }
+
+  truncateDescription(text) {
+    if (text.length > 20) {
+      return `${text
+        .split(' ')
+        .splice(0, 20)
+        .join(' ')}...`;
+    } else {
+      return text;
+    }
   }
 
   componentWillMount() {
@@ -54,14 +66,7 @@ class PropertyItem extends Component {
         <br />
         <PropertyLine
           label={'Description'}
-          field={
-            property.description.length > 20
-              ? `${property.description
-                  .split(' ')
-                  .splice(0, 20)
-                  .join(' ')}...`
-              : property.description
-          }
+          field={this.truncateDescription(property.description)}
         />
         <PropertyLine
           label={'Facilities'}
