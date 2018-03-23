@@ -15,6 +15,9 @@ class ImageManager extends Component {
     this.handlePriority = this.handlePriority.bind(this);
     this.showPreviewThumbnail = this.showPreviewThumbnail.bind(this);
     this.renderError = this.renderError.bind(this);
+    this.removeImageFromFetchedImages = this.removeImageFromFetchedImages.bind(
+      this
+    );
     this.clickOnImageThumbnail = this.clickOnImageThumbnail.bind(this);
     this.deleteImage = this.deleteImage.bind(this);
     this.id = this.props.match.params.id;
@@ -72,9 +75,16 @@ class ImageManager extends Component {
 
   clickOnImageThumbnail(e) {
     if (window.confirm('Delete the image?')) {
-      console.log('deleting ID:', e.target.id);
       this.deleteImage(e.target.id);
     }
+  }
+
+  removeImageFromFetchedImages(id) {
+    console.log(`deleting ${id} from alreadyOnline`);
+    const { alreadyOnline } = this.state;
+    const index = alreadyOnline.findIndex(e => e.props.id === id);
+    alreadyOnline.splice(index, 1);
+    this.setState({ alreadyOnline });
   }
 
   deleteImage(id) {
@@ -82,8 +92,8 @@ class ImageManager extends Component {
     this.props.apiClient
       .delete(url)
       .then(r => {
+        this.removeImageFromFetchedImages(id);
         console.log('successful delete:', r);
-        this.fetchImagesFromAPI();
       })
       .catch(err => console.log(err));
   }
