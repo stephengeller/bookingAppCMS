@@ -55,7 +55,6 @@ class PropertyItem extends Component {
 
   render() {
     const { property } = this.state;
-    console.log(property.title, property.description.length);
     return (
       <Card
         className="property-item center-align hoverable"

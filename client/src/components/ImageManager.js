@@ -8,13 +8,15 @@ class ImageManager extends Component {
     super(props);
     this.getFiles = this.getFiles.bind(this);
     this.submitPictures = this.submitPictures.bind(this);
+    this.clearStateAndFetch = this.clearStateAndFetch.bind(this);
     this.fetchImagesFromAPI = this.fetchImagesFromAPI.bind(this);
     this.createImage = this.createImage.bind(this);
     this.addToUploadArray = this.addToUploadArray.bind(this);
     this.handlePriority = this.handlePriority.bind(this);
     this.showPreviewThumbnail = this.showPreviewThumbnail.bind(this);
     this.renderError = this.renderError.bind(this);
-    this.goToImage = this.goToImage.bind(this);
+    this.clickOnImageThumbnail = this.clickOnImageThumbnail.bind(this);
+    this.deleteImage = this.deleteImage.bind(this);
     this.id = this.props.match.params.id;
     this.url = `/properties/${this.id}/image`;
     this.state = {
@@ -28,9 +30,10 @@ class ImageManager extends Component {
     };
   }
 
-  createImageObject(image, array, priority) {
+  addImageObjectToArray(image, array, priority) {
     image.priority = Number(priority);
-    return array.push(image);
+    array.push(image);
+    return array;
   }
 
   resetState(filesToUpload) {
@@ -48,7 +51,11 @@ class ImageManager extends Component {
       const image = oneItemArray[0];
       let { priority, filesToUpload } = this.state;
       if (priority) {
-        filesToUpload = this.createImageObject(image, filesToUpload, priority);
+        filesToUpload = this.addImageObjectToArray(
+          image,
+          filesToUpload,
+          priority
+        );
         this.resetState(filesToUpload);
         this.displayBase64Images(image, 'add', image.name);
       } else {
@@ -63,8 +70,22 @@ class ImageManager extends Component {
     }
   }
 
-  goToImage(e) {
-    console.log('clicked on:', e.target);
+  clickOnImageThumbnail(e) {
+    if (window.confirm('Delete the image?')) {
+      console.log('deleting ID:', e.target.id);
+      this.deleteImage(e.target.id);
+    }
+  }
+
+  deleteImage(id) {
+    const url = `${this.url}/${id}`;
+    this.props.apiClient
+      .delete(url)
+      .then(r => {
+        console.log('successful delete:', r);
+        this.fetchImagesFromAPI();
+      })
+      .catch(err => console.log(err));
   }
 
   async submitPictures(files) {
@@ -84,15 +105,10 @@ class ImageManager extends Component {
           .post(this.url, file)
           .then(response => {
             counter++;
-            console.log('Success!', 'counter:', counter, file, response);
+            console.log('Successful submit!', file, response);
             if (counter >= files.length) {
               console.log('Done!');
-              this.setState({
-                filesToUpload: [],
-                toUploadThumbnails: [],
-                loading: false
-              });
-              this.fetchImagesFromAPI();
+              this.clearStateAndFetch();
             }
           })
           .catch(errorResponse => {
@@ -106,6 +122,15 @@ class ImageManager extends Component {
     }
   }
 
+  clearStateAndFetch() {
+    this.setState({
+      filesToUpload: [],
+      toUploadThumbnails: [],
+      loading: false
+    });
+    this.fetchImagesFromAPI();
+  }
+
   async fetchImagesFromAPI() {
     console.log('fetching images from api');
     await this.props.apiClient.get(`${this.url}s`).then(response => {
@@ -113,11 +138,18 @@ class ImageManager extends Component {
         response.data.length > 0 &&
         this.state.uploadedImages.length !== response.data.length
       ) {
+        console.log('fetched:', response.data);
         this.setState({
           alreadyOnline: response.data.map(image =>
             this.createImage(image.url, image.id, image.priority)
           )
         });
+      } else {
+        console.log(
+          'fetch unsuccessful:',
+          response.data,
+          this.state.uploadedImages
+        );
       }
       this.setState({ uploadedImages: response.data });
     });
@@ -132,7 +164,7 @@ class ImageManager extends Component {
         style={{ margin: '10px', cursor: 'pointer' }}
         id={id}
         width="200"
-        onClick={e => this.goToImage(e)}
+        onClick={e => this.clickOnImageThumbnail(e)}
       />
     );
   }
