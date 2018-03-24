@@ -10,7 +10,9 @@ class ImageManager extends Component {
     super(props);
     this.getFiles = this.getFiles.bind(this);
     this.submitPictures = this.submitPictures.bind(this);
-    this.clearStateAndFetch = this.clearStateAndFetch.bind(this);
+    this.resetAfterCompleteSubmission = this.resetAfterCompleteSubmission.bind(
+      this
+    );
     this.fetchImagesFromAPI = this.fetchImagesFromAPI.bind(this);
     this.addToUploadArray = this.addToUploadArray.bind(this);
     this.handlePriority = this.handlePriority.bind(this);
@@ -38,10 +40,9 @@ class ImageManager extends Component {
     };
   }
 
-  addImageObjectToArray(image, array, priority) {
+  createImageObjWithPriority(image, priority) {
     image.priority = Number(priority);
-    array.push(image);
-    return array;
+    return image;
   }
 
   resetState(filesToUpload) {
@@ -57,13 +58,9 @@ class ImageManager extends Component {
   addToUploadArray(oneItemArray) {
     if (oneItemArray && oneItemArray[0]) {
       const image = oneItemArray[0];
-      let { priority, filesToUpload } = this.state;
+      const { priority, filesToUpload } = this.state;
       if (priority) {
-        filesToUpload = this.addImageObjectToArray(
-          image,
-          filesToUpload,
-          priority
-        );
+        filesToUpload.push(this.createImageObjWithPriority(image, priority));
         this.imageManagerHelper.displayBase64Images(
           image,
           'add',
@@ -93,7 +90,6 @@ class ImageManager extends Component {
   }
 
   removeImageFromFetchedImages(id) {
-    console.log(`deleting ${id} from alreadyOnline`);
     const { alreadyOnline } = this.state;
     const index = alreadyOnline.findIndex(e => e.props.id === id);
     alreadyOnline.splice(index, 1);
@@ -126,13 +122,9 @@ class ImageManager extends Component {
     if (files.length > 0) {
       let counter = 0;
       this.setState({ loading: true });
-      files = files.map(file => {
-        return {
-          priority: Number(file.priority),
-          base64: file.base64
-        };
-      });
-      // TODO: fix this await to await for axios and not forEach
+
+      files = this.imageManagerHelper.formatImages(files);
+
       for (let file of files) {
         console.log('posting:', `Counter: ${counter}`, file);
         this.props.apiClient
@@ -141,16 +133,15 @@ class ImageManager extends Component {
             counter++;
             console.log('Successful submit!', file, response);
             this.addToAlreadyOnline(response.data);
+
             if (counter >= files.length) {
-              console.log('All files have been successful!');
-              this.clearStateAndFetch();
+              this.resetAfterCompleteSubmission();
             }
           })
           .catch(errorResponse => {
-            console.log(errorResponse);
             counter++;
             const error = this.errorHandler.createErrorMessage(
-              'Problem submitting image',
+              'Problem submitting image' + errorResponse,
               false
             );
             this.setState({ loading: false, error });
@@ -173,7 +164,8 @@ class ImageManager extends Component {
     this.setState({ alreadyOnline });
   }
 
-  clearStateAndFetch() {
+  resetAfterCompleteSubmission() {
+    console.log('All files have been submitted');
     this.setState({
       filesToUpload: [],
       toUploadThumbnails: [],

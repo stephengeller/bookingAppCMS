@@ -23,6 +23,15 @@ class ImageManagerHelper {
     );
   }
 
+  formatImages(files) {
+    return files.map(file => {
+      return {
+        priority: Number(file.priority),
+        base64: file.base64
+      };
+    });
+  }
+
   displayBase64Images(base64Object, setOrAdd = 'add', id, handleEncodedImage) {
     const { file } = base64Object;
     const reader = new FileReader();
