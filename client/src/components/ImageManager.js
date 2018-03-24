@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import FileBase64 from 'react-file-base64';
 import { Row, Button, Input, Preloader } from 'react-materialize';
-import { Alert } from 'react-bootstrap';
 
 import ErrorHandler from '../modules/ErrorHandler';
 import ImageManagerHelper from './helpers/ImageManagerHelper';
@@ -15,6 +14,7 @@ class ImageManager extends Component {
     this.fetchImagesFromAPI = this.fetchImagesFromAPI.bind(this);
     this.addToUploadArray = this.addToUploadArray.bind(this);
     this.handlePriority = this.handlePriority.bind(this);
+    this.handleEncodedImage = this.handleEncodedImage.bind(this);
     this.showPreviewThumbnail = this.showPreviewThumbnail.bind(this);
     this.removeImageFromFetchedImages = this.removeImageFromFetchedImages.bind(
       this
@@ -64,8 +64,13 @@ class ImageManager extends Component {
           filesToUpload,
           priority
         );
+        this.imageManagerHelper.displayBase64Images(
+          image,
+          'add',
+          image.name,
+          this.handleEncodedImage
+        );
         this.resetState(filesToUpload);
-        this.displayBase64Images(image, 'add', image.name);
       } else {
         this.setState({
           error: this.errorHandler.createErrorMessage(
@@ -101,9 +106,20 @@ class ImageManager extends Component {
       .delete(url)
       .then(r => {
         this.removeImageFromFetchedImages(id);
-        console.log('successful delete:', r);
+        const error = this.errorHandler.createErrorMessage(
+          'successful delete of image id: ' + id,
+          true
+        );
+        this.setState({ error });
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        console.log(err);
+        const error = this.errorHandler.createErrorMessage(
+          'could not delete image id: ' + id,
+          true
+        );
+        this.setState({ error });
+      });
   }
 
   submitPictures(files) {
@@ -124,20 +140,37 @@ class ImageManager extends Component {
           .then(response => {
             counter++;
             console.log('Successful submit!', file, response);
+            this.addToAlreadyOnline(response.data);
             if (counter >= files.length) {
-              console.log('Done!');
+              console.log('All files have been successful!');
               this.clearStateAndFetch();
             }
           })
           .catch(errorResponse => {
             console.log(errorResponse);
             counter++;
-            this.setState({ loading: false });
+            const error = this.errorHandler.createErrorMessage(
+              'Problem submitting image',
+              false
+            );
+            this.setState({ loading: false, error });
           });
       }
     } else {
-      console.log('nothing to upload');
+      const error = this.errorHandler.createErrorMessage(
+        'Nothing to upload',
+        false
+      );
+      this.setState({ error });
     }
+  }
+
+  addToAlreadyOnline(image) {
+    const { alreadyOnline } = this.state;
+    alreadyOnline.push(
+      this.imageManagerHelper.createImage(image.url, image.id, image.priority)
+    );
+    this.setState({ alreadyOnline });
   }
 
   clearStateAndFetch() {
@@ -146,7 +179,6 @@ class ImageManager extends Component {
       toUploadThumbnails: [],
       loading: false
     });
-    this.fetchImagesFromAPI();
   }
 
   async fetchImagesFromAPI() {
@@ -178,7 +210,12 @@ class ImageManager extends Component {
   }
 
   getFiles(file) {
-    this.displayBase64Images(file[0], 'set', file[0].name);
+    this.imageManagerHelper.displayBase64Images(
+      file[0],
+      'set',
+      file[0].name,
+      this.handleEncodedImage
+    );
     this.setState({ file });
   }
 
@@ -199,19 +236,12 @@ class ImageManager extends Component {
     this.setState({ preview });
   }
 
-  displayBase64Images(base64Object, setOrAdd = 'add', id) {
-    const { file } = base64Object;
-    const reader = new FileReader();
-    reader.onload = (theFile => {
-      return e => {
-        if (setOrAdd === 'add') {
-          this.addThumbnailToToUpload(e.target.result, id);
-        } else {
-          this.showPreviewThumbnail(e.target.result, id);
-        }
-      };
-    })(file);
-    return reader.readAsDataURL(file);
+  handleEncodedImage(base64, setOrAdd, id) {
+    if (setOrAdd === 'add') {
+      this.addThumbnailToToUpload(base64, id);
+    } else {
+      this.showPreviewThumbnail(base64, id);
+    }
   }
 
   componentDidMount() {
@@ -236,7 +266,7 @@ class ImageManager extends Component {
           {this.errorHandler.renderAlert(error)}
           <FileBase64 multiple={true} onDone={file => this.getFiles(file)} />
           <Input
-            s={1}
+            s={3}
             type="number"
             limit={0}
             label="priority"

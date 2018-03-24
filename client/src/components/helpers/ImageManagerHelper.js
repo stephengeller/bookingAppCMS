@@ -1,11 +1,11 @@
 import React from 'react';
 import FileBase64 from 'react-file-base64';
-import { Row, Button, Input, Preloader } from 'react-materialize';
 import { Alert } from 'react-bootstrap';
 
 class ImageManagerHelper {
   constructor(clickOnImageThumbnailFunction) {
     this.createImage = this.createImage.bind(this);
+    this.displayBase64Images = this.displayBase64Images.bind(this);
     this.clickOnImageThumbnail = clickOnImageThumbnailFunction;
   }
 
@@ -21,6 +21,17 @@ class ImageManagerHelper {
         onClick={e => this.clickOnImageThumbnail(e)}
       />
     );
+  }
+
+  displayBase64Images(base64Object, setOrAdd = 'add', id, handleEncodedImage) {
+    const { file } = base64Object;
+    const reader = new FileReader();
+    reader.onload = (theFile => {
+      return e => {
+        handleEncodedImage(e.target.result, setOrAdd, id);
+      };
+    })(file);
+    return reader.readAsDataURL(file);
   }
 }
 
