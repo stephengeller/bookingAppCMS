@@ -1,3 +1,6 @@
+import React from 'react';
+import { Alert } from 'react-bootstrap';
+
 class ErrorHandler {
   emptyBoxErrorHandler(fieldNames, state) {
     const missingFields = [];
@@ -33,6 +36,17 @@ class ErrorHandler {
       message,
       style: color
     };
+  }
+
+  renderAlert(error) {
+    if (error === null) {
+      return;
+    }
+    return (
+      <Alert bsStyle={error.style}>
+        <p>{error.message}</p>
+      </Alert>
+    );
   }
 }
 

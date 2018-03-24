@@ -3,6 +3,8 @@ import FileBase64 from 'react-file-base64';
 import { Row, Button, Input, Preloader } from 'react-materialize';
 import { Alert } from 'react-bootstrap';
 
+import ErrorHandler from '../modules/ErrorHandler';
+
 class ImageManager extends Component {
   constructor(props) {
     super(props);
@@ -14,12 +16,12 @@ class ImageManager extends Component {
     this.addToUploadArray = this.addToUploadArray.bind(this);
     this.handlePriority = this.handlePriority.bind(this);
     this.showPreviewThumbnail = this.showPreviewThumbnail.bind(this);
-    this.renderError = this.renderError.bind(this);
     this.removeImageFromFetchedImages = this.removeImageFromFetchedImages.bind(
       this
     );
     this.clickOnImageThumbnail = this.clickOnImageThumbnail.bind(this);
     this.deleteImage = this.deleteImage.bind(this);
+    this.errorHandler = new ErrorHandler();
     this.id = this.props.match.params.id;
     this.url = `/properties/${this.id}/image`;
     this.state = {
@@ -29,7 +31,7 @@ class ImageManager extends Component {
       uploadedImages: [],
       priority: '',
       loading: false,
-      errorMsg: null
+      error: null
     };
   }
 
@@ -44,7 +46,7 @@ class ImageManager extends Component {
       filesToUpload,
       file: null,
       preview: null,
-      errorMsg: null,
+      error: null,
       priority: ''
     });
   }
@@ -62,13 +64,21 @@ class ImageManager extends Component {
         this.resetState(filesToUpload);
         this.displayBase64Images(image, 'add', image.name);
       } else {
+        const error = this.errorHandler.createErrorMessage(
+          'Choose a priority',
+          false
+        );
         this.setState({
-          errorMsg: 'Choose priority'
+          error
         });
       }
     } else {
+      const error = this.errorHandler.createErrorMessage(
+        'Choose a file',
+        false
+      );
       this.setState({
-        errorMsg: 'Choose a file'
+        error
       });
     }
   }
@@ -221,31 +231,21 @@ class ImageManager extends Component {
     this.fetchImagesFromAPI();
   }
 
-  renderError() {
-    if (this.state.errorMsg === null) {
-      return;
-    }
-    return (
-      <Alert bsStyle="danger">
-        <p>{this.state.errorMsg}</p>
-      </Alert>
-    );
-  }
-
   render() {
     const {
       file,
       toUploadThumbnails,
       filesToUpload,
       preview,
-      alreadyOnline
+      alreadyOnline,
+      error
     } = this.state;
 
     return (
       <div className="center-align">
         <h4 style={{ margin: '30px' }}>Manage images for {this.id}</h4>
         <Row className="container">
-          {this.renderError()}
+          {this.errorHandler.renderAlert(error)}
           <FileBase64 multiple={true} onDone={file => this.getFiles(file)} />
           <Input
             s={1}
