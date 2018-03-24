@@ -4,6 +4,7 @@ import { Row, Button, Input, Preloader } from 'react-materialize';
 import { Alert } from 'react-bootstrap';
 
 import ErrorHandler from '../modules/ErrorHandler';
+import ImageManagerHelper from './helpers/ImageManagerHelper';
 
 class ImageManager extends Component {
   constructor(props) {
@@ -12,7 +13,6 @@ class ImageManager extends Component {
     this.submitPictures = this.submitPictures.bind(this);
     this.clearStateAndFetch = this.clearStateAndFetch.bind(this);
     this.fetchImagesFromAPI = this.fetchImagesFromAPI.bind(this);
-    this.createImage = this.createImage.bind(this);
     this.addToUploadArray = this.addToUploadArray.bind(this);
     this.handlePriority = this.handlePriority.bind(this);
     this.showPreviewThumbnail = this.showPreviewThumbnail.bind(this);
@@ -22,6 +22,9 @@ class ImageManager extends Component {
     this.clickOnImageThumbnail = this.clickOnImageThumbnail.bind(this);
     this.deleteImage = this.deleteImage.bind(this);
     this.errorHandler = new ErrorHandler();
+    this.imageManagerHelper = new ImageManagerHelper(
+      this.clickOnImageThumbnail
+    );
     this.id = this.props.match.params.id;
     this.url = `/properties/${this.id}/image`;
     this.state = {
@@ -64,21 +67,16 @@ class ImageManager extends Component {
         this.resetState(filesToUpload);
         this.displayBase64Images(image, 'add', image.name);
       } else {
-        const error = this.errorHandler.createErrorMessage(
-          'Choose a priority',
-          false
-        );
         this.setState({
-          error
+          error: this.errorHandler.createErrorMessage(
+            'Choose a priority',
+            false
+          )
         });
       }
     } else {
-      const error = this.errorHandler.createErrorMessage(
-        'Choose a file',
-        false
-      );
       this.setState({
-        error
+        error: this.errorHandler.createErrorMessage('Choose a file', false)
       });
     }
   }
@@ -161,7 +159,11 @@ class ImageManager extends Component {
         console.log('fetched:', response.data);
         this.setState({
           alreadyOnline: response.data.map(image =>
-            this.createImage(image.url, image.id, image.priority)
+            this.imageManagerHelper.createImage(
+              image.url,
+              image.id,
+              image.priority
+            )
           )
         });
       } else {
@@ -175,20 +177,6 @@ class ImageManager extends Component {
     });
   }
 
-  createImage(src, id, priority = 0) {
-    return (
-      <img
-        key={id}
-        alt={src}
-        src={src}
-        style={{ margin: '10px', cursor: 'pointer' }}
-        id={id}
-        width="200"
-        onClick={e => this.clickOnImageThumbnail(e)}
-      />
-    );
-  }
-
   getFiles(file) {
     this.displayBase64Images(file[0], 'set', file[0].name);
     this.setState({ file });
@@ -200,14 +188,14 @@ class ImageManager extends Component {
 
   addThumbnailToToUpload(src, id) {
     const { toUploadThumbnails } = this.state;
-    toUploadThumbnails.push(this.createImage(src, id));
+    toUploadThumbnails.push(this.imageManagerHelper.createImage(src, id));
     this.setState({
       toUploadThumbnails
     });
   }
 
   showPreviewThumbnail(src, id) {
-    const preview = this.createImage(src, id);
+    const preview = this.imageManagerHelper.createImage(src, id);
     this.setState({ preview });
   }
 
