@@ -10,13 +10,18 @@ class Properties extends Component {
     };
   }
 
+  componentDidMount() {
+    document.title = 'Properties';
+  }
+
   render() {
     return (
       <div>
-        <h2 className="center-align">Property Manager</h2>
+        <h2 className="center-align">Properties</h2>
         <PropertyManager
           apiClient={this.props.apiClient}
-          googleApiKey={this.props.googleApiKey} />
+          googleApiKey={this.props.googleApiKey}
+        />
       </div>
     );
   }

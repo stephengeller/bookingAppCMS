@@ -1,20 +1,23 @@
 import React, { Component } from 'react';
-import {Redirect} from 'react-router-dom';
-
+import { Redirect } from 'react-router-dom';
 
 import GoToManageButton from '../components/buttons/GoToManageButton';
 
 class Home extends Component {
+  componentDidMount() {
+    document.title = 'CareFreeBreaks CMS';
+  }
+
   render() {
     const { user } = this.props;
 
-    if(user === null) {
+    if (user === null) {
       return <Redirect to="/login" />;
     } else {
       return (
         <div className="center">
           <h2 className="center">Welcome To CareFreeBreaks CMS</h2>
-         <div className="divider" />
+          <div className="divider" />
           <div>
             <h3>Welcome {user.given_name}</h3>
             <br />

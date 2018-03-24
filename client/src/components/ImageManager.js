@@ -217,7 +217,7 @@ class ImageManager extends Component {
   }
 
   componentDidMount() {
-    document.title = 'wowowowoow';
+    document.title = `Images: ${this.id}`;
     this.fetchImagesFromAPI();
   }
 

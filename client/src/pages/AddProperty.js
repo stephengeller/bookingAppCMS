@@ -10,6 +10,10 @@ class AddProperty extends Component {
     };
   }
 
+  componentDidMount() {
+    document.title = 'Add Property';
+  }
+
   render() {
     return (
       <div className="">

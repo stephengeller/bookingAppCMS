@@ -10,13 +10,15 @@ class PropertyDetails extends Component {
     };
   }
 
+  componentDidMount() {
+    document.title = `${this.props.match.params.id}`;
+  }
+
   render() {
     const { id } = this.props.match.params;
     return (
       <div className="">
-        <PropertyItemEditor
-          apiClient={this.props.apiClient}
-          id={id} />
+        <PropertyItemEditor apiClient={this.props.apiClient} id={id} />
       </div>
     );
   }

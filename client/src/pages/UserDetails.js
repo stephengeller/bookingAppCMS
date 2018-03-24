@@ -24,10 +24,12 @@ class UserDetails extends Component {
   async getUserEmail() {
     const url = this.props.location.pathname;
     const email = url.slice(url.indexOf('users/') + 6);
-    await this.props.userStore.searchByEmail(email)
+    await this.props.userStore
+      .searchByEmail(email)
       .then(user => {
         console.log(user);
         this.setState({ user });
+        document.title = `${user.attr.given_name} ${user.attr.family_name}`;
       })
       .catch(err => console.log(err));
   }
@@ -42,7 +44,8 @@ class UserDetails extends Component {
         <UserEditor
           user={user}
           userStore={this.props.userStore}
-          onUserChanged={this.onUserChanged.bind(this)}/>
+          onUserChanged={this.onUserChanged.bind(this)}
+        />
       </div>
     ) : (
       <div className="center-align center">
