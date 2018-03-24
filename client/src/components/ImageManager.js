@@ -98,7 +98,7 @@ class ImageManager extends Component {
       .catch(err => console.log(err));
   }
 
-  async submitPictures(files) {
+  submitPictures(files) {
     if (files.length > 0) {
       let counter = 0;
       this.setState({ loading: true });
@@ -111,7 +111,7 @@ class ImageManager extends Component {
       // TODO: fix this await to await for axios and not forEach
       for (let file of files) {
         console.log('posting:', `Counter: ${counter}`, file);
-        await this.props.apiClient
+        this.props.apiClient
           .post(this.url, file)
           .then(response => {
             counter++;
@@ -217,6 +217,7 @@ class ImageManager extends Component {
   }
 
   componentDidMount() {
+    document.title = 'wowowowoow';
     this.fetchImagesFromAPI();
   }
 
