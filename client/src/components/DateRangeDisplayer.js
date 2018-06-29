@@ -113,12 +113,7 @@ class DateRangeDisplayer extends Component {
       })
       .catch(error => {
         const message = 'Error getting property availability: ' + error;
-        // const message = this.errorHandler.createErrorMessage(
-        //   messageString,
-        //   false
-        // );
         console.log(message);
-        // this.setState({ errocr: message });
       });
   }
 
