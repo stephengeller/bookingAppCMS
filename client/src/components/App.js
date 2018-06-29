@@ -160,7 +160,7 @@ class App extends Component {
           />
           <PropsRoute
             exact
-            path="/properties/add"
+            path="/addproperty"
             component={AddProperty}
             apiClient={this.state.apiClient}
             googleApiKey={this.props['GOOGLE_API_KEY']}
