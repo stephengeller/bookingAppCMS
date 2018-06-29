@@ -9,10 +9,9 @@ import GoogleMapsAPI from '../../modules/GoogleMapsAPI';
 class PropertyItem extends Component {
   constructor(props) {
     super(props);
-    this.toggleEditor = this.toggleEditor.bind(this);
-    this.hideEditor = this.hideEditor.bind(this);
+    this.toggleContents = this.toggleContents.bind(this);
     this.state = {
-      showPropertyEditor: false,
+      shortDescription: true,
       property: {
         location: ''
       }
@@ -22,13 +21,9 @@ class PropertyItem extends Component {
     });
   }
 
-  toggleEditor() {
-    const oppositeOfPrevious = !this.state.showPropertyEditor;
-    this.setState({ showPropertyEditor: oppositeOfPrevious });
-  }
-
-  hideEditor() {
-    this.setState({ showPropertyEditor: false });
+  toggleContents() {
+    const oppositeOfPrevious = !this.state.shortDescription;
+    this.setState({ shortDescription: oppositeOfPrevious });
   }
 
   componentWillMount() {
@@ -42,7 +37,7 @@ class PropertyItem extends Component {
   }
 
   render() {
-    const { property } = this.state;
+    const { property, shortDescription } = this.state;
     return (
       <Card
         className="property-item center-align hoverable"
@@ -53,10 +48,12 @@ class PropertyItem extends Component {
         <br />
         <PropertyLine
           label={'Description'}
-          field={`${property.description
+          field={shortDescription ? <a style={{color: 'inherit'}}>{property.description
             .split(' ')
             .splice(0, 20)
-            .join(' ')}...`}
+              .join(' ')}...</a> : <a style={{color: 'inherit'}}>{property.description}</a>
+          }
+          toggleContents={this.toggleContents}
         />
         <PropertyLine
           label={'Facilities'}
