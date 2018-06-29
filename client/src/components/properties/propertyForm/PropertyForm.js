@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Row, Preloader } from 'react-materialize';
+import { Row, Preloader, Button } from 'react-materialize';
+import { Modal } from 'react-bootstrap';
 
 import Formatter from '../../../modules/Formatter';
 import ErrorHandler from '../../../modules/ErrorHandler';
@@ -31,7 +32,9 @@ class PropertyForm extends Component {
 			fields: {
 				location: {}
 			},
-			notice: '',
+			notice: {
+				show: false
+			},
 			loading: false
 		};
 	}
@@ -55,9 +58,10 @@ class PropertyForm extends Component {
 	}
 
 	resetAfterSuccess(fieldsToClean, notice) {
-        this.submissionInProgress(false);
-        fieldsToClean.map(fieldName => (this.state.fields[fieldName] = ''));
-		this.setState({ fields: this.state.fields, notice });
+		this.submissionInProgress(false);
+		const { fields } = this.state;
+		fieldsToClean.map(fieldName => (fields[fieldName] = ''));
+		this.setState({ fields, notice });
 	}
 
 	submissionInProgress(bool) {
@@ -65,31 +69,28 @@ class PropertyForm extends Component {
 	}
 
 	async addProperty() {
-	    const {fields} = this.state;
+		const { fields } = this.state;
 		this.submissionInProgress(true);
-		if (
-			this.errorHandler.allFieldsAreCompleted(
-				this.requiredFields,
-				fields
-			)
-		) {
+		if (this.errorHandler.allFieldsAreCompleted(this.requiredFields, fields)) {
 			const fieldsToSubmit = await this.setUpFieldsObject(fields);
 			this.props.apiClient
 				.post('/properties/', fieldsToSubmit)
 				.then(() => {
 					const notice = {
 						message: `Property "${fieldsToSubmit.title}" successfully added`,
-						style: { color: 'green' }
+						style: { color: 'green' },
+						show: true
 					};
 					this.resetAfterSuccess(this.allFields, notice);
 				})
 				.catch(error => {
-					const errorMessage = {
+					const notice = {
 						message: error.toString(),
-						style: { color: 'red' }
+						style: { color: 'red' },
+						show: true
 					};
 					this.submissionInProgress(false);
-					this.setState({ notice: errorMessage });
+					this.setState({ notice });
 				});
 		} else {
 			this.handleMissingFields();
@@ -101,6 +102,7 @@ class PropertyForm extends Component {
 			this.requiredFields,
 			this.state
 		);
+		notice.show = true;
 		this.submissionInProgress(false);
 		this.setState({ notice });
 	}
@@ -125,6 +127,7 @@ class PropertyForm extends Component {
 					fields={sectionFields}
 					value={this.state.fields}
 					updateInputValue={this.updateInputValue}
+					key={section}
 				/>
 			);
 		}
@@ -135,9 +138,17 @@ class PropertyForm extends Component {
 		const { notice, loading } = this.state;
 		return (
 			<div className="container">
-				<div className="notice" style={notice.style} id="error">
-					{notice.message}
-				</div>
+				<Modal show={notice.show} style={notice.style} id="notice">
+					<Modal.Header>
+						<Modal.Title>{'Notice'}</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>{notice.message}</Modal.Body>
+					<Modal.Footer>
+						<Button onClick={() => this.setState({ notice: { show: false } })}>
+							Close
+						</Button>
+					</Modal.Footer>
+				</Modal>
 				{this.buildForm(PropertyFields)}
 				<br />
 				{loading === false ? (

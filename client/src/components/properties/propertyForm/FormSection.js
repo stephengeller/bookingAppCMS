@@ -2,11 +2,10 @@ import React from 'react'
 import FormItem from './FormItem'
 
 const FormSection = ({name, fields, value, updateInputValue}) => {
-    console.log(this.props)
     const form = [];
 
     form.push(
-        <h5 className="center-align">
+        <h5 className="center-align" key={name}>
             <strong>{name}</strong>
         </h5>
     );
@@ -19,7 +18,7 @@ const FormSection = ({name, fields, value, updateInputValue}) => {
                 value={value[fields[i].name]}
                 type={fields[i].type}
                 updateInputValue={updateInputValue}
-                key={fields[i].name}
+                key={`${fields[i].name}-${i}`}
             />
         );
     }
