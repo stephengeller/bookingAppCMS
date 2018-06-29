@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Card } from 'react-materialize';
 
 import PropertyLine from './PropertyLine';
-import DeletePropertyButton from './buttons/DeletePropertyButton';
-import EditPropertyButton from './buttons/EditPropertyButton';
-import GoogleMapsAPI from '../modules/GoogleMapsAPI';
+import DeletePropertyButton from '../buttons/DeletePropertyButton';
+import EditPropertyButton from '../buttons/EditPropertyButton';
+import GoogleMapsAPI from '../../modules/GoogleMapsAPI';
 
 class PropertyItem extends Component {
   constructor(props) {

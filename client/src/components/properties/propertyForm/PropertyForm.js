@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { Row, Preloader } from 'react-materialize';
 
-import Formatter from '../../modules/Formatter';
-import ErrorHandler from '../../modules/ErrorHandler';
-import GoogleMapsAPI from '../../modules/GoogleMapsAPI';
-import AddPropertyButton from '../buttons/AddPropertyButton';
+import Formatter from '../../../modules/Formatter';
+import ErrorHandler from '../../../modules/ErrorHandler';
+import GoogleMapsAPI from '../../../modules/GoogleMapsAPI';
+import AddPropertyButton from '../../buttons/AddPropertyButton';
 import FormSection from './FormSection';
 
-const PropertyFields = require('../../json/PropertyForm/PropertyFormFields');
-const RequiredFields = require('../../json/PropertyForm/RequiredFields');
-const AllFields = require('../../json/PropertyForm/AllFields');
+const PropertyFields = require('../../../json/PropertyForm/PropertyFormFields');
+const RequiredFields = require('../../../json/PropertyForm/RequiredFields');
+const AllFields = require('../../../json/PropertyForm/AllFields');
 
 class PropertyForm extends Component {
 	constructor(props) {
@@ -54,8 +54,9 @@ class PropertyForm extends Component {
 		};
 	}
 
-	cleanFieldsAfterSuccess(fieldsToClean, notice) {
-		fieldsToClean.map(fieldName => (this.state.fields[fieldName] = ''));
+	resetAfterSuccess(fieldsToClean, notice) {
+        this.submissionInProgress(false);
+        fieldsToClean.map(fieldName => (this.state.fields[fieldName] = ''));
 		this.setState({ fields: this.state.fields, notice });
 	}
 
@@ -64,24 +65,23 @@ class PropertyForm extends Component {
 	}
 
 	async addProperty() {
+	    const {fields} = this.state;
 		this.submissionInProgress(true);
 		if (
 			this.errorHandler.allFieldsAreCompleted(
 				this.requiredFields,
-				this.state.fields
+				fields
 			)
 		) {
-			const fields = await this.setUpFieldsObject(this.state.fields);
-
+			const fieldsToSubmit = await this.setUpFieldsObject(fields);
 			this.props.apiClient
-				.post('/properties/', fields)
+				.post('/properties/', fieldsToSubmit)
 				.then(() => {
-					this.submissionInProgress(false);
 					const notice = {
-						message: `Property "${fields.title}" successfully added`,
+						message: `Property "${fieldsToSubmit.title}" successfully added`,
 						style: { color: 'green' }
 					};
-					this.cleanFieldsAfterSuccess(this.allFields, notice);
+					this.resetAfterSuccess(this.allFields, notice);
 				})
 				.catch(error => {
 					const errorMessage = {

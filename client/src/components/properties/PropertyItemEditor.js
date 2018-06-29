@@ -5,10 +5,10 @@ import 'react-dates/lib/css/_datepicker.css';
 import { DateRangePicker } from 'react-dates';
 import { Link } from 'react-router-dom';
 
-import DateRangeArrayMaker from '../modules/DateRangeArrayMaker';
-import DateRangeDisplayer from './DateRangeDisplayer';
-import Formatter from '../modules/Formatter';
-import ErrorHandler from '../modules/ErrorHandler';
+import DateRangeArrayMaker from '../../modules/DateRangeArrayMaker';
+import DateRangeDisplayer from '../DateRangeDisplayer';
+import Formatter from '../../modules/Formatter';
+import ErrorHandler from '../../modules/ErrorHandler';
 import FormItem from './propertyForm/FormItem';
 
 class PropertyItemEditor extends Component {
