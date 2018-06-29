@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropertyForm from '../components/PropertyForm';
+import PropertyForm from '../components/propertyForm/PropertyForm';
 
 class AddProperty extends Component {
   constructor(props) {

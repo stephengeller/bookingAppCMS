@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { Row, Preloader } from 'react-materialize';
 
-import Formatter from '../modules/Formatter';
-import ErrorHandler from '../modules/ErrorHandler';
-import GoogleMapsAPI from '../modules/GoogleMapsAPI';
-import AddPropertyButton from './buttons/AddPropertyButton';
-import FormItem from './FormItem';
+import Formatter from '../../modules/Formatter';
+import ErrorHandler from '../../modules/ErrorHandler';
+import GoogleMapsAPI from '../../modules/GoogleMapsAPI';
+import AddPropertyButton from '../buttons/AddPropertyButton';
+import FormSection from './FormSection';
 
-const PropertyFields = require('../json/PropertyForm/PropertyFormFields');
-const RequiredFields = require('../json/PropertyForm/RequiredFields');
-const AllFields = require('../json/PropertyForm/AllFields');
+const PropertyFields = require('../../json/PropertyForm/PropertyFormFields');
+const RequiredFields = require('../../json/PropertyForm/RequiredFields');
+const AllFields = require('../../json/PropertyForm/AllFields');
 
 class PropertyForm extends Component {
 	constructor(props) {
@@ -54,9 +54,9 @@ class PropertyForm extends Component {
 		};
 	}
 
-	cleanFields(fieldsToClean, currentFieldsState) {
-		fieldsToClean.map(fieldName => (currentFieldsState[fieldName] = ''));
-		return currentFieldsState;
+	cleanFieldsAfterSuccess(fieldsToClean, notice) {
+		fieldsToClean.map(fieldName => (this.state.fields[fieldName] = ''));
+		this.setState({ fields: this.state.fields, notice });
 	}
 
 	submissionInProgress(bool) {
@@ -76,19 +76,14 @@ class PropertyForm extends Component {
 			this.props.apiClient
 				.post('/properties/', fields)
 				.then(() => {
-                    this.submissionInProgress(false);
-                    const notice = {
+					this.submissionInProgress(false);
+					const notice = {
 						message: `Property "${fields.title}" successfully added`,
 						style: { color: 'green' }
 					};
-					const currentFieldsState = this.cleanFields(
-						this.allFields,
-						this.state.fields
-					);
-					this.setState({ fields: currentFieldsState, notice });
+					this.cleanFieldsAfterSuccess(this.allFields, notice);
 				})
 				.catch(error => {
-					console.log(error, fields);
 					const errorMessage = {
 						message: error.toString(),
 						style: { color: 'red' }
@@ -112,7 +107,7 @@ class PropertyForm extends Component {
 
 	updateInputValue(evt, formName) {
 		let value = evt.target.value.toString();
-		let fields = this.state.fields;
+		let { fields } = this.state;
 		fields[formName] = value;
 		this.setState({
 			fields
@@ -125,35 +120,27 @@ class PropertyForm extends Component {
 		for (let section in keys) {
 			const sectionFields = fields[keys[section]];
 			form.push(
-				<h5 className="center-align">
-					<strong>{keys[section]}</strong>
-				</h5>
+				<FormSection
+					name={keys[section]}
+					fields={sectionFields}
+					value={this.state.fields}
+					updateInputValue={this.updateInputValue}
+				/>
 			);
-			for (let field in sectionFields) {
-				form.push(
-					<FormItem
-						name={sectionFields[field].name}
-						label={sectionFields[field].label}
-						value={this.state.fields[sectionFields[field].name]}
-						type={sectionFields[field].type}
-						updateInputValue={this.updateInputValue}
-						key={sectionFields[field].name}
-					/>
-				);
-			}
 		}
 		return form;
 	}
 
 	render() {
+		const { notice, loading } = this.state;
 		return (
 			<div className="container">
-				<div className="notice" style={this.state.notice.style} id="error">
-					{this.state.notice.message}
+				<div className="notice" style={notice.style} id="error">
+					{notice.message}
 				</div>
 				{this.buildForm(PropertyFields)}
 				<br />
-				{this.state.loading === false ? (
+				{loading === false ? (
 					<Row>
 						<AddPropertyButton addProperty={this.addProperty} />
 						<br />

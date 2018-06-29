@@ -9,7 +9,7 @@ import DateRangeArrayMaker from '../modules/DateRangeArrayMaker';
 import DateRangeDisplayer from './DateRangeDisplayer';
 import Formatter from '../modules/Formatter';
 import ErrorHandler from '../modules/ErrorHandler';
-import FormItem from './FormItem';
+import FormItem from './propertyForm/FormItem';
 
 class PropertyItemEditor extends Component {
   constructor(props) {
