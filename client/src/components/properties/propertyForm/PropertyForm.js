@@ -138,7 +138,12 @@ class PropertyForm extends Component {
 		const { notice, loading } = this.state;
 		return (
 			<div className="container">
-				<Modal show={notice.show} style={notice.style} id="notice">
+				<Modal
+					show={notice.show}
+					style={notice.style}
+					id="notice"
+					className="center"
+				>
 					<Modal.Header>
 						<Modal.Title>{'Notice'}</Modal.Title>
 					</Modal.Header>
