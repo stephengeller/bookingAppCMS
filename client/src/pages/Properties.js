@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropertyManager from '../components/PropertyManager';
+import PropertyManager from '../components/properties/PropertyManager';
 
 class Properties extends Component {
   constructor(props) {

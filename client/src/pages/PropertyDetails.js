@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropertyItemEditor from '../components/PropertyItemEditor';
+import PropertyItemEditor from '../components/properties/PropertyItemEditor';
 
 class PropertyDetails extends Component {
   constructor(props) {

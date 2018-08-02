@@ -1,0 +1,42 @@
+{
+  "Details":
+  [
+    {
+      "name":"title",
+      "label":"Title"
+    },
+    {
+      "name":"description",
+      "type":"textarea",
+      "label":"Property Description"
+    },
+    {
+      "name":"facilities",
+      "label":"Facilities (separated by commas)"
+    },
+    {
+      "name":"bookingEmail",
+      "label":"Booking Email",
+      "type":"email"
+    }
+  ],
+  "Address":
+  [
+    {
+        "name":"addressLine1",
+        "label":"Address Line 1"
+    },
+    {
+        "name":"addressLine2",
+        "label":"Address Line 2 (optional)"
+    },
+    {
+        "name":"city",
+        "label":"City"
+    },
+    {
+      "name": "postcode",
+      "label": "Post Code"
+    }
+  ]
+}

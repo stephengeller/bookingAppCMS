@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Preloader, Input } from 'react-materialize';
 
-import PropertyItem from '../components/PropertyItem';
-import GoToAddPropertyButton from './buttons/GoToAddPropertyButton';
+import PropertyItem from './PropertyItem';
+import GoToAddPropertyButton from '../buttons/GoToAddPropertyButton';
 
 class ApiPropertyManager extends Component {
   constructor(props) {

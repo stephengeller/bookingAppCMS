@@ -6,7 +6,7 @@ class GoToAddPropertyButton extends Component {
   render() {
     return (
       <div className="center-align">
-        <Link to={`/properties/add`} className="edit-property-button">
+        <Link to={`/addproperty`} className="edit-property-button">
           <Button className="btn waves-effect waves-light blue accent-2 hoverable">
             <Icon right>folder</Icon>Add Property
           </Button>

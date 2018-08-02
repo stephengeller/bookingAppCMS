@@ -1,0 +1,10 @@
+[
+  "title",
+  "description",
+  "facilities",
+  "addressLine1",
+  "addressLine2",
+  "city",
+  "postcode",
+  "bookingEmail"
+]
