@@ -5,6 +5,11 @@ import { Redirect } from 'react-router-dom';
 
 import CognitoUserStore from '../modules/CognitoUserStore';
 
+const formatError = ({ message = 'Failure' }) => ({
+  message,
+  style: { color: 'red' }
+});
+
 class UserEditor extends Component {
   constructor(props) {
     super(props);
@@ -26,6 +31,7 @@ class UserEditor extends Component {
     this.updateField = this.updateField.bind(this);
     this.disableUser = this.disableUser.bind(this);
     this.resetUserPassword = this.resetUserPassword.bind(this);
+    this.handleFailure = this.handleFailure.bind(this);
     this.state = {
       inputField: '',
       error: {},
@@ -33,29 +39,35 @@ class UserEditor extends Component {
     };
   }
 
+  handleFailure(err) {
+    const error = formatError(err);
+    this.setState({ error });
+    console.log(error);
+  }
+
   resetUserPassword(email) {
     CognitoUserStore.resetUserPassword(email)
-    .then(this.props.onUserChanged)
-      .catch(err => console.log(err));
+      .then(this.props.onUserChanged)
+      .catch(this.handleFailure);
   }
 
   disableUser(email) {
     CognitoUserStore.disableUser(email)
-    .then(this.props.onUserChanged)
-      .catch(err => console.log(err));
+      .then(this.props.onUserChanged)
+      .catch(this.handleFailure);
   }
 
   enableUser(email) {
     CognitoUserStore.enableUser(email)
-    .then(this.props.onUserChanged)
-      .catch(err => console.log(err));
+      .then(this.props.onUserChanged)
+      .catch(this.handleFailure);
   }
 
   deleteUser(email) {
     this.setState();
     CognitoUserStore.deleteUser(email)
       .then(() => {
-        this.setState({redirect: true});
+        this.setState({ redirect: true });
       })
       .catch(err => console.log(err));
   }
@@ -117,12 +129,12 @@ class UserEditor extends Component {
 
   renderBackToParent() {
     if (this.state.redirect) {
-      return <Redirect to='/users'></Redirect>
+      return <Redirect to="/users" />;
     }
   }
 
   renderDisableBtn() {
-    if(this.props.user.Enabled) {
+    if (this.props.user.Enabled) {
       return (
         <Button
           className={'red accent-4 button'}
@@ -130,7 +142,7 @@ class UserEditor extends Component {
         >
           <Icon right>block</Icon>Disable user
         </Button>
-      )
+      );
     }
     return (
       <Button
@@ -139,11 +151,11 @@ class UserEditor extends Component {
       >
         <Icon right>check</Icon>Enable user
       </Button>
-    )
+    );
   }
 
   renderDeleteBtn() {
-    if(!this.props.user.Enabled) {
+    if (!this.props.user.Enabled) {
       return (
         <Button
           className={'red accent-4 button'}
@@ -151,12 +163,12 @@ class UserEditor extends Component {
         >
           <Icon right>block</Icon>Delete user
         </Button>
-      )
+      );
     }
   }
 
   render() {
-    if(this.state.redirect) {
+    if (this.state.redirect) {
       return this.renderBackToParent();
     }
     const { error, userObject, inputField, inputValue } = this.state;
@@ -175,14 +187,15 @@ class UserEditor extends Component {
             className="button"
             onClick={() => this.updateField(this.state.inputField)}
           >
-            <Icon right>create</Icon> Update {inputField.replace(/custom:/, '').replace(/_/, ' ')}
+            <Icon right>create</Icon> Update{' '}
+            {inputField.replace(/custom:/, '').replace(/_/, ' ')}
           </Button>
         </div>
         <div className="divider" />
         <div>
           <Button
             className={'blue darken-1 button'}
-            onClick={() => this.resetUserPassword(userObject.email)}
+            onClick={() => this.resetUserPassword(this.userObject.email)}
           >
             <Icon right>cached</Icon>Reset user password
           </Button>
@@ -193,9 +206,15 @@ class UserEditor extends Component {
         </div>
       </div>
     );
+
+    const { user } = this.props;
+    const { UserStatus, Enabled } = user || {};
+    const userEnabledMessage = Enabled ? 'active' : 'inactive';
+    const UserStatusMessage = `${UserStatus} / ${userEnabledMessage}`;
+
     return (
       <div style={{ margin: '30px' }}>
-        <h6 className="center-align">({this.props.user.UserStatus} / {this.props.user.Enabled ? 'enabled' : 'disabled'})</h6>
+        <h6 className="center-align">{UserStatusMessage}</h6>
         <h5 style={error.style}>{error.message}</h5>
         <Row>
           <Input
