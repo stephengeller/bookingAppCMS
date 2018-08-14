@@ -4,120 +4,118 @@ AWS.config.region = 'eu-west-2';
 var USER_POOL_ID = null;
 
 function searchForUser(property, value) {
-  var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
-  var params = {
-    UserPoolId: USER_POOL_ID,
-    Filter: `${property} = "${value}"`,
-    Limit: 1
-  };
-  return cognitoidentityserviceprovider.listUsers(params).promise();
+	var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+	var params = {
+		UserPoolId: USER_POOL_ID,
+		Filter: `${property} = "${value}"`,
+		Limit: 1
+	};
+	return cognitoidentityserviceprovider.listUsers(params).promise();
 }
 
 function updateAtrribute(attribute, value, username) {
-  var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
-  var params = {
-    UserAttributes: [
-      {
-        Name: attribute,
-        Value: value
-      }
-    ],
-    UserPoolId: USER_POOL_ID,
-    Username: username
-  };
-  return cognitoidentityserviceprovider
-    .adminUpdateUserAttributes(params)
-    .promise();
+	var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+	var params = {
+		UserAttributes: [
+			{
+				Name: attribute,
+				Value: value
+			}
+		],
+		UserPoolId: USER_POOL_ID,
+		Username: username
+	};
+	return cognitoidentityserviceprovider
+		.adminUpdateUserAttributes(params)
+		.promise();
 }
 module.exports = {
+	init: (session, awsConfig) => {
+		USER_POOL_ID = awsConfig['userPoolId'];
+		var loginUrl = 'cognito-idp.eu-west-2.amazonaws.com/' + USER_POOL_ID;
+		AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+			IdentityPoolId: awsConfig['identityPoolId'],
+			Logins: {
+				[loginUrl]: session.getIdToken().getJwtToken()
+			}
+		});
+		return AWS.config.credentials.refreshPromise();
+	},
 
-  init: (session, awsConfig) => {
-    USER_POOL_ID = awsConfig['userPoolId'];
-    var loginUrl = 'cognito-idp.eu-west-2.amazonaws.com/' + USER_POOL_ID;
-    AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-      IdentityPoolId : awsConfig['identityPoolId'],
-      Logins : {
-        [loginUrl] : session.getIdToken().getJwtToken()
-      }
-    });
-    return AWS.config.credentials.refreshPromise()
-  },
+	searchByEmail: email =>
+		searchForUser('email', email)
+			.then(result => {
+				if (result.Users.length === 0) {
+					throw new Error('User not found');
+				}
+				return result;
+			})
+			.then(result => result.Users[0])
+			.then(result => {
+				result.attr = {};
+				for (var i = 0, l = result.Attributes.length; i < l; i++) {
+					result.attr[result.Attributes[i]['Name']] =
+						result.Attributes[i]['Value'];
+				}
+				return result;
+			}),
 
-  searchByEmail: email => {
-    return searchForUser('email', email)
-      .then(result => {
-        if(result.Users.length === 0) {
-          throw new Error('User not found');
-        }
-        return result;
-      })
-      .then(result => result.Users[0])
-      .then(result => {
-        result.attr = {};
-        for(var i = 0, l = result.Attributes.length; i < l; i++) {
-          result.attr[result.Attributes[i]['Name']] = result.Attributes[i]['Value'];
-        }
-        return result;
-      })
-  },
+	setNumTokens: (tokens, email) =>
+		updateAtrribute('custom:tokens', tokens, email),
 
-  setNumTokens: (tokens, email) => {
-    return updateAtrribute('custom:tokens', tokens, email);
-  },
+	setAddress: (address, email) => updateAtrribute('address', address, email),
 
-  setAddress: (address, email) => {
-    return updateAtrribute('address', address, email);
-  },
+	setPhoneNum: (phoneNum, email) =>
+		updateAtrribute('phone_number', phoneNum, email),
 
-  setPhoneNum: (phoneNum, email) => {
-    return updateAtrribute('phone_number', phoneNum, email);
-  },
+	setGivenName: (givenName, email) =>
+		updateAtrribute('given_name', givenName, email),
 
-  setGivenName: (givenName, email) => {
-    return updateAtrribute('given_name', givenName, email);
-  },
+	setFamilyName: (familyName, email) =>
+		updateAtrribute('family_name', familyName, email),
 
-  setFamilyName: (familyName, email) => {
-    return updateAtrribute('family_name', familyName, email);
-  },
+	setEmail: (newEmail, oldEmail) =>
+		updateAtrribute('email', newEmail, oldEmail),
 
-  setEmail: (newEmail, oldEmail) => {
-    return updateAtrribute('email', newEmail, oldEmail);
-  },
+	disableUser: email => {
+		const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+		const params = {
+			UserPoolId: USER_POOL_ID,
+			Username: email
+		};
 
-  disableUser: email => {
-    var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
-    var params = {
-      UserPoolId: USER_POOL_ID,
-      Username: email
-    };
-    return cognitoidentityserviceprovider.adminDisableUser(params).promise();
-  },
+		return cognitoidentityserviceprovider.adminDisableUser(params).promise();
+	},
 
-  enableUser: email => {
-    var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
-    var params = {
-      UserPoolId: USER_POOL_ID,
-      Username: email
-    };
-    return cognitoidentityserviceprovider.adminEnableUser(params).promise();
-  },
+	enableUser: email => {
+		const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+		const params = {
+			UserPoolId: USER_POOL_ID,
+			Username: email
+		};
 
-  deleteUser: email => {
-    var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
-    var params = {
-      UserPoolId: USER_POOL_ID,
-      Username: email
-    };
-    return cognitoidentityserviceprovider.adminDeleteUser(params).promise();
-  },
+		return cognitoidentityserviceprovider.adminEnableUser(params).promise();
+	},
 
-  resetUserPassword: email => {
-    var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
-    var params = {
-      UserPoolId: USER_POOL_ID,
-      Username: email
-    };
-    cognitoidentityserviceprovider.adminResetUserPassword(params).promise();
-  }
+	deleteUser: email => {
+		const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+		const params = {
+			UserPoolId: USER_POOL_ID,
+			Username: email
+		};
+
+		return cognitoidentityserviceprovider.adminDeleteUser(params).promise();
+	},
+
+	resetUserPassword: email => {
+		const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
+		const params = {
+			UserPoolId: USER_POOL_ID,
+			Username: email
+		};
+
+		return cognitoidentityserviceprovider
+			.adminResetUserPassword(params)
+			.promise();
+	}
 };
