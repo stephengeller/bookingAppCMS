@@ -176,7 +176,7 @@ class UserEditor extends Component {
 		if (this.state.redirect) {
 			return this.renderBackToParent();
 		}
-		const { error, userObject, inputField, inputValue } = this.state;
+		const { error, inputField, inputValue } = this.state;
 		const input = (
 			<Input
 				value={inputValue || ''}
