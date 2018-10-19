@@ -13,10 +13,9 @@ import ErrorHandler from '../../../modules/ErrorHandler';
 import GoogleMapsAPI from '../../../modules/GoogleMapsAPI';
 import AddPropertyButton from '../../buttons/AddPropertyButton';
 import FormSection from './FormSection';
-
-const PropertyFields = require('../../../json/PropertyForm/PropertyFormFields');
-const RequiredFields = require('../../../json/PropertyForm/RequiredFields');
-const AllFields = require('../../../json/PropertyForm/AllFields');
+§import PropertyFields from "../../../json/PropertyForm/PropertyFormFields";
+import RequiredFields from "../../../json/PropertyForm/RequiredFields";
+import AllFields from "../../../json/PropertyForm/AllFields";
 
 class PropertyForm extends Component {
 	constructor(props) {
@@ -41,7 +40,8 @@ class PropertyForm extends Component {
 			notice: {
 				show: false
 			},
-			loading: false
+			loading: false,
+            roomType: 'Room Type'
 		};
 	}
 
@@ -140,12 +140,14 @@ class PropertyForm extends Component {
 		return form;
 	}
 
-	handleDropdown = () => {
-		console.log('handled!')
-	}
+	handleDropdown = (e) => {
+	    const choice = e.target.innerHTML;
+		this.setState({roomType: choice})
+	};
 
 	render() {
 		const { notice, loading } = this.state;
+		const options = ['A', 'B', 'C'];
 		return (
 			<div className="container">
 				<Modal
@@ -167,11 +169,9 @@ class PropertyForm extends Component {
 				{this.buildForm(PropertyFields)}
 				<div>
                     <Dropdown className={'room-type-dropdown'} trigger={
-                        <Button></Button>
+                        <Button>{this.state.roomType}</Button>
                     }>
-                        <NavItem onClick={this.handleDropdown}>one</NavItem>
-                        <NavItem onClick={this.handleDropdown}>two</NavItem>
-                        <NavItem onClick={this.handleDropdown}>three</NavItem>
+                        {options.map((o) => <NavItem key={o} onClick={this.handleDropdown}>Type {o}</NavItem>)}
                     </Dropdown>
 				</div>
 				<br />
