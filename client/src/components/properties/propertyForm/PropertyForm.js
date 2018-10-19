@@ -13,7 +13,7 @@ import ErrorHandler from '../../../modules/ErrorHandler';
 import GoogleMapsAPI from '../../../modules/GoogleMapsAPI';
 import AddPropertyButton from '../../buttons/AddPropertyButton';
 import FormSection from './FormSection';
-§import PropertyFields from "../../../json/PropertyForm/PropertyFormFields";
+import PropertyFields from "../../../json/PropertyForm/PropertyFormFields";
 import RequiredFields from "../../../json/PropertyForm/RequiredFields";
 import AllFields from "../../../json/PropertyForm/AllFields";
 
