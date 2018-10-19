@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { Row, Preloader, Button } from 'react-materialize';
+import {
+	Row,
+	Preloader,
+	Button,
+	Dropdown,
+	NavItem
+} from 'react-materialize';
 import { Modal } from 'react-bootstrap';
 
 import Formatter from '../../../modules/Formatter';
@@ -134,6 +140,10 @@ class PropertyForm extends Component {
 		return form;
 	}
 
+	handleDropdown = () => {
+		console.log('handled!')
+	}
+
 	render() {
 		const { notice, loading } = this.state;
 		return (
@@ -155,6 +165,15 @@ class PropertyForm extends Component {
 					</Modal.Footer>
 				</Modal>
 				{this.buildForm(PropertyFields)}
+				<div>
+                    <Dropdown className={'room-type-dropdown'} trigger={
+                        <Button></Button>
+                    }>
+                        <NavItem onClick={this.handleDropdown}>one</NavItem>
+                        <NavItem onClick={this.handleDropdown}>two</NavItem>
+                        <NavItem onClick={this.handleDropdown}>three</NavItem>
+                    </Dropdown>
+				</div>
 				<br />
 				{loading === false ? (
 					<Row>
