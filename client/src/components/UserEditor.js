@@ -128,7 +128,7 @@ class UserEditor extends Component {
 			});
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		this.loadField('email');
 	}
 

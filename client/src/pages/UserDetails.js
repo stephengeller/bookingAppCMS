@@ -13,7 +13,7 @@ class UserDetails extends Component {
     this.getUserEmail = this.getUserEmail.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.getUserEmail();
   }
 

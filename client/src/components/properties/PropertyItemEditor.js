@@ -26,7 +26,7 @@ class PropertyItemEditor extends Component {
     this.url = `/properties/${this.props.id}`;
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.apiClient
       .get(this.url)
       .then(response => {

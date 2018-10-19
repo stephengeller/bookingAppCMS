@@ -26,7 +26,7 @@ class PropertyItem extends Component {
     this.setState({ shortDescription: oppositeOfPrevious });
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { property } = this.props;
     if (property.address && typeof property.address === Array) {
       property.address = property.address.join(', ');
