@@ -1,7 +1,7 @@
 import React from 'react'
 import FormItem from './FormItem'
 
-const FormSection = ({name, fields, value, updateInputValue}) => {
+const FormSection = ({name, fields, value, updateInputValue, updateTagValue}) => {
     const form = [];
 
     form.push(
@@ -18,6 +18,7 @@ const FormSection = ({name, fields, value, updateInputValue}) => {
                 value={value[fields[i].name]}
                 type={fields[i].type}
                 updateInputValue={updateInputValue}
+                updateTagValue={updateTagValue}
                 key={`${fields[i].name}-${i}`}
             />
         );

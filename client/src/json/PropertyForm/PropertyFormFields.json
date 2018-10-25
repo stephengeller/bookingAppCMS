@@ -12,7 +12,8 @@
     },
     {
       "name":"facilities",
-      "label":"Facilities (separated by commas)"
+      "label":"Facilities (press Enter to add)",
+      "type": "tags-input"
     },
     {
       "name":"bookingEmail",

@@ -1,38 +1,66 @@
-import React, { Component } from 'react';
+import React  from 'react';
 import { Input } from 'react-materialize';
+import TagsInput from 'react-tagsinput';
+import 'react-tagsinput/react-tagsinput.css';
 
-class FormItem extends Component {
-  checkForDefaults(props) {
-    let { type, s } = props;
-    if (type === undefined) {
-      type = 'text';
-    }
-    if (s === undefined) {
-      s = 12;
-    }
-    return {
-      type,
-      s
-    };
+const checkForDefaults = (props) => {
+  let { type, s } = props;
+  if (type === undefined) {
+    type = 'text';
   }
+  if (s === undefined) {
+    s = 12;
+  }
+  return {
+    type,
+    s
+  };
+};
 
-  render() {
-    let { name, label, value } = this.props;
-    let { type, s } = this.checkForDefaults(this.props);
-    return (
-      <Input
-        s={s}
-        label={label}
-        id={name}
-        type={type}
-        className="validate"
-        value={value}
-        onChange={value => {
-          this.props.updateInputValue(value, name);
-        }}
-      />
-    );
+const renderTagsInput = (props) => {
+  let { name, label, value } = props;
+  value = value || [];
+  return (
+    <TagsInput
+      className=""
+      value={value}
+      onChange={value => {
+        props.updateTagValue(value, name);
+      }}
+      inputProps={{
+        placeholder: label
+      }}
+      tagProps={{
+        className: 'react-tagsinput-tag-custom'
+      }}
+    />
+  );
+};
+
+const renderHTMLInput = (props, { type, s }) => {
+  let { name, label, value } = props;
+  return (
+    <Input
+      s={s}
+      label={label}
+      id={name}
+      type={type}
+      className="validate"
+      value={value}
+      onChange={value => {
+        props.updateInputValue(value, name);
+      }}
+    />
+  );
+};
+
+const FormItem = (props) => {
+  let { type, s } = checkForDefaults(props);
+  if (type === 'tags-input') {
+    return renderTagsInput(props);
+  } else {
+    return renderHTMLInput(props, { type, s });
   }
-}
+};
 
 export default FormItem;

@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import {
 	Row,
 	Preloader,
-	Button,
-	Dropdown,
-	NavItem
+	Button
 } from 'react-materialize';
 import { Modal } from 'react-bootstrap';
 
@@ -21,7 +19,7 @@ class PropertyForm extends Component {
 	constructor(props) {
 		super(props);
 		this.addProperty = this.addProperty.bind(this);
-		this.updateInputValue = this.updateInputValue.bind(this);
+        this.updateInputValue = this.updateInputValue.bind(this);
 		this.submissionInProgress = this.submissionInProgress.bind(this);
 		this.handleMissingFields = this.handleMissingFields.bind(this);
 		this.buildForm = this.buildForm.bind(this);
@@ -41,7 +39,8 @@ class PropertyForm extends Component {
 				show: false
 			},
 			loading: false,
-            roomType: 'Room Type'
+            roomType: 'Room Type',
+			tags: []
 		};
 	}
 
@@ -122,6 +121,14 @@ class PropertyForm extends Component {
 		});
 	}
 
+    updateTagValue = (array, formName) => {
+        let { fields } = this.state;
+        fields[formName] = array;
+        this.setState({
+            fields
+        });
+    }
+
 	buildForm(fields) {
 		const form = [];
 		const keys = Object.keys(fields);
@@ -133,6 +140,7 @@ class PropertyForm extends Component {
 					fields={sectionFields}
 					value={this.state.fields}
 					updateInputValue={this.updateInputValue}
+                    updateTagValue={this.updateTagValue}
 					key={section}
 				/>
 			);
@@ -140,14 +148,8 @@ class PropertyForm extends Component {
 		return form;
 	}
 
-	handleDropdown = (e) => {
-	    const choice = e.target.innerHTML;
-		this.setState({roomType: choice})
-	};
-
 	render() {
 		const { notice, loading } = this.state;
-		const options = ['A', 'B', 'C'];
 		return (
 			<div className="container">
 				<Modal
@@ -167,13 +169,6 @@ class PropertyForm extends Component {
 					</Modal.Footer>
 				</Modal>
 				{this.buildForm(PropertyFields)}
-				<div>
-                    <Dropdown className={'room-type-dropdown'} trigger={
-                        <Button>{this.state.roomType}</Button>
-                    }>
-                        {options.map((o) => <NavItem key={o} onClick={this.handleDropdown}>Type {o}</NavItem>)}
-                    </Dropdown>
-				</div>
 				<br />
 				{loading === false ? (
 					<Row>
