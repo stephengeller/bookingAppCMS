@@ -48,10 +48,8 @@ class PropertyItem extends Component {
         <br />
         <PropertyLine
           label={'Description'}
-          field={shortDescription ? <a style={{color: 'inherit'}}>{property.description
-            .split(' ')
-            .splice(0, 20)
-              .join(' ')}...</a> : <a style={{color: 'inherit'}}>{property.description}</a>
+          field={ shortDescription ? this.createShortDescription(property) :
+            <a style={{color: 'inherit'}}>{property.description}</a>
           }
           toggleContents={this.toggleContents}
         />
@@ -72,6 +70,13 @@ class PropertyItem extends Component {
         <br />
       </Card>
     );
+  }
+
+  createShortDescription(property) {
+    return <a style={{color: 'inherit'}}>{property.description
+      .split(' ')
+      .splice(0, 20)
+      .join(' ')}...</a>;
   }
 }
 
