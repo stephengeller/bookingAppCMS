@@ -7,7 +7,7 @@
     "aws-sdk": "^2.204.0",
     "axios": "^0.17.0",
     "moment": "^2.20.1",
-    "react": "^16.2.0",
+    "react": "16.2.0",
     "react-bootstrap": "^0.32.1",
     "react-dates": "^16.3.0",
     "react-dom": "^16.2.0",

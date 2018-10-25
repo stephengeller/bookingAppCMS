@@ -4,7 +4,6 @@ import { Card } from 'react-materialize';
 import PropertyLine from './PropertyLine';
 import DeletePropertyButton from '../buttons/DeletePropertyButton';
 import EditPropertyButton from '../buttons/EditPropertyButton';
-import GoogleMapsAPI from '../../modules/GoogleMapsAPI';
 
 class PropertyItem extends Component {
   constructor(props) {
@@ -12,13 +11,8 @@ class PropertyItem extends Component {
     this.toggleContents = this.toggleContents.bind(this);
     this.state = {
       shortDescription: true,
-      property: {
-        location: ''
-      }
+      property: this.props.property
     };
-    this.mapsAPI = new GoogleMapsAPI({
-      googleApiKey: this.props.googleApiKey
-    });
   }
 
   toggleContents() {
@@ -26,7 +20,7 @@ class PropertyItem extends Component {
     this.setState({ shortDescription: oppositeOfPrevious });
   }
 
-  componentDidMount() {
+  UNSAFE_componentWillMount() {
     const { property } = this.props;
     if (property.address && typeof property.address === Array) {
       property.address = property.address.join(', ');
@@ -73,10 +67,12 @@ class PropertyItem extends Component {
   }
 
   createShortDescription(property) {
+    const length = 20;
+    const ellipsis = property.description.length > length ? "..." : ""
     return <a style={{color: 'inherit'}}>{property.description
       .split(' ')
-      .splice(0, 20)
-      .join(' ')}...</a>;
+      .splice(0, length)
+      .join(' ')}{ellipsis}</a>;
   }
 }
 
