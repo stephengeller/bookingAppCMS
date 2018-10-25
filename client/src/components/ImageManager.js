@@ -148,7 +148,7 @@ class ImageManager extends Component {
     return reader.readAsDataURL(file);
   }
 
-  UNSAFE_componentWillMount() {
+  componentWillMount() {
     this.getPreexistingImages();
   }
 
