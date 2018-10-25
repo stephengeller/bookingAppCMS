@@ -9,13 +9,10 @@ class ErrorHandler {
       }
     });
 
-    const messageString =
+    const message =
       'The following fields are required: ' + missingFields.join(', ');
 
-    return {
-      style: { color: 'red' },
-      message: messageString
-    };
+    return { style: { color: 'red' }, message };
   }
 
   allFieldsAreCompleted(requiredFields, fields) {
@@ -29,11 +26,9 @@ class ErrorHandler {
 
   createErrorMessage(message, boolean) {
     const color = boolean ? 'green' : 'red';
-    return {
-      message,
-      style: { color }
-    };
+    return { message, style: { color } };
   }
+
 }
 
 export default ErrorHandler;

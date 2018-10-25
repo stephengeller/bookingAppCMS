@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import {
 	Row,
-	Preloader,
-	Button
+	Preloader
 } from 'react-materialize';
-import { Modal } from 'react-bootstrap';
 
 import Formatter from '../../../modules/Formatter';
 import ErrorHandler from '../../../modules/ErrorHandler';
 import GoogleMapsAPI from '../../../modules/GoogleMapsAPI';
 import AddPropertyButton from '../../buttons/AddPropertyButton';
+import ModalNotice from '../../ModalNotice';
+
 import FormSection from './FormSection';
 import PropertyFields from "../../../json/PropertyForm/PropertyFormFields";
 import RequiredFields from "../../../json/PropertyForm/RequiredFields";
@@ -81,19 +81,13 @@ class PropertyForm extends Component {
 			this.props.apiClient
 				.post('/properties/', fieldsToSubmit)
 				.then(() => {
-					const notice = {
-						message: `Property "${fieldsToSubmit.title}" successfully added`,
-						style: { color: 'green' },
-						show: true
-					};
+					const notice = this.generateNotice(
+					    `Property "${fieldsToSubmit.title}" successfully added`, 'green'
+                    );
 					this.resetAfterSuccess(this.allFields, notice);
 				})
 				.catch(error => {
-					const notice = {
-						message: error.toString(),
-						style: { color: 'red' },
-						show: true
-					};
+					const notice = this.generateNotice(error.toString(), 'red')
 					this.submissionInProgress(false);
 					this.setState({ notice });
 				});
@@ -102,7 +96,15 @@ class PropertyForm extends Component {
 		}
 	}
 
-	handleMissingFields() {
+    generateNotice(message, color) {
+        return {
+            message,
+            style: {color},
+            show: true
+        }
+    }
+
+    handleMissingFields() {
 		const notice = this.errorHandler.emptyBoxErrorHandler(
 			this.requiredFields,
 			this.state
@@ -152,22 +154,7 @@ class PropertyForm extends Component {
 		const { notice, loading } = this.state;
 		return (
 			<div className="container">
-				<Modal
-					show={notice.show}
-					style={notice.style}
-					id="notice"
-					className="center"
-				>
-					<Modal.Header>
-						<Modal.Title>{'Notice'}</Modal.Title>
-					</Modal.Header>
-					<Modal.Body>{notice.message}</Modal.Body>
-					<Modal.Footer>
-						<Button onClick={() => this.setState({ notice: { show: false } })}>
-							Close
-						</Button>
-					</Modal.Footer>
-				</Modal>
+                <ModalNotice notice={notice} setState={this.setState.bind(this)}/>
 				{this.buildForm(PropertyFields)}
 				<br />
 				{loading === false ? (
