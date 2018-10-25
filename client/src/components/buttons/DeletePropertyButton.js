@@ -1,16 +1,15 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Icon } from 'react-materialize';
 
-class DeletePropertyButton extends Component {
-  render() {
-    const { property } = this.props;
+const DeletePropertyButton = (props) => {
+    const { property } = props;
     return (
       <span className="right-align">
         <button
           className="btn waves-effect waves-light red accent-4 hoverable"
           onClick={() => {
             if (window.confirm(`Delete the property ${property.title}?`)) {
-              this.props.deleteProperty(property);
+              props.deleteProperty(property);
             }
           }}
         >
@@ -18,7 +17,6 @@ class DeletePropertyButton extends Component {
         </button>
       </span>
     );
-  }
-}
+  };
 
 export default DeletePropertyButton;
