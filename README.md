@@ -2,7 +2,7 @@
 
 A content management system for a property booking app. Made by [Stephen Geller](http://www.stephengeller.co.uk).
 
-Website for the most recent version [here](https://cms.carefreebreaks.com/home), although you will need to log in. The current build is hidden for security purposes, and so this repository is out-of-date.
+Website for the most recent version [here](https://cms.carefreebreaks.com/home), although you will not be able to log in without an account. The current build is hidden for security purposes, and so this repository is out-of-date.
 
 ## ** Notice **
 
