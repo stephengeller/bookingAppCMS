@@ -33,7 +33,7 @@ module.exports = {
   searchByEmail: email => {
     return searchForUser('email', email)
       .then(result => {
-        if(result.Users.length === 0) {
+        if (result.Users.length === 0) {
           throw new Error('User not found');
         }
         return result;
@@ -41,11 +41,14 @@ module.exports = {
       .then(result => result.Users[0])
       .then(result => {
         result.attr = {};
-        for(var i = 0, l = result.Attributes.length; i < l; i++) {
-          result.attr[result.Attributes[i]['Name']] = result.Attributes[i]['Value'];
+        let i = 0,
+          l = result.Attributes.length;
+        for (; i < l; i++) {
+          result.attr[result.Attributes[i]['Name']] =
+            result.Attributes[i]['Value'];
         }
         return result;
-      })
+      });
   },
 
   setNumTokens: (tokens, email) => {

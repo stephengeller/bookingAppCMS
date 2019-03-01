@@ -48,7 +48,7 @@ class DateRangeDisplayer extends Component {
         </li>
       );
       if (arrayOfDates instanceof Array) {
-        for (var i = 0; i < arrayOfDates.length; i++) {
+        for (let i = 0; i < arrayOfDates.length; i++) {
           let date = arrayOfDates[i];
           availableDates.push(
             <li key={i} className="collection-item">
@@ -73,7 +73,7 @@ class DateRangeDisplayer extends Component {
   onDeleteAvailability(date) {
     axios
       .delete(`${this.url}/${date}`)
-      .then(response => {
+      .then(() => {
         const { datesArray } = this.state;
         let index = -1;
         for (var i = 0, l = datesArray.length; i < l; i++) {

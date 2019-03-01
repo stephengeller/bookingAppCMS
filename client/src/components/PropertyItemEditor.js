@@ -53,7 +53,7 @@ class PropertyItemEditor extends Component {
     );
     axios
       .put(this.url, fields)
-      .then(response => {
+      .then(() => {
         const message = 'successfully updated property!';
         console.log(message);
         this.setState({ error: message });
@@ -81,7 +81,7 @@ class PropertyItemEditor extends Component {
           this.setState({ error });
         })
         .catch(errorResponse => {
-          const message = 'Error updating availabilty: ' + errorResponse;
+          const message = 'Error updating availability: ' + errorResponse;
           const error = this.errorHandler.createErrorMessage(message, false);
           this.setState({ error });
         });
@@ -136,7 +136,8 @@ class PropertyItemEditor extends Component {
           type="submit"
           onClick={this.updateProperty}
         >
-          <Icon right>edit</Icon>Update Property
+          <Icon right>edit</Icon>
+          Update Property
         </Button>
         <br />
         <h4 className="center-align">Available Dates</h4>

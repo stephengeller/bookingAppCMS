@@ -4,13 +4,12 @@ import { Alert } from 'react-bootstrap';
 import { Input, Button, Icon } from 'react-materialize';
 
 class Login extends Component {
-
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       disableLogin: false,
       errorMessage: null
-    }
+    };
   }
 
   onSubmit(evt) {
@@ -18,7 +17,7 @@ class Login extends Component {
     this.setState({
       disableLogin: true,
       errorMessage: null
-    })
+    });
     this.props
       .logUserIn(this.refs.username.state.value, this.refs.password.state.value)
       .then(this.props.onLoggedIn)
@@ -26,12 +25,12 @@ class Login extends Component {
         this.setState({
           disableLogin: false,
           errorMessage: err.message
-        })
-      })
+        });
+      });
   }
 
   renderError() {
-    if(this.state.errorMessage === null) {
+    if (this.state.errorMessage === null) {
       return;
     }
     return (
@@ -39,30 +38,28 @@ class Login extends Component {
         <h4>Login error!</h4>
         <p>{this.state.errorMessage}</p>
       </Alert>
-    )
+    );
   }
 
   renderButton() {
-    if(this.state.disableLogin) {
+    if (this.state.disableLogin) {
       return (
-        <Button 
-          ref="loginButton"
-          disabled
-          type="submit">
+        <Button ref="loginButton" disabled type="submit">
           <Icon right>person</Icon>
           Login
         </Button>
-      )  
+      );
     }
     return (
-      <Button 
+      <Button
         onClick={this.onSubmit.bind(this)}
         ref="loginButton"
-        type="submit">
+        type="submit"
+      >
         <Icon right>person</Icon>
         Login
       </Button>
-    )
+    );
   }
 
   render() {

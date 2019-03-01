@@ -38,7 +38,7 @@ class UserManager extends Component {
   }
 
   searchForUser(email) {
-    this.setState({errorMsg: null});
+    this.setState({ errorMsg: null });
     if (email) {
       this.setState({ loading: true });
       CognitoUserStore.searchByEmail(email)
@@ -63,7 +63,7 @@ class UserManager extends Component {
   }
 
   renderError() {
-    if(this.state.errorMsg === null) {
+    if (this.state.errorMsg === null) {
       return;
     }
     return (

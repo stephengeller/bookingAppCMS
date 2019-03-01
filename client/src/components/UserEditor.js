@@ -35,19 +35,19 @@ class UserEditor extends Component {
 
   resetUserPassword(email) {
     CognitoUserStore.resetUserPassword(email)
-    .then(this.props.onUserChanged)
+      .then(this.props.onUserChanged)
       .catch(err => console.log(err));
   }
 
   disableUser(email) {
     CognitoUserStore.disableUser(email)
-    .then(this.props.onUserChanged)
+      .then(this.props.onUserChanged)
       .catch(err => console.log(err));
   }
 
   enableUser(email) {
     CognitoUserStore.enableUser(email)
-    .then(this.props.onUserChanged)
+      .then(this.props.onUserChanged)
       .catch(err => console.log(err));
   }
 
@@ -55,7 +55,7 @@ class UserEditor extends Component {
     this.setState();
     CognitoUserStore.deleteUser(email)
       .then(() => {
-        this.setState({redirect: true});
+        this.setState({ redirect: true });
       })
       .catch(err => console.log(err));
   }
@@ -117,46 +117,49 @@ class UserEditor extends Component {
 
   renderBackToParent() {
     if (this.state.redirect) {
-      return <Redirect to='/users'></Redirect>
+      return <Redirect to="/users" />;
     }
   }
 
   renderDisableBtn() {
-    if(this.props.user.Enabled) {
+    if (this.props.user.Enabled) {
       return (
         <Button
           className={'red accent-4 button'}
           onClick={() => this.disableUser(this.userObject.email)}
         >
-          <Icon right>block</Icon>Disable user
+          <Icon right>block</Icon>
+          Disable user
         </Button>
-      )
+      );
     }
     return (
       <Button
         className={'green accent-4 button'}
         onClick={() => this.enableUser(this.userObject.email)}
       >
-        <Icon right>check</Icon>Enable user
+        <Icon right>check</Icon>
+        Enable user
       </Button>
-    )
+    );
   }
 
   renderDeleteBtn() {
-    if(!this.props.user.Enabled) {
+    if (!this.props.user.Enabled) {
       return (
         <Button
           className={'red accent-4 button'}
           onClick={() => this.deleteUser(this.userObject.email)}
         >
-          <Icon right>block</Icon>Delete user
+          <Icon right>block</Icon>
+          Delete user
         </Button>
-      )
+      );
     }
   }
 
   render() {
-    if(this.state.redirect) {
+    if (this.state.redirect) {
       return this.renderBackToParent();
     }
     const { error, userObject, inputField, inputValue } = this.state;
@@ -175,7 +178,8 @@ class UserEditor extends Component {
             className="button"
             onClick={() => this.updateField(this.state.inputField)}
           >
-            <Icon right>create</Icon> Update {inputField.replace(/custom:/, '').replace(/_/, ' ')}
+            <Icon right>create</Icon> Update{' '}
+            {inputField.replace(/custom:/, '').replace(/_/, ' ')}
           </Button>
         </div>
         <div className="divider" />
@@ -184,7 +188,8 @@ class UserEditor extends Component {
             className={'blue darken-1 button'}
             onClick={() => this.resetUserPassword(userObject.email)}
           >
-            <Icon right>cached</Icon>Reset user password
+            <Icon right>cached</Icon>
+            Reset user password
           </Button>
         </div>
         <div>
@@ -195,7 +200,10 @@ class UserEditor extends Component {
     );
     return (
       <div style={{ margin: '30px' }}>
-        <h6 className="center-align">({this.props.user.UserStatus} / {this.props.user.Enabled ? 'enabled' : 'disabled'})</h6>
+        <h6 className="center-align">
+          ({this.props.user.UserStatus} /{' '}
+          {this.props.user.Enabled ? 'enabled' : 'disabled'})
+        </h6>
         <h5 style={error.style}>{error.message}</h5>
         <Row>
           <Input

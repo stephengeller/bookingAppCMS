@@ -3,7 +3,7 @@ class ErrorHandler {
     const missingFields = [];
 
     fieldNames.forEach(field => {
-      if (!state.fields[field]) {
+      if (!state.fields[field['name']]) {
         console.log('missing:', field);
         missingFields.push(field);
       }
@@ -18,22 +18,22 @@ class ErrorHandler {
     };
   }
 
-  allFieldsAreCompleted(requiredFields, fields) {
-    for (let i = 0; i < requiredFields.length; i++) {
-      if (!fields[requiredFields[i]]) {
+  allFieldsAreCompleted = (allFields, stateFields) => {
+    for (let i = 0; i < allFields.length; i++) {
+      if (!stateFields[allFields[i]['name']] && allFields['required']) {
         return false;
       }
     }
     return true;
-  }
+  };
 
-  createErrorMessage(message, boolean) {
+  createErrorMessage = (message, boolean) => {
     const color = boolean ? 'green' : 'red';
     return {
       message,
       style: { color }
     };
-  }
+  };
 }
 
 export default ErrorHandler;

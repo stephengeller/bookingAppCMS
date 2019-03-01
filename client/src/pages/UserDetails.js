@@ -40,9 +40,7 @@ class UserDetails extends Component {
         <h5 className="center-align">
           {user.attr['given_name']} {user.attr['family_name']}
         </h5>
-        <UserEditor
-          user={user}
-          onUserChanged={this.onUserChanged.bind(this)}/>
+        <UserEditor user={user} onUserChanged={this.onUserChanged.bind(this)} />
       </div>
     ) : (
       <div className="center-align center">
