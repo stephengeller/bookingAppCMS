@@ -25,5 +25,11 @@
     "build": "sh -ac '. ./.env.${REACT_APP_ENV}; react-scripts build'",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "prettier": {
+    "trailingComma": "none",
+    "tabWidth": 2,
+    "semi": true,
+    "singleQuote": true
   }
 }
