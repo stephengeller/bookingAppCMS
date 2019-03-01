@@ -21,25 +21,14 @@ class PropertyForm extends Component {
       googleApiKey: this.props.googleApiKey
     });
     this.allFields = [
-      'title',
-      'description',
-      'facilities',
-      'addressLine1',
-      'addressLine2',
-      'city',
-      'postcode',
-
-      'bookingEmail'
-    ];
-    this.requiredFields = [
-      'title',
-      'description',
-      'facilities',
-      'addressLine1',
-      'city',
-      'postcode',
-
-      'bookingEmail'
+      { name: 'title', required: true },
+      { name: 'description', required: true },
+      { name: 'facilities', required: true },
+      { name: 'addressLine1', required: true },
+      { name: 'addressLine2', required: false },
+      { name: 'city', required: true },
+      { name: 'postcode', required: true },
+      { name: 'bookingEmail', required: true }
     ];
 
     this.state = {
@@ -71,8 +60,8 @@ class PropertyForm extends Component {
     };
   }
 
-  cleanFields(fieldsToClean, currentFieldsState) {
-    fieldsToClean.map(fieldName => (currentFieldsState[fieldName] = ''));
+  cleanFields(allFields, currentFieldsState) {
+    allFields.map(fieldObj => (currentFieldsState[fieldObj['name']] = ''));
     return currentFieldsState;
   }
 
@@ -83,10 +72,7 @@ class PropertyForm extends Component {
   async addProperty() {
     this.submissionInProgress(true);
     if (
-      this.errorHandler.allFieldsAreCompleted(
-        this.requiredFields,
-        this.state.fields
-      )
+      this.errorHandler.allFieldsAreCompleted(this.allFields, this.state.fields)
     ) {
       const fields = await this.setUpFieldsObject(this.state.fields);
 
@@ -120,7 +106,7 @@ class PropertyForm extends Component {
 
   handleMissingFields() {
     const error = this.errorHandler.emptyBoxErrorHandler(
-      this.requiredFields,
+      this.allFields,
       this.state
     );
     this.submissionInProgress(false);
